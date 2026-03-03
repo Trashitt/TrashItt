@@ -104,9 +104,9 @@ function Ticker() {
         }
 
         .ticker-text {
-          font-family: 'DM Sans', sans-serif;
+          font-family: "Syne Mono", monospace;
           font-size: 0.88rem;
-          font-weight: 600;
+          font-weight: 400;
           color: #ffffff;
           letter-spacing: 0.01em;
           opacity: 0.95;

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import myLogo from 'C:/Users/WELLCOM/Desktop/TrashItt frontend/TrashItt/src/logo.png';
 import {
   Leaf,
   Mail,
@@ -106,12 +107,7 @@ function Login() {
       <div className="login-left">
         <div className="login-left-overlay" />
         <div className="login-left-content">
-          <Link to="/" className="login-logo">
-            <div className="login-logo-icon">
-              <Leaf size={24} />
-            </div>
-            <span className="login-logo-text">TrashItt</span>
-          </Link>
+          
 
           <div className="login-left-main">
             <h1 className="login-left-title">
@@ -172,7 +168,7 @@ function Login() {
       <div className="login-right">
         <div className="login-form-container">
           <div className="login-form-header">
-            <h2>Sign In</h2>
+            <h2>Log In</h2>
             <p>Enter your credentials to access your dashboard</p>
           </div>
 
@@ -255,7 +251,7 @@ function Login() {
               ) : (
                 <>
                   <LogIn size={18} />
-                  <span>Sign In</span>
+                  <span>Log In</span>
                   <ArrowRight size={16} />
                 </>
               )}
@@ -322,6 +318,7 @@ function Login() {
           justify-content: center;
           overflow: hidden;
           flex-shrink: 0;
+          transform: translateY(70px);
         }
 
         .login-left-overlay {
@@ -344,37 +341,6 @@ function Login() {
           max-width: 520px;
         }
 
-        .login-logo {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          text-decoration: none;
-        }
-
-        .login-logo-icon {
-          width: 42px;
-          height: 42px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: rgba(255,255,255,0.15);
-          border: 1px solid rgba(255,255,255,0.2);
-          border-radius: 12px;
-          color: #ffffff;
-          transition: transform 0.3s ease;
-        }
-
-        .login-logo:hover .login-logo-icon {
-          transform: rotate(-12deg);
-        }
-
-        .login-logo-text {
-          font-family: 'Syne', sans-serif;
-          font-weight: 800;
-          font-size: 1.4rem;
-          color: #ffffff;
-        }
-
         .login-left-main {
           display: flex;
           flex-direction: column;
@@ -392,7 +358,8 @@ function Login() {
         }
 
         .login-left-title-green {
-          color: var(--lime);
+          color: linear-gradient(135deg, var(--green), var(--teal)) !important ;
+
         }
 
         .login-left-sub {
@@ -452,6 +419,8 @@ function Login() {
 
         .login-left-footer {
           padding-top: 24px;
+          transform: translateY(-100px);
+
         }
 
         .login-left-footer p {

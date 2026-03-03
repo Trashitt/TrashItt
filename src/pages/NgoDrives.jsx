@@ -176,7 +176,7 @@ function NgoDrives() {
             <Heart size={14} />
             <span>NGO Drives</span>
           </div>
-          <h1>Community Cleanup Drives</h1>
+          <h1>Community <span className="hero-highlight">Cleanup Drives</span></h1>
           <p>
             Join hands with NGOs and community organizations to make Ranchi cleaner.
             Participate in drives, earn points, and create real impact!
@@ -446,15 +446,20 @@ function NgoDrives() {
           display: inline-flex;
           align-items: center;
           gap: 8px;
-          padding: 6px 18px;
-          background: rgba(220,38,38,0.08);
-          color: #dc2626;
+          padding: 6px 16px;
+          background: rgba(255, 255, 255, 0.1);
+          color: #ffffff;
           border-radius: 9999px;
-          font-size: 0.82rem;
+          font-size: 0.8rem;
           font-weight: 700;
           text-transform: uppercase;
           letter-spacing: 0.08em;
           margin-bottom: 14px;
+        }
+          [data-theme='light'] .ngo-hero-badge {
+          color: #000000 ;
+          background: rgba(0, 0, 0, 0.1);
+
         }
 
         .ngo-hero h1 {
@@ -492,11 +497,14 @@ function NgoDrives() {
         }
 
         .ngo-hero-stat strong {
-          font-family: 'Syne', sans-serif;
-          font-weight: 800;
-          font-size: 1.5rem;
-          color: var(--green);
+          font-family: var(--font-number);
+          font-weight: 500;
+          font-size: 2rem;
+          color: #ffffff;
         }
+          [data-theme=light] .ngo-hero-stat strong{
+          color: #000000;
+          }
 
         .ngo-hero-stat span {
           font-size: 0.78rem;
@@ -607,14 +615,18 @@ function NgoDrives() {
           align-items: center;
           gap: 5px;
           padding: 5px 14px;
-          background: rgba(217,119,6,0.1);
-          color: var(--yellow);
+          background: rgba(255, 255, 255, 0.1);
+          color: #ffffff;
           border-radius: 9999px;
           font-size: 0.8rem;
           font-weight: 700;
           flex-shrink: 0;
           animation: pulse 2s ease-in-out infinite;
         }
+          [data-theme=light] .ngo-card-points-badge{
+          background: rgba(0, 0, 0, 0.1);
+          color: #000000;
+          }
 
         .ngo-card-org {
           display: flex;
@@ -691,6 +703,7 @@ function NgoDrives() {
           height: 100%;
           border-radius: 9999px;
           transition: width 1s ease;
+          background: linear-gradient(90deg, var(--green), var(--teal)) !important;
         }
 
         /* Expanded */

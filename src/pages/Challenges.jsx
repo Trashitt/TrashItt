@@ -167,8 +167,8 @@ function Challenges() {
               <span>Active Challenges</span>
             </div>
             <h1>
-              Compete. Clean.<br />
-              <span className="ch-hero-highlight">Conquer.</span>
+              <span className="hero-highlight">Compete.</span> Clean.<br />
+              <span className="hero-highlight">Conquer.</span>
             </h1>
             <p>
               Join exciting eco-challenges, compete with fellow citizens,
@@ -194,7 +194,6 @@ function Challenges() {
         </div>
       </section>
 
-      {/* Ticker */}
       <Ticker />
 
       {/* Main Content */}
@@ -451,7 +450,7 @@ function Challenges() {
         .ch-hero {
           position: relative;
           padding: 64px 0 56px;
-          background: linear-gradient(135deg, #451a03, #7c2d12, #9a3412);
+          background: linear-gradient(135deg, #000000, #01380d, #024e0e);
           overflow: hidden;
         }
 
@@ -501,28 +500,28 @@ function Challenges() {
         }
 
         .ch-hero-badge {
+          margin-bottom: 18px;
+          animation: pulse 2s ease-in-out infinite;
           display: inline-flex;
           align-items: center;
           gap: 8px;
-          padding: 6px 18px;
-          background: rgba(251,146,60,0.2);
-          border: 1px solid rgba(251,146,60,0.3);
+          padding: 6px 16px;
+          background: rgba(255, 255, 255, 0.1);
+          color: #ffffff;
           border-radius: 9999px;
-          color: #fb923c;
-          font-size: 0.82rem;
+          font-size: 0.8rem;
           font-weight: 700;
           text-transform: uppercase;
           letter-spacing: 0.08em;
-          margin-bottom: 18px;
-          animation: pulse 2s ease-in-out infinite;
         }
+
 
         .ch-hero h1 {
           font-family: 'Syne', sans-serif;
           font-weight: 800;
           font-size: clamp(2rem, 5vw, 3.2rem);
           line-height: 1.15;
-          color: #ffffff;
+          color: #ffffff !important;
           margin-bottom: 16px;
         }
 
@@ -554,10 +553,10 @@ function Challenges() {
         }
 
         .ch-hero-stat strong {
-          font-family: 'Syne', sans-serif;
-          font-weight: 800;
-          font-size: 1.5rem;
-          color: #fb923c;
+          font-family: var(--font-number);
+          font-weight: 500;
+          font-size: 2.5rem;
+          color: #ffffff;
         }
 
         .ch-hero-stat span {
@@ -757,7 +756,7 @@ function Challenges() {
 
         .ch-card-progress-fill {
           height: 100%;
-          background: linear-gradient(90deg, var(--green), var(--lime));
+          background: linear-gradient(90deg, var(--green), var(--teal));
           border-radius: 9999px;
           transition: width 1s ease;
         }
@@ -775,8 +774,8 @@ function Challenges() {
           align-items: center;
           gap: 4px;
           padding: 10px 18px;
-          background: rgba(217,119,6,0.1);
-          color: var(--yellow);
+          background: rgba(255, 255, 255, 0.1);
+          color: #ffffff;
           border-radius: 12px;
           font-weight: 800;
           font-family: 'Syne', sans-serif;

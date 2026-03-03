@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
+import myLogo from 'C:/Users/WELLCOM/Desktop/TrashItt frontend/TrashItt/src/logo.png';
 import {
   Leaf,
   Recycle,
@@ -225,84 +226,145 @@ function Home() {
     <div className="home-page">
       {/* SECTION 1: HERO */}
       <section className="home-hero">
-        <div className="home-hero-gradient" />
-        <div className="home-hero-mesh" />
+  <div className="home-hero-gradient" />
+  <div className="home-hero-mesh" />
 
-        {/* Leaf Particles */}
-        {leafParticles.map((leaf) => (
-          <div
-            key={leaf.id}
-            className="home-leaf-particle"
-            style={{
-              left: leaf.left,
-              fontSize: `${leaf.size}px`,
-              animationDuration: `${leaf.duration}s`,
-              animationDelay: `${leaf.delay}s`,
-              '--leaf-drift': `${leaf.drift}px`,
-              '--leaf-drift-end': `${leaf.driftEnd}px`,
-              opacity: 0,
-            }}
+  {/* Leaf Particles */}
+  {leafParticles.map((leaf) => (
+    <div
+      key={leaf.id}
+      className="home-leaf-particle"
+      style={{
+        left: leaf.left,
+        fontSize: `${leaf.size}px`,
+        animationDuration: `${leaf.duration}s`,
+        animationDelay: `${leaf.delay}s`,
+        '--leaf-drift': `${leaf.drift}px`,
+        '--leaf-drift-end': `${leaf.driftEnd}px`,
+        opacity: 0,
+      }}
+    >
+      🍃
+    </div>
+  ))}
+
+  {/* NEW: Wrapper to hold the left and right sides next to each other */}
+  <div className="home-hero-inner container">
+    
+    {/* LEFT SIDE: Your existing text content */}
+    <div className="home-hero-content">
+      <div className="home-hero-badge">
+        <Sparkles size={14} />
+        <span>Smart Waste Management for Ranchi</span>
+      </div>
+
+      <h1 className="home-hero-title">
+        {heroWords.map((word, i) => (
+          <span
+            key={i}
+            className="home-hero-word"
+            style={{ animationDelay: `${0.3 + i * 0.15}s` }}
           >
-            🍃
-          </div>
+            {word}{' '}
+          </span>
         ))}
+      </h1>
 
-        <div className="home-hero-content">
-          <div className="home-hero-badge">
-            <Sparkles size={14} />
-            <span>Smart Waste Management for Ranchi</span>
-          </div>
+      <p className="home-hero-sub">
+        India's smartest waste segregation platform. Scan, segregate, earn points,
+        and join Ranchi's green revolution. Together, we make a difference!
+      </p>
 
-          <h1 className="home-hero-title">
-            {heroWords.map((word, i) => (
-              <span
-                key={i}
-                className="home-hero-word"
-                style={{ animationDelay: `${0.3 + i * 0.15}s` }}
-              >
-                {word}{' '}
-              </span>
-            ))}
-          </h1>
+      <div className="home-hero-ctas">
+        <Link to="/scanner" className="btn btn-primary btn-lg home-hero-btn">
+          <ScanLine size={20} />
+          <span>Try AI Scanner</span>
+        </Link>
+        <Link to="/challenges" className="btn btn-secondary btn-lg home-hero-btn">
+          <Trophy size={20} />
+          <span>Join Challenges</span>
+        </Link>
+      </div>
 
-          <p className="home-hero-sub">
-            India's smartest waste segregation platform. Scan, segregate, earn points,
-            and join Ranchi's green revolution. Together, we make a difference!
-          </p>
+      <div className="home-hero-stats-mini">
+        <div className="home-hero-mini-stat">
+          <strong>1,247</strong>
+          <span>Citizens</span>
+        </div>
+        <div className="home-hero-mini-divider" />
+        <div className="home-hero-mini-stat">
+          <strong>12,450</strong>
+          <span>KG Segregated</span>
+        </div>
+        <div className="home-hero-mini-divider" />
+        <div className="home-hero-mini-stat">
+          <strong>5</strong>
+          <span>Live Challenges</span>
+        </div>
+      </div>
+    </div>
 
-          <div className="home-hero-ctas">
-            <Link to="/scanner" className="btn btn-primary btn-lg home-hero-btn">
-              <ScanLine size={20} />
-              <span>Try AI Scanner</span>
-            </Link>
-            <Link to="/challenges" className="btn btn-secondary btn-lg home-hero-btn">
-              <Trophy size={20} />
-              <span>Join Challenges</span>
-            </Link>
-          </div>
-
-          <div className="home-hero-stats-mini">
-            <div className="home-hero-mini-stat">
-              <strong>1,247</strong>
-              <span>Citizens</span>
-            </div>
-            <div className="home-hero-mini-divider" />
-            <div className="home-hero-mini-stat">
-              <strong>12,450</strong>
-              <span>KG Segregated</span>
-            </div>
-            <div className="home-hero-mini-divider" />
-            <div className="home-hero-mini-stat">
-              <strong>5</strong>
-              <span>Live Challenges</span>
-            </div>
+    {/* RIGHT SIDE: Your new 3D Orb Visual */}
+    <div className="landing-hero-visual">
+      <div className="orb-container">
+        <div className="orbital-ring ring-1"></div>
+        <div className="orbital-ring ring-2"></div>
+        
+        <div className="tech-orb">
+          <div className="sphere-content">
+            {/* Make sure logo.png is in your 'public' folder! */}
+            <img src={myLogo} alt="TrashIt" className="orb-logo" />
+            
+            {/* <Link to="/scanner" className="btn-sphere-action">
+              <Camera size={16} /> Segregate Waste
+            </Link> */}
           </div>
         </div>
+      </div>
+      
+      <div className="floating-card fc-1">
+        <Camera size={20} className="fc-icon" style={{ color: 'var(--green)' }}/>
+        <strong>AI Scanner</strong>
+        <span>94% Accuracy</span>
+      </div>
 
-        <div className="home-hero-scroll-arrow">
-          <ChevronDown size={28} />
-        </div>
-      </section>
+      <div className="floating-card fc-2">
+        <MapPin size={20} className="fc-icon" style={{ color: '#2563eb' }}/>
+        <strong>Local Recycling</strong>
+        <span>Find drop-offs</span>
+      </div>
+
+      <div className="floating-card fc-3">
+        <Leaf size={20} className="fc-icon" style={{ color: 'var(--yellow)' }}/>
+        <strong>EcoPoints</strong>
+        <span>Trash to rewards</span>
+      </div>
+
+      <div className="floating-card fc-4">
+        <Users size={20} className="fc-icon" style={{ color: '#ec4899' }}/>
+        <strong>Community</strong>
+        <span>Join challenges</span>
+      </div>
+
+      <div className="floating-card fc-5">
+        <AlertTriangle size={20} className="fc-icon" style={{ color: '#7c3aed' }}/>
+        <strong>Report Issues</strong>
+        <span>Fix your city</span>
+      </div>
+
+      <div className="floating-card fc-6">
+        <TrendingUp size={20} className="fc-icon" style={{ color: 'var(--teal)' }}/>
+        <strong>Impact Tracker</strong>
+        <span>Live CO₂ stats</span>
+      </div>
+    </div>
+    
+  </div>
+
+  <div className="home-hero-scroll-arrow">
+    <ChevronDown size={28} />
+  </div>
+</section>
 
       {/* SECTION 2: TICKER */}
       <Ticker />
@@ -333,7 +395,7 @@ function Home() {
           </div>
         </div>
       </section>
-
+<Ticker />
       {/* SECTION 4: AI SCANNER PROMO */}
       <section className="home-scanner-promo-section">
         <div className="container">
@@ -381,7 +443,7 @@ function Home() {
           </AnimateOnScroll>
         </div>
       </section>
-
+<Ticker />
       {/* SECTION 5: THREE BINS */}
       <section className="home-bins-section">
         <div className="container">
@@ -425,7 +487,7 @@ function Home() {
           </div>
         </div>
       </section>
-
+<Ticker />
       {/* SECTION 6: TRENDING CHALLENGES */}
       <section className="home-challenges-section">
         <div className="container">
@@ -474,7 +536,7 @@ function Home() {
           </div>
         </div>
       </section>
-
+<Ticker />
       {/* SECTION 7: HOW IT WORKS */}
       <section className="home-how-section">
         <div className="container">
@@ -511,7 +573,7 @@ function Home() {
           </div>
         </div>
       </section>
-
+<Ticker />
       {/* SECTION 8: GALLERY PREVIEW */}
       <section className="home-gallery-section">
         <div className="container">
@@ -565,159 +627,403 @@ function Home() {
         }
 
         /* ===================== HERO ===================== */
-        .home-hero {
-          position: relative;
-          min-height: 100vh;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          overflow: hidden;
-          padding: 100px 24px 60px;
-        }
+.home-hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 100px 24px 60px;
+}
 
-        .home-hero-gradient {
-          position: absolute;
-          inset: 0;
-          background: 
-            radial-gradient(ellipse at 20% 50%, rgba(22,163,74,0.12) 0%, transparent 50%),
-            radial-gradient(ellipse at 80% 20%, rgba(13,148,136,0.1) 0%, transparent 50%),
-            radial-gradient(ellipse at 50% 80%, rgba(132,204,22,0.08) 0%, transparent 50%);
-          z-index: 0;
-        }
+.home-hero-gradient {
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(ellipse at 20% 50%, rgba(22,163,74,0.12) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(13,148,136,0.1) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 80%, rgba(132,204,22,0.08) 0%, transparent 50%);
+  z-index: 0;
+}
 
-        .home-hero-mesh {
-          position: absolute;
-          inset: 0;
-          background-image: 
-            radial-gradient(circle at 25% 25%, rgba(22,163,74,0.06) 1px, transparent 1px),
-            radial-gradient(circle at 75% 75%, rgba(13,148,136,0.04) 1px, transparent 1px);
-          background-size: 60px 60px;
-          z-index: 0;
-        }
+.home-hero-mesh {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    radial-gradient(circle at 25% 25%, rgba(22,163,74,0.06) 1px, transparent 1px),
+    radial-gradient(circle at 75% 75%, rgba(13,148,136,0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+  z-index: 0;
+}
 
-        .home-leaf-particle {
-          position: absolute;
-          bottom: -20px;
-          z-index: 1;
-          pointer-events: none;
-          animation: leafFloat linear infinite;
-        }
+.home-leaf-particle {
+  position: absolute;
+  bottom: -20px;
+  z-index: 1;
+  pointer-events: none;
+  animation: leafFloat linear infinite;
+}
 
-        .home-hero-content {
-          position: relative;
-          z-index: 2;
-          text-align: center;
-          max-width: 800px;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 24px;
-        }
+/* NEW: Layout wrapper to split left and right */
+.home-hero-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  width: 100%;
+  position: relative;
+  z-index: 2;
+}
 
-        .home-hero-badge {
-          display: inline-flex;
+/* LEFT SIDE: Content */
+.home-hero-content {
+  flex: 1; /* Takes up available space */
+  max-width: 850px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Aligns text to the left */
+  text-align: left;
+  gap: 24px;
+  transform: translateX(-80px);
+}
+
+.home-hero-badge,
+.home-scanner-promo-badge {
+  display: inline-flex;
           align-items: center;
           gap: 8px;
-          padding: 8px 20px;
-          background: rgba(22,163,74,0.1);
-          border: 1px solid rgba(22,163,74,0.2);
+          padding: 6px 16px;
+          background: rgba(255, 255, 255, 0.1);
+          color: #ffffff;
           border-radius: 9999px;
-          color: var(--green);
-          font-size: 0.85rem;
-          font-weight: 600;
-          animation: fadeInDown 0.6s ease forwards;
+          font-size: 0.8rem;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+          transform: translateY(10px)
+}
+  .section-badge{
+  color: #ffffff !important;       
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  font-size: 0.90rem;
+  font-weight: 400;
+  // font-family: "Syne Mono", monospace;
+  }
+  [data-theme='light'] .home-hero-badge {
+          color: #000000 !important;    //sledgehammer
+        }
+  [data-theme='light'] .section-badge {
+          color: #000000 !important;    //sledgehammer
         }
 
-        .home-hero-title {
-          font-family: 'Syne', sans-serif;
-          font-weight: 800;
-          font-size: clamp(2.2rem, 6vw, 4rem);
-          line-height: 1.15;
-          letter-spacing: -0.03em;
-        }
 
-        .home-hero-word {
-          display: inline-block;
-          opacity: 0;
-          animation: fadeInUp 0.5s ease forwards;
-        }
+.home-hero-title {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 800;
+  font-size: clamp(2.2rem, 5vw, 4rem);
+  line-height: 1.15;
+  letter-spacing: 2px;
+  
+}
 
-        .home-hero-word:nth-child(1),
-        .home-hero-word:nth-child(3),
-        .home-hero-word:nth-child(5) {
-          background: linear-gradient(135deg, var(--green), var(--teal));
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-        }
+.home-hero-word {
+  display: inline-block;
+  opacity: 0;
+  animation: fadeInUp 0.5s ease forwards;
+}
 
-        .home-hero-sub {
-          font-size: clamp(1rem, 2vw, 1.15rem);
-          color: var(--muted);
-          max-width: 600px;
-          line-height: 1.7;
-          animation: fadeInUp 0.6s ease 1.2s forwards;
-          opacity: 0;
-        }
+.home-hero-word:nth-child(1),
+.home-hero-word:nth-child(3),
+.home-hero-word:nth-child(5) {
+  background: linear-gradient(135deg, var(--green), var(--teal));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
 
-        .home-hero-ctas {
-          display: flex;
-          gap: 16px;
-          flex-wrap: wrap;
-          justify-content: center;
-          animation: fadeInUp 0.6s ease 1.4s forwards;
-          opacity: 0;
-        }
+.home-hero-sub {
+  font-size: clamp(1rem, 2vw, 1.15rem);
+  color: var(--muted);
+  line-height: 1.7;
+  animation: fadeInUp 0.6s ease 1.2s forwards;
+  opacity: 0;
+}
 
-        .home-hero-btn {
-          min-width: 180px;
-        }
+.home-hero-ctas {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: flex-start; /* Aligns buttons to left */
+  animation: fadeInUp 0.6s ease 1.4s forwards;
+  opacity: 0;
+}
 
-        .home-hero-stats-mini {
-          display: flex;
-          align-items: center;
-          gap: 24px;
-          margin-top: 16px;
-          animation: fadeInUp 0.6s ease 1.6s forwards;
-          opacity: 0;
-        }
+.home-hero-btn {
+  min-width: 180px;
+  
+}
 
-        .home-hero-mini-stat {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 2px;
-        }
+.home-hero-stats-mini {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-top: 16px;
+  animation: fadeInUp 0.6s ease 1.6s forwards;
+  opacity: 0;
+  margin-left:10px;
 
-        .home-hero-mini-stat strong {
-          font-family: 'Syne', sans-serif;
-          font-size: 1.3rem;
-          font-weight: 800;
-          color: var(--green);
-        }
+}
 
-        .home-hero-mini-stat span {
-          font-size: 0.78rem;
-          color: var(--muted);
-        }
+.home-hero-mini-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+  gap: 2px;
+}
 
-        .home-hero-mini-divider {
-          width: 1px;
-          height: 32px;
-          background: var(--border);
-        }
+.home-hero-mini-stat strong {
+  font-family: var(--font-number);
+  font-size: 2rem;
+  font-weight: 500;
+    color : #ffffffdc;
 
-        .home-hero-scroll-arrow {
-          position: absolute;
-          bottom: 32px;
-          left: 50%;
-          transform: translateX(-50%);
-          color: var(--green);
-          animation: bounceSoft 1.5s ease-in-out infinite;
-          z-index: 2;
-          opacity: 0.7;
-        }
+}
 
+.home-hero-mini-stat span {
+  font-size: 0.80rem;
+    color : #ffffffdc;
+    font-weight :500;
+
+}
+    [data-theme='light'] .home-hero-mini-stat strong , .home-hero-mini-stat span{
+    color: #363636;
+    }
+
+.home-hero-mini-divider {
+  width: 1px;
+  height: 32px;
+  background: var(--border);
+}
+.btn.btn-primary.home-hero-btn {
+  background: linear-gradient(135deg, var(--green), var(--teal));
+  color: #ffffff;
+  border: none;
+}
+
+/* Secondary Button (Join Challenges) */
+.btn.btn-secondary.home-hero-btn {
+  background: transparent;
+  border: 2px solid  var(--green); 
+  color: #ffffff;            
+}
+
+
+.btn.btn-secondary.home-hero-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, var(--green), var(--teal));
+}
+
+[data-theme=light] .btn.btn-secondary.home-hero-btn{
+color: var(--green);
+}
+[data-theme=light] .btn.btn-secondary.home-hero-btn:hover{
+color: white;
+}
+  
+
+/* RIGHT SIDE: 3D Orb Visual */
+.landing-hero-visual { 
+  flex: 1.2; 
+  position: relative; 
+  height: 600px; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+transform: translateX(60px);
+      }
+
+.orb-container {
+  position: relative;
+  width: 320px; 
+  height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: breathe 4s ease-in-out infinite;
+  z-index: 5;
+}
+
+.tech-orb {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  background: 
+    radial-gradient(circle at 30% 30%, rgba(0, 210, 106, 0.8), transparent 60%),
+    radial-gradient(circle at 70% 70%, rgba(0, 30, 15, 0.8), transparent 40%),
+    radial-gradient(circle at 15% 55%, rgba(0, 255, 120, 0.25), transparent 25%),
+    radial-gradient(circle at 50% 50%, rgba(15, 35, 25, 0.9), rgba(8, 8, 10, 0.98) 85%);
+  box-shadow: 0 0 40px rgba(0, 210, 106, 0.4), 0 0 100px rgba(0, 210, 106, 0.2);
+  border: 1px solid rgba(0, 210, 106, 0.15);
+}
+
+.tech-orb::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  border-radius: 50%;
+  box-shadow: 
+    inset -25px -25px 60px rgba(0,0,0,0.95), 
+    inset 15px 15px 35px rgba(255,255,255,0.25), 
+    inset -50px 10px 45px rgba(0, 150, 70, 0.15), 
+    inset 20px -30px 40px rgba(0, 50, 20, 0.6);
+  pointer-events: none; 
+  z-index: 10;
+}
+
+.sphere-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  margin-top: -25px; 
+  transform: perspective(300px) rotateX(12deg) scale(1.05);
+}
+
+.orb-logo {
+  width: 240px; 
+  filter: invert(1) hue-rotate(180deg) brightness(1.2) contrast(1.15);
+}
+
+.btn-sphere-action {
+  background: rgba(0, 210, 106, 0.15);
+  border: 1px solid rgba(0, 210, 106, 0.4);
+  color: #fff; /* Changed to white for visibility */
+  padding: 10px 22px;
+  border-radius: 50px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+  text-decoration: none; /* since it is a Link now */
+}
+
+.btn-sphere-action:hover {
+  background: var(--green);
+  color: var(--bg);
+  transform: scale(1.05);
+}
+
+.orbital-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 2px dashed rgba(0, 210, 106, 0.4);
+  box-shadow: 0 0 20px rgba(0, 210, 106, 0.1);
+  pointer-events: none;
+}
+
+.ring-1 {
+  width: 400px;
+  height: 400px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: rgba(0, 180, 216, 0.3) transparent;
+  animation: spin 15s linear infinite;
+}
+
+.ring-2 {
+  width: 460px;
+  height: 460px;
+  border-color: rgba(255, 193, 7, 0.2) transparent;
+  animation: spin-reverse 20s linear infinite;
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+}
+@keyframes spin { 100% { transform: rotateX(60deg) rotateY(20deg) rotateZ(360deg); } }
+@keyframes spin-reverse { 100% { transform: rotateX(70deg) rotateY(-20deg) rotateZ(-360deg); } }
+
+/* Floating Cards Layout */
+.floating-card {
+  position: absolute;
+  background: var(--glass-bg);           /* 👈 Magic variable applied! */
+  color: var(--glass-text);              /* 👈 Magic variable applied! */
+  backdrop-filter: blur(15px);
+  border: 1px solid var(--border);       /* Uses your existing border variable */
+  border-radius: 16px;
+  padding: 14px 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15); /* Softened the shadow a bit */
+  animation: orbCardFloat 6s ease-in-out infinite;
+  z-index: 10;
+  white-space: nowrap;
+}
+.fc-1 { top: 5%; right: 5%; animation-delay: 0s; border-color: rgba(0, 210, 106, 0.5); }
+.fc-2 { bottom: 5%; left: 5%; animation-delay: 1.5s; border-color: rgba(0, 102, 255, 0.5); }
+.fc-3 { bottom: 8%; right: 8%; animation-delay: 3s; border-color: rgba(255, 193, 7, 0.5); }
+.fc-4 { top: 10%; left: 5%; animation-delay: 2s; border-color: rgba(236, 72, 153, 0.5); }
+.fc-5 { top: 45%; right: -5%; animation-delay: 4.5s; border-color: rgba(124, 58, 237, 0.5); }
+.fc-6 { top: 45%; left: -5%; animation-delay: 1s; border-color: rgba(0, 180, 216, 0.5); }
+
+.fc-icon { margin-bottom: 6px; display: block; }
+.floating-card strong { display: block; font-size: 15px; margin-bottom: 2px; }
+.floating-card span { font-size: 11px; color: var(--muted); }
+
+@keyframes orbCardFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); }
+}
+
+.home-hero-scroll-arrow {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--green);
+  animation: bounceSoft 1.5s ease-in-out infinite;
+  z-index: 2;
+  opacity: 0.7;
+}
+
+/* Make sure it stacks nicely on mobile screens */
+@media (max-width: 992px) {
+  .home-hero-inner {
+    flex-direction: column;
+    text-align: center;
+  }
+  .home-hero-content {
+    align-items: center;
+    text-align: center;
+  }
+  .home-hero-ctas {
+    justify-content: center;
+  }
+  .home-hero-mini-stat {
+    align-items: center;
+  }
+  .landing-hero-visual {
+    transform: scale(0.8);
+    margin-top: 40px;
+  }
+}
+  
         /* ===================== STATS ===================== */
         .home-stats-section {
           padding: 80px 0;
@@ -760,9 +1066,9 @@ function Home() {
         }
 
         .home-stat-value {
-          font-family: 'Syne', sans-serif;
-          font-weight: 800;
-          font-size: 2rem;
+          font-family: var(--font-number);
+          font-weight: 400;
+          font-size: 2.5rem;
           color: var(--text);
           line-height: 1;
         }
@@ -772,7 +1078,7 @@ function Home() {
           color: var(--muted);
           font-weight: 500;
         }
-
+          
         /* ===================== SCANNER PROMO ===================== */
         .home-scanner-promo-section {
           padding: 80px 0;
@@ -814,9 +1120,10 @@ function Home() {
           background: rgba(132,204,22,0.2);
           border: 1px solid rgba(132,204,22,0.3);
           border-radius: 9999px;
-          color: var(--lime);
-          font-size: 0.78rem;
-          font-weight: 700;
+          color: #ffffff;
+          font-size: 0.90rem;
+          font-weight: 400;
+          font-family: "Syne Mono", monospace;
           text-transform: uppercase;
           letter-spacing: 0.1em;
           margin-bottom: 16px;
@@ -1162,7 +1469,7 @@ function Home() {
 
         .home-challenge-progress-fill {
           height: 100%;
-          background: linear-gradient(90deg, var(--green), var(--lime));
+          background: linear-gradient(135deg, var(--green), var(--teal));
           border-radius: 9999px;
           transition: width 1s ease;
         }
@@ -1230,8 +1537,8 @@ function Home() {
           transform: translateX(-50%);
           width: 28px;
           height: 28px;
-          background: linear-gradient(135deg, var(--green), var(--accent));
-          color: #ffffff;
+          background: #ffffff;
+          color: #000000;
           border-radius: 50%;
           display: flex;
           align-items: center;
@@ -1240,6 +1547,9 @@ function Home() {
           font-weight: 800;
           font-family: 'Syne', sans-serif;
         }
+          [data-theme=light] .home-how-step-num {
+          background: #000000;
+          color: #ffffff;}
 
         .home-how-icon-wrap {
           width: 70px;
@@ -1350,7 +1660,18 @@ function Home() {
           text-align: center;
           margin-top: 40px;
         }
-
+        .btn.btn-secondary{
+        color : #ffffff;
+        }
+        .btn.btn-secondary:hover{
+        background: linear-gradient(135deg, var(--green), var(--teal));
+        }
+        [data-theme=light] .btn.btn-secondary{
+        color : var(--green);
+        }
+        [data-theme=light] .btn.btn-secondary:hover{
+        color : white;
+        }
         /* ===================== RESPONSIVE ===================== */
         @media (max-width: 1024px) {
           .home-stats-grid {

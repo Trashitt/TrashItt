@@ -102,7 +102,7 @@ function Leaderboard() {
             <Trophy size={14} />
             <span>Leaderboard</span>
           </div>
-          <h1>Top Eco Warriors of Ranchi</h1>
+          <h1>Top <span className="hero-highlight">Eco Warriors</span> of Ranchi</h1>
           <p>See who's leading the charge for a cleaner Ranchi. Scan, segregate, and climb the ranks!</p>
         </div>
 
@@ -323,26 +323,31 @@ function Leaderboard() {
         }
 
         .lb-hero-badge {
+          margin-bottom: 14px;
           display: inline-flex;
           align-items: center;
           gap: 8px;
-          padding: 6px 18px;
-          background: rgba(217,119,6,0.1);
-          color: var(--yellow);
+          padding: 6px 16px;
+          background: rgba(255, 255, 255, 0.1);
+          color: #ffffff;
           border-radius: 9999px;
-          font-size: 0.82rem;
+          font-size: 0.8rem;
           font-weight: 700;
           text-transform: uppercase;
           letter-spacing: 0.08em;
-          margin-bottom: 14px;
         }
+          [data-theme='light'] .lb-hero-badge {
+          color: #000000 ;
+          background: rgba(0, 0, 0, 0.1);
+        }
+        
 
         .lb-hero h1 {
           font-family: 'Syne', sans-serif;
           font-weight: 800;
           font-size: clamp(2rem, 5vw, 3rem);
           margin-bottom: 12px;
-          background: linear-gradient(135deg, var(--yellow), #f59e0b);
+          background: linear-gradient(135deg, var(--yellow), #e5ff00);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;

@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
+import myLogo from 'C:/Users/WELLCOM/Desktop/TrashItt frontend/TrashItt/src/logo.png';
+
 import {
-  Leaf,
   Home,
   BookOpen,
   ScanLine,
@@ -84,11 +85,9 @@ function Navbar({ theme, toggleTheme }) {
     <>
       <nav className={`navbar ${scrolled ? 'navbar-scrolled' : ''}`}>
         <div className="navbar-inner">
+          {/* DESKTOP LOGO */}
           <Link to="/" className="navbar-logo" aria-label="TrashItt Home">
-            <div className="navbar-logo-icon">
-              <Leaf size={22} />
-            </div>
-            <span className="navbar-logo-text">TrashItt</span>
+            <img src={myLogo} alt="TrashItt Logo" className="navbar-logo-img" />
           </Link>
 
           <div className="navbar-links-desktop">
@@ -149,11 +148,9 @@ function Navbar({ theme, toggleTheme }) {
         className={`mobile-menu ${mobileOpen ? 'mobile-menu-open' : ''}`}
       >
         <div className="mobile-menu-header">
+          {/* MOBILE MENU LOGO */}
           <Link to="/" className="navbar-logo" onClick={() => setMobileOpen(false)}>
-            <div className="navbar-logo-icon">
-              <Leaf size={20} />
-            </div>
-            <span className="navbar-logo-text">TrashItt</span>
+            <img src={myLogo} alt="TrashItt Logo" className="navbar-logo-img" />
           </Link>
           <button
             className="mobile-menu-close"
@@ -221,12 +218,12 @@ function Navbar({ theme, toggleTheme }) {
           top: 0;
           left: 0;
           right: 0;
-          height: var(--navbar-height);
+          height: 80px;
           z-index: 1000;
-          background: rgba(240, 253, 244, 0.75);
+          background: rgba(255, 255, 255, 0.75);
           backdrop-filter: blur(16px);
           -webkit-backdrop-filter: blur(16px);
-          border-bottom: 1px solid transparent;
+          border-bottom: 1px solid var(--border);
           transition: all 0.3s ease;
         }
 
@@ -235,7 +232,7 @@ function Navbar({ theme, toggleTheme }) {
         }
 
         .navbar-scrolled {
-          height: 62px;
+          height: 80px;
           background: rgba(240, 253, 244, 0.92);
           border-bottom: 1px solid var(--border);
           box-shadow: 0 2px 20px var(--shadow);
@@ -259,38 +256,28 @@ function Navbar({ theme, toggleTheme }) {
         .navbar-logo {
           display: flex;
           align-items: center;
-          gap: 10px;
           text-decoration: none;
           flex-shrink: 0;
           z-index: 10;
         }
 
-        .navbar-logo-icon {
-          width: 38px;
-          height: 38px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: linear-gradient(135deg, var(--green), var(--accent));
-          color: #ffffff;
-          border-radius: 10px;
+        /* NEW LOGO IMAGE STYLES */
+        .navbar-logo-img {
+          height: 70px; /* Adjust this number to make it bigger/smaller */
+          width: auto;
+          object-fit: contain;
           transition: transform 0.3s ease;
         }
 
-        .navbar-logo:hover .navbar-logo-icon {
-          transform: rotate(-12deg) scale(1.05);
+        .navbar-logo:hover .navbar-logo-img {
+          transform: scale(1.05); /* Slight pop effect on hover */
         }
 
-        .navbar-logo-text {
-          font-family: 'Syne', sans-serif;
-          font-weight: 800;
-          font-size: 1.35rem;
-          background: linear-gradient(135deg, var(--green), var(--teal));
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-          letter-spacing: -0.02em;
-        }
+        /* Invert logo color for dark mode if it is a black logo */
+        /* Invert black text to white, but keep the original green/yellow colors */
+[data-theme="dark"] .navbar-logo-img {
+  filter: invert(1) hue-rotate(180deg) brightness(1.2); 
+}
 
         .navbar-links-desktop {
           display: flex;
@@ -303,11 +290,14 @@ function Navbar({ theme, toggleTheme }) {
           padding: 8px 14px;
           font-size: 0.88rem;
           font-weight: 500;
-          color: var(--text2);
+          color: rgb(255,255,255);
           text-decoration: none;
           border-radius: 8px;
           transition: all 0.25s ease;
           white-space: nowrap;
+        }
+          [data-theme='light'] .navbar-link {
+          color: #000000; /* Makes it pure white ONLY in dark mode */
         }
 
         .navbar-link:hover {
@@ -325,10 +315,10 @@ function Navbar({ theme, toggleTheme }) {
           bottom: 2px;
           left: 50%;
           transform: translateX(-50%) scale(0);
-          width: 5px;
-          height: 5px;
+          width: 80%;
+          height: 2px;
           background: var(--green);
-          border-radius: 50%;
+          border-radius: 100%;
           transition: transform 0.25s ease;
         }
 
@@ -399,19 +389,19 @@ function Navbar({ theme, toggleTheme }) {
         }
 
         .navbar-btn-login {
-          color: var(--green);
+          background: linear-gradient(135deg, var(--green), var(--teal));
           background: transparent;
           border: 1.5px solid var(--green);
         }
 
         .navbar-btn-login:hover {
-          background: var(--green);
+          background: linear-gradient(135deg, var(--green), var(--teal));
           color: #ffffff;
         }
 
         .navbar-btn-signup {
           color: #ffffff;
-          background: linear-gradient(135deg, var(--green), var(--accent));
+          background: linear-gradient(135deg, var(--green), var(--teal));
           border: 1.5px solid transparent;
           box-shadow: 0 2px 10px rgba(22, 163, 74, 0.2);
         }
@@ -624,18 +614,8 @@ function Navbar({ theme, toggleTheme }) {
             padding: 0 16px;
           }
 
-          .navbar-logo-text {
-            font-size: 1.2rem;
-          }
-
-          .navbar-logo-icon {
-            width: 34px;
-            height: 34px;
-          }
-
-          .navbar-logo-icon svg {
-            width: 18px;
-            height: 18px;
+          .navbar-logo-img {
+            height: 36px; /* slightly smaller for mobile */
           }
 
           .mobile-menu {

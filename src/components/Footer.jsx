@@ -1,5 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import myLogo from 'C:/Users/WELLCOM/Desktop/TrashItt frontend/TrashItt/src/logo.png';
+
 import {
   Leaf,
   Mail,
@@ -44,12 +46,9 @@ function Footer() {
           <div className="footer-grid">
             {/* Column 1: About */}
             <div className="footer-col footer-col-about">
-              <Link to="/" className="footer-logo">
-                <div className="footer-logo-icon">
-                  <Leaf size={20} />
-                </div>
-                <span className="footer-logo-text">TrashItt</span>
-              </Link>
+               <Link to="/" className="footer-logo" aria-label="TrashItt Home">
+                          <img src={myLogo} alt="TrashItt Logo" className="footer-logo-img" />
+                        </Link>
               <p className="footer-about-text">
                 Making Ranchi Cleaner, One Step at a Time. TrashItt is a smart waste segregation 
                 and recycling platform built for the people of Ranchi, Jharkhand.
@@ -239,33 +238,29 @@ function Footer() {
         .footer-logo {
           display: flex;
           align-items: center;
-          gap: 10px;
           text-decoration: none;
+          flex-shrink: 0;
+          z-index: 10;
+          transform: translateX(-20px);
         }
 
-        .footer-logo-icon {
-          width: 36px;
-          height: 36px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: linear-gradient(135deg, var(--green), var(--accent));
-          color: #ffffff;
-          border-radius: 9px;
+        /* NEW LOGO IMAGE STYLES */
+        .footer-logo-img {
+          height: 100px; 
+          width: auto;
+          object-fit: contain;
           transition: transform 0.3s ease;
+          filter: invert(1) hue-rotate(180deg) brightness(1.2); 
+                 }
+
+        .footer-logo:hover .footer-logo-img {
+          transform: scale(1.05); 
         }
 
-        .footer-logo:hover .footer-logo-icon {
-          transform: rotate(-12deg) scale(1.05);
-        }
-
-        .footer-logo-text {
-          font-family: 'Syne', sans-serif;
-          font-weight: 800;
-          font-size: 1.3rem;
-          color: #ffffff;
-          letter-spacing: -0.02em;
-        }
+        
+[data-theme="dark"] .footer-logo-img {
+  filter: invert(1) hue-rotate(180deg) brightness(1.2); 
+}
 
         .footer-about-text {
           font-size: 0.9rem;
@@ -319,7 +314,7 @@ function Footer() {
           left: 0;
           width: 32px;
           height: 3px;
-          background: linear-gradient(90deg, var(--green), var(--lime));
+          background: linear-gradient(90deg, var(--green), var(--teal));
           border-radius: 2px;
         }
 

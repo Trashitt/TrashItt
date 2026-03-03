@@ -169,7 +169,7 @@ function FAQ() {
             <HelpCircle size={14} />
             <span>FAQ</span>
           </div>
-          <h1>Frequently Asked Questions</h1>
+          <h1>Frequently <span className="hero-highlight">Asked Questions</span></h1>
           <p>
             Everything you need to know about TrashItt — from waste segregation
             to earning points and joining challenges.
@@ -371,17 +371,21 @@ function FAQ() {
           display: inline-flex;
           align-items: center;
           gap: 8px;
-          padding: 6px 18px;
-          background: rgba(22,163,74,0.1);
-          color: var(--green);
+          padding: 6px 16px;
+          background: rgba(255, 255, 255, 0.1);
+          color: #ffffff;
           border-radius: 9999px;
-          font-size: 0.82rem;
+          font-size: 0.8rem;
           font-weight: 700;
           text-transform: uppercase;
           letter-spacing: 0.08em;
           margin-bottom: 14px;
         }
+          [data-theme='light'] .faq-hero-badge {
+          color: #000000 ;
+          background: rgba(0, 0, 0, 0.1);
 
+        }
         .faq-hero h1 {
           font-family: 'Syne', sans-serif;
           font-weight: 800;

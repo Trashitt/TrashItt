@@ -158,13 +158,7 @@ function Signup() {
       {/* Left Panel - Form */}
       <div className="signup-left">
         <div className="signup-form-container">
-          <Link to="/" className="signup-logo-mobile">
-            <div className="signup-logo-icon-m">
-              <Leaf size={20} />
-            </div>
-            <span className="signup-logo-text-m">TrashItt</span>
-          </Link>
-
+        
           <div className="signup-form-header">
             <h2>Create Account</h2>
             <p>Join 1,247+ citizens making Ranchi cleaner</p>
@@ -317,36 +311,36 @@ function Signup() {
             </div>
 
             {/* City + College Row */}
-            <div className="signup-row">
-              <div className="signup-field signup-field-half">
-                <label htmlFor="city">City</label>
-                <div className={`signup-input-wrap ${errors.city ? 'signup-input-error' : ''}`}>
-                  <MapPin size={18} className="signup-input-icon" />
-                  <input
-                    id="city"
-                    name="city"
-                    type="text"
-                    placeholder="Ranchi"
-                    value={formData.city}
-                    onChange={handleChange}
-                  />
-                </div>
-                {errors.city && <span className="signup-error">{errors.city}</span>}
+            {/* City */}
+            <div className="signup-field">
+              <label htmlFor="city">City</label>
+              <div className={`signup-input-wrap ${errors.city ? 'signup-input-error' : ''}`}>
+                <MapPin size={18} className="signup-input-icon" />
+                <input
+                  id="city"
+                  name="city"
+                  type="text"
+                  placeholder="Ranchi"
+                  value={formData.city}
+                  onChange={handleChange}
+                />
               </div>
+              {errors.city && <span className="signup-error">{errors.city}</span>}
+            </div>
 
-              <div className="signup-field signup-field-half">
-                <label htmlFor="college">College (Optional)</label>
-                <div className="signup-input-wrap">
-                  <GraduationCap size={18} className="signup-input-icon" />
-                  <input
-                    id="college"
-                    name="college"
-                    type="text"
-                    placeholder="BIT Mesra"
-                    value={formData.college}
-                    onChange={handleChange}
-                  />
-                </div>
+            {/* College */}
+            <div className="signup-field">
+              <label htmlFor="college">College (Optional)</label>
+              <div className="signup-input-wrap">
+                <GraduationCap size={18} className="signup-input-icon" />
+                <input
+                  id="college"
+                  name="college"
+                  type="text"
+                  placeholder="BIT Mesra"
+                  value={formData.college}
+                  onChange={handleChange}
+                />
               </div>
             </div>
 
@@ -440,13 +434,7 @@ function Signup() {
       <div className="signup-right">
         <div className="signup-right-overlay" />
         <div className="signup-right-content">
-          <Link to="/" className="signup-logo">
-            <div className="signup-logo-icon">
-              <Leaf size={24} />
-            </div>
-            <span className="signup-logo-text">TrashItt</span>
-          </Link>
-
+          
           <div className="signup-right-main">
             <h1 className="signup-right-title">
               Join the Green<br />
@@ -540,10 +528,13 @@ function Signup() {
           display: flex;
           align-items: flex-start;
           justify-content: center;
+          align-content:center;
           padding: 48px;
           background: var(--bg);
           overflow-y: auto;
           max-height: 100vh;
+          transform: translateY(50px);
+
         }
 
         .signup-form-container {
@@ -553,37 +544,9 @@ function Signup() {
           animation: fadeInUp 0.6s ease forwards;
         }
 
-        .signup-logo-mobile {
-          display: none;
-          align-items: center;
-          gap: 8px;
-          text-decoration: none;
-          margin-bottom: 24px;
-        }
-
-        .signup-logo-icon-m {
-          width: 34px;
-          height: 34px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: linear-gradient(135deg, var(--green), var(--accent));
-          color: #ffffff;
-          border-radius: 9px;
-        }
-
-        .signup-logo-text-m {
-          font-family: 'Syne', sans-serif;
-          font-weight: 800;
-          font-size: 1.2rem;
-          background: linear-gradient(135deg, var(--green), var(--teal));
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-        }
-
         .signup-form-header {
           margin-bottom: 28px;
+          text-align: center
         }
 
         .signup-form-header h2 {
@@ -888,7 +851,7 @@ function Signup() {
           justify-content: center;
           gap: 10px;
           padding: 14px 28px;
-          background: linear-gradient(135deg, var(--green), var(--accent));
+          background: linear-gradient(135deg, var(--green), var(--teal));
           color: #ffffff;
           font-size: 1rem;
           font-weight: 700;
@@ -967,6 +930,7 @@ function Signup() {
           justify-content: center;
           overflow: hidden;
           flex-shrink: 0;
+          transform: translateY(70px);
         }
 
         .signup-right-overlay {
@@ -989,37 +953,6 @@ function Signup() {
           max-width: 480px;
         }
 
-        .signup-logo {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          text-decoration: none;
-        }
-
-        .signup-logo-icon {
-          width: 42px;
-          height: 42px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: rgba(255,255,255,0.15);
-          border: 1px solid rgba(255,255,255,0.2);
-          border-radius: 12px;
-          color: #ffffff;
-          transition: transform 0.3s ease;
-        }
-
-        .signup-logo:hover .signup-logo-icon {
-          transform: rotate(-12deg);
-        }
-
-        .signup-logo-text {
-          font-family: 'Syne', sans-serif;
-          font-weight: 800;
-          font-size: 1.4rem;
-          color: #ffffff;
-        }
-
         .signup-right-main {
           display: flex;
           flex-direction: column;
@@ -1035,7 +968,7 @@ function Signup() {
         }
 
         .signup-right-title-green {
-          color: var(--lime);
+         color: linear-gradient(135deg, var(--green), var(--teal));
         }
 
         .signup-right-sub {
@@ -1123,6 +1056,7 @@ function Signup() {
           color: rgba(255,255,255,0.5);
           font-size: 0.85rem;
           font-style: italic;
+          transform: translateY(-100px);
         }
 
         .signup-particle {

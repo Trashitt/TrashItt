@@ -230,7 +230,7 @@ function WasteScanner() {
             <Sparkles size={14} />
             <span>AI-Powered</span>
           </div>
-          <h1>Waste Scanner</h1>
+          <h1>Waste <span className="hero-highlight">Scanner</span></h1>
           <p>
             Upload or capture a photo of any waste item and our AI will instantly
             identify it, tell you the correct bin, and give you disposal tips!
@@ -482,19 +482,24 @@ function WasteScanner() {
         }
 
         .scanner-hero-badge {
-          display: inline-flex;
+           display: inline-flex;
           align-items: center;
           gap: 8px;
-          padding: 6px 18px;
-          background: rgba(22,163,74,0.1);
-          color: var(--green);
+          padding: 6px 16px;
+          background: rgba(255, 255, 255, 0.1);
+          color: #ffffff;
           border-radius: 9999px;
-          font-size: 0.82rem;
+          font-size: 0.8rem;
           font-weight: 700;
           text-transform: uppercase;
           letter-spacing: 0.08em;
-          margin-bottom: 14px;
+          margin-bottom: 12px;
         }
+          [data-theme='light'] .scanner-hero-badge {
+          color: #000000 ;
+          background: rgba(0, 0, 0, 0.1);
+
+      }
 
         .scanner-hero h1 {
           font-family: 'Syne', sans-serif;
@@ -606,7 +611,7 @@ function WasteScanner() {
           align-items: center;
           gap: 12px;
           padding: 16px 36px;
-          background: linear-gradient(135deg, var(--green), var(--accent));
+          background: linear-gradient(135deg, var(--green), var(--teal));
           color: #ffffff;
           border: none;
           border-radius: 14px;
@@ -666,14 +671,18 @@ function WasteScanner() {
           display: flex;
           align-items: center;
           justify-content: center;
-          background: rgba(22,163,74,0.1);
-          color: var(--green);
+          background: rgba(255, 255, 255, 0.1);
+          color: #ffffff;
           border-radius: 50%;
           font-size: 0.8rem;
           font-weight: 800;
           font-family: 'Syne', sans-serif;
           flex-shrink: 0;
         }
+          [data-theme=light] .scanner-how-num{
+          color: #000000;
+          background: rgba(0, 0, 0, 0.1);
+          }
 
         /* ========== PROCESSING STATES ========== */
         .scanner-processing {

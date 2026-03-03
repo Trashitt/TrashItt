@@ -1,4 +1,5 @@
 import React from 'react';
+import Ticker from '../components/Ticker.jsx';
 import {
   Leaf,
   Heart,
@@ -122,7 +123,7 @@ function About() {
               <span>Our Story</span>
             </div>
             <h1>
-              We Are <span className="about-hero-green">TrashItt</span>
+              We Are <span className="hero-highlight">TrashItt</span>
             </h1>
             <p className="about-hero-sub">
               Born in Ranchi. Built for India.
@@ -175,7 +176,7 @@ function About() {
           </div>
         </div>
       </section>
-
+<Ticker />
       {/* Why Ranchi */}
       <section className="about-ranchi">
         <div className="container">
@@ -228,7 +229,7 @@ function About() {
           </div>
         </div>
       </section>
-
+<Ticker />
       {/* Timeline */}
       <section className="about-timeline">
         <div className="container">
@@ -264,8 +265,39 @@ function About() {
           </div>
         </div>
       </section>
+<Ticker />
 
-      {/* Team */}
+      {/* Hostel Story */}
+      <section className="about-story">
+        <div className="container">
+          <div className="about-story-card">
+            <div className="about-story-glow" />
+            <div className="about-story-content">
+              <Coffee size={32} className="about-story-icon" />
+              <h3>The Hostel Room Story</h3>
+              <p>
+                It all started in a cramped hostel room at 2 AM. Four friends,
+                exhausted from assignments, were sipping chai and complaining
+                about the overflowing dustbins outside their window. "Why can't
+                someone just make an app that tells people where to throw their
+                waste?" one of us joked. But the joke stuck. We couldn't sleep
+                that night — not because of the chai, but because we realized
+                WE could be that "someone." We opened our laptops, started
+                sketching wireframes on the back of old assignment papers, and
+                by sunrise, TrashItt had a name, a logo, and a mission. What
+                started as a midnight rant became a platform that now serves
+                over 1,200 citizens of Ranchi. Turns out, the best ideas really
+                do come at 2 AM — with the right amount of chai and frustration.
+              </p>
+              <div className="about-story-signature">
+                — Team TrashItt, Hostel Room 304 ☕🌿
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+<Ticker/>
+ {/* Team */}
       <section className="about-team">
         <div className="container">
           <div className="about-section-header">
@@ -312,75 +344,9 @@ function About() {
           </div>
         </div>
       </section>
+<Ticker />
 
-      {/* Hostel Story */}
-      <section className="about-story">
-        <div className="container">
-          <div className="about-story-card">
-            <div className="about-story-glow" />
-            <div className="about-story-content">
-              <Coffee size={32} className="about-story-icon" />
-              <h3>The Hostel Room Story</h3>
-              <p>
-                It all started in a cramped hostel room at 2 AM. Four friends,
-                exhausted from assignments, were sipping chai and complaining
-                about the overflowing dustbins outside their window. "Why can't
-                someone just make an app that tells people where to throw their
-                waste?" one of us joked. But the joke stuck. We couldn't sleep
-                that night — not because of the chai, but because we realized
-                WE could be that "someone." We opened our laptops, started
-                sketching wireframes on the back of old assignment papers, and
-                by sunrise, TrashItt had a name, a logo, and a mission. What
-                started as a midnight rant became a platform that now serves
-                over 1,200 citizens of Ranchi. Turns out, the best ideas really
-                do come at 2 AM — with the right amount of chai and frustration.
-              </p>
-              <div className="about-story-signature">
-                — Team TrashItt, Hostel Room 304 ☕🌿
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Instagram Section */}
-      <section className="about-instagram">
-        <div className="container">
-          <div className="about-insta-card">
-            <div className="about-insta-content">
-              <Instagram size={36} className="about-insta-icon" />
-              <h3>Follow Us on Instagram</h3>
-              <p>
-                Stay updated with the latest challenges, community stories,
-                cleanup drives, and green tips from TrashItt!
-              </p>
-              <a
-                href="https://instagram.com/trashitt_official"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="about-insta-btn"
-              >
-                <Instagram size={18} />
-                <span>@trashitt_official</span>
-                <ArrowRight size={16} />
-              </a>
-            </div>
-            <div className="about-insta-grid">
-              {[1, 2, 3, 4, 5, 6].map((n) => (
-                <div className="about-insta-thumb" key={n}>
-                  <img
-                    src={`https://picsum.photos/seed/insta${n}/200/200`}
-                    alt={`Instagram post ${n}`}
-                    loading="lazy"
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Vision */}
+{/* Vision */}
       <section className="about-vision">
         <div className="container">
           <div className="about-vision-card">
@@ -428,6 +394,45 @@ function About() {
           </div>
         </div>
       </section>
+<Ticker />
+      {/* Instagram Section */}
+      <section className="about-instagram">
+        <div className="container">
+          <div className="about-insta-card">
+            <div className="about-insta-content">
+              <Instagram size={36} className="about-insta-icon" />
+              <h3>Follow Us on Instagram</h3>
+              <p>
+                Stay updated with the latest challenges, community stories,
+                cleanup drives, and green tips from TrashItt!
+              </p>
+              <a
+                href="https://instagram.com/trashitt_official"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="about-insta-btn"
+              >
+                <Instagram size={18} />
+                <span>@trashitt_official</span>
+                <ArrowRight size={16} />
+              </a>
+            </div>
+            <div className="about-insta-grid">
+              {[1, 2, 3, 4, 5, 6].map((n) => (
+                <div className="about-insta-thumb" key={n}>
+                  <img
+                    src={`https://picsum.photos/seed/insta${n}/200/200`}
+                    alt={`Instagram post ${n}`}
+                    loading="lazy"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      
 
       <style>{`
         .about-page {
@@ -439,7 +444,8 @@ function About() {
         .about-hero {
           position: relative;
           padding: 80px 0 64px;
-          background: linear-gradient(135deg, #064e2b, #0a6e3a, #0d9488);
+          background: radial-gradient(ellipse at 30% 50%, rgba(251,146,60,0.15) 0%, transparent 60%),
+                      radial-gradient(ellipse at 70% 20%, rgba(220,38,38,0.1) 0%, transparent 50%);
           overflow: hidden;
           text-align: center;
         }
@@ -447,9 +453,8 @@ function About() {
         .about-hero-bg {
           position: absolute;
           inset: 0;
-          background:
-            radial-gradient(ellipse at 20% 40%, rgba(132,204,22,0.12) 0%, transparent 60%),
-            radial-gradient(ellipse at 80% 60%, rgba(255,255,255,0.05) 0%, transparent 50%);
+          
+            
         }
 
         .about-hero-content {
@@ -466,7 +471,7 @@ function About() {
           gap: 8px;
           padding: 6px 18px;
           background: rgba(255,255,255,0.12);
-          border: 1px solid rgba(255,255,255,0.2);
+          // border: 1px solid rgba(255,255,255,0.2);
           border-radius: 9999px;
           color: #ffffff;
           font-size: 0.82rem;
@@ -475,6 +480,10 @@ function About() {
           letter-spacing: 0.08em;
           margin-bottom: 20px;
         }
+          [data-theme=light] .about-hero-badge{
+          color: #000000;
+          background: rgba(0, 0, 0, 0.12);
+          }
 
         .about-hero h1 {
           font-family: 'Syne', sans-serif;
@@ -483,7 +492,9 @@ function About() {
           color: #ffffff;
           margin-bottom: 12px;
         }
-
+         [data-theme=light] .about-hero-sub, .about-hero-desc{
+          color: #000000;
+          }
         .about-hero-green {
           color: var(--lime);
         }
@@ -503,6 +514,9 @@ function About() {
           max-width: 600px;
           margin: 0 auto;
         }
+          [data-theme=light] .about-hero-desc{
+          color: #000000;
+          }
 
         /* ========== MISSION ========== */
         .about-mission {
@@ -578,14 +592,19 @@ function About() {
           align-items: center;
           gap: 8px;
           padding: 6px 16px;
-          background: rgba(22,163,74,0.1);
-          color: var(--green);
+          background: rgba(255, 255, 255, 0.1);
+          color: #ffffff;
           border-radius: 9999px;
           font-size: 0.8rem;
           font-weight: 700;
           text-transform: uppercase;
           letter-spacing: 0.08em;
           margin-bottom: 12px;
+        }
+          [data-theme='light'] .about-section-badge {
+          color: #000000 ;
+          background: rgba(0, 0, 0, 0.1);
+
         }
 
         .about-section-header h2 {
@@ -837,13 +856,12 @@ function About() {
         }
 
         .about-story-card {
-          background: linear-gradient(135deg, #1a0f05, #2d1a0a, #3d2510);
-          border-radius: 24px;
+         background: linear-gradient(135deg, var(--green), var(--teal));
+         border-radius: 24px;
           padding: 56px;
           position: relative;
           overflow: hidden;
         }
-
         .about-story-glow {
           position: absolute;
           top: -60px;

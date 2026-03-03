@@ -177,7 +177,7 @@ function WasteGuide() {
             <BookOpen size={14} />
             <span>Waste Guide</span>
           </div>
-          <h1>Know Your Waste</h1>
+          <h1>Know <span className="hero-highlight">Your Waste</span></h1>
           <p>
             Learn to identify, segregate, and dispose of every type of waste correctly.
             A cleaner Ranchi starts with you!
@@ -333,17 +333,21 @@ function WasteGuide() {
           display: inline-flex;
           align-items: center;
           gap: 8px;
-          padding: 6px 18px;
-          background: rgba(22,163,74,0.1);
-          color: var(--green);
+          padding: 6px 16px;
+          background: rgba(255, 255, 255, 0.1);
+          color: #ffffff;
           border-radius: 9999px;
-          font-size: 0.82rem;
+          font-size: 0.8rem;
           font-weight: 700;
           text-transform: uppercase;
           letter-spacing: 0.08em;
-          margin-bottom: 14px;
+          margin-bottom: 12px;
         }
+          [data-theme='light'] .wg-hero-badge {
+          color: #000000 ;
+          background: rgba(0, 0, 0, 0.1);
 
+        }
         .wg-hero h1 {
           font-family: 'Syne', sans-serif;
           font-weight: 800;

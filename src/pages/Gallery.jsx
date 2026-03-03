@@ -247,7 +247,7 @@ function Gallery() {
             <Camera size={14} />
             <span>Community Gallery</span>
           </div>
-          <h1>Before & After</h1>
+          <h1>Before<span className="hero-highlight"> & After</span></h1>
           <p>
             Witness the incredible transformations made by our TrashItt community.
             Every cleanup tells a story of change!
@@ -419,18 +419,22 @@ function Gallery() {
         }
 
         .gal-hero-badge {
+          margin-bottom: 14px;
           display: inline-flex;
           align-items: center;
           gap: 8px;
-          padding: 6px 18px;
-          background: rgba(22,163,74,0.1);
-          color: var(--green);
+          padding: 6px 16px;
+          background: rgba(255, 255, 255, 0.1);
+          color: #ffffff;
           border-radius: 9999px;
-          font-size: 0.82rem;
+          font-size: 0.8rem;
           font-weight: 700;
           text-transform: uppercase;
           letter-spacing: 0.08em;
-          margin-bottom: 14px;
+          margin-bottom:14px
+        }
+          [data-theme='light'] .gal-hero-badge {
+          color: #000000 ;
         }
 
         .gal-hero h1 {
@@ -438,11 +442,12 @@ function Gallery() {
           font-weight: 800;
           font-size: clamp(2rem, 5vw, 3rem);
           margin-bottom: 12px;
-          background: linear-gradient(135deg, var(--green), var(--teal));
+          background: #ffffff;
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
         }
+          
 
         .gal-hero p {
           color: var(--muted);
