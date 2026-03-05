@@ -289,7 +289,7 @@ function FAQ() {
               <div className="faq-cta-actions">
                 <a href="mailto:hello@trashitt.in" className="faq-cta-btn faq-cta-btn-primary">
                   <Mail size={18} />
-                  <span>hello@trashitt.in</span>
+                  <span>trashitt.eco@gmail.com</span>
                 </a>
                 <a
                   href="https://instagram.com/trashitt_official"

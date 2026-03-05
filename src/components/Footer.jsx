@@ -133,7 +133,7 @@ function Footer() {
                 </li>
                 <li className="footer-contact-item">
                   <Mail size={16} />
-                  <a href="mailto:hello@trashitt.in">hello@trashitt.in</a>
+                  <a href="mailto:hello@trashitt.in">trashitt.eco@gmail.com</a>
                 </li>
                 <li className="footer-contact-item">
                   <Phone size={16} />

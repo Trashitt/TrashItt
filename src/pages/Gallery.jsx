@@ -435,6 +435,7 @@ function Gallery() {
         }
           [data-theme='light'] .gal-hero-badge {
           color: #000000 ;
+          background: rgba(0, 0, 0, 0.1);
         }
 
         .gal-hero h1 {

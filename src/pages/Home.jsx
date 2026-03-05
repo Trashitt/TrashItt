@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import myLogo from 'C:/Users/WELLCOM/Desktop/TrashItt frontend/TrashItt/src/logo.png';
+import myLogo from '../logo.png';
 import {
   Leaf,
   Recycle,
@@ -712,10 +712,12 @@ function Home() {
   // font-family: "Syne Mono", monospace;
   }
   [data-theme='light'] .home-hero-badge {
-          color: #000000 !important;    //sledgehammer
+          color: #000000 !important;
+          background: rgba(0, 0, 0, 0.1)  !important ;    //sledgehammer
         }
   [data-theme='light'] .section-badge {
-          color: #000000 !important;    //sledgehammer
+          color: #000000 !important; 
+             background: rgba(0, 0, 0, 0.1)  !important ;//sledgehammer
         }
 
 

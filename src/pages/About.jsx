@@ -7,6 +7,7 @@ import {
   Target,
   MapPin,
   Instagram,
+  Twitter,
   ArrowRight,
   Sparkles,
   Globe,
@@ -396,8 +397,11 @@ function About() {
       </section>
 <Ticker />
       {/* Instagram Section */}
-      <section className="about-instagram">
-        <div className="container">
+      {/* Social Media Section */}
+      <section className="about-socials">
+        <div className="container" style={{ display: 'flex', flexDirection: 'column', gap: '40px' }}>
+          
+          {/* Instagram Card */}
           <div className="about-insta-card">
             <div className="about-insta-content">
               <Instagram size={36} className="about-insta-icon" />
@@ -429,9 +433,42 @@ function About() {
               ))}
             </div>
           </div>
+
+          {/* Twitter Card (Horizontally Inverted) */}
+          <div className="about-twitter-card">
+            {/* Grid comes first in JSX for the left-side placement */}
+            <div className="about-twitter-grid">
+              {[1, 2, 3, 4, 5, 6].map((n) => (
+                <div className="about-twitter-thumb" key={n}>
+                  <img
+                    src={`https://picsum.photos/seed/twitter${n}/200/200`}
+                    alt={`Twitter post ${n}`}
+                    loading="lazy"
+                  />
+                </div>
+              ))}
+            </div>
+            <div className="about-twitter-content">
+              <Twitter size={36} className="about-twitter-icon" />
+              <h3>Join Us on Twitter</h3>
+              <p>
+                Join the conversation, retweet our impact, and share your own eco-journey with the TrashItt community!
+              </p>
+              <a
+                href="https://twitter.com/trashitt_official"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="about-twitter-btn"
+              >
+                <Twitter size={18} />
+                <span>@trashitt_official</span>
+                <ArrowRight size={16} />
+              </a>
+            </div>
+          </div>
+
         </div>
       </section>
-
       
 
       <style>{`
@@ -907,13 +944,15 @@ function About() {
           font-weight: 600;
         }
 
-        /* ========== INSTAGRAM ========== */
-        .about-instagram {
+        /* ========== SOCIALS (Instagram & Twitter) ========== */
+        .about-socials {
           padding: 80px 0;
           background: var(--bg2);
         }
 
-        .about-insta-card {
+        /* --- Shared Card Layout --- */
+        .about-insta-card,
+        .about-twitter-card {
           display: flex;
           align-items: center;
           gap: 48px;
@@ -923,34 +962,44 @@ function About() {
           padding: 40px;
         }
 
-        .about-insta-content {
+        /* --- Content Areas --- */
+        .about-insta-content,
+        .about-twitter-content {
           flex: 1;
           display: flex;
           flex-direction: column;
           gap: 14px;
         }
 
-        .about-insta-icon {
-          color: #e1306c;
-        }
-
-        .about-insta-content h3 {
+        .about-insta-content h3,
+        .about-twitter-content h3 {
           font-family: 'Syne', sans-serif;
           font-size: 1.4rem;
         }
 
-        .about-insta-content p {
+        .about-insta-content p,
+        .about-twitter-content p {
           font-size: 0.95rem;
           color: var(--muted);
           line-height: 1.7;
         }
 
-        .about-insta-btn {
+        /* --- Icons --- */
+        .about-insta-icon {
+          color: #e1306c;
+        }
+
+        .about-twitter-icon {
+          color: #1da1f2;
+        }
+
+        /* --- Buttons --- */
+        .about-insta-btn,
+        .about-twitter-btn {
           display: inline-flex;
           align-items: center;
           gap: 10px;
           padding: 12px 28px;
-          background: linear-gradient(135deg, #e1306c, #c13584, #833ab4);
           color: #ffffff;
           border-radius: 12px;
           font-size: 0.95rem;
@@ -958,6 +1007,10 @@ function About() {
           text-decoration: none;
           transition: all 0.3s ease;
           width: fit-content;
+        }
+
+        .about-insta-btn {
+          background: linear-gradient(135deg, #e1306c, #c13584, #833ab4);
           box-shadow: 0 4px 16px rgba(225,48,108,0.3);
         }
 
@@ -966,7 +1019,19 @@ function About() {
           box-shadow: 0 6px 24px rgba(225,48,108,0.4);
         }
 
-        .about-insta-grid {
+        .about-twitter-btn {
+          background: linear-gradient(135deg, #1da1f2, #0d8bdb);
+          box-shadow: 0 4px 16px rgba(29,161,242,0.3);
+        }
+
+        .about-twitter-btn:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 6px 24px rgba(29,161,242,0.4);
+        }
+
+        /* --- Photo Grids --- */
+        .about-insta-grid,
+        .about-twitter-grid {
           display: grid;
           grid-template-columns: repeat(3, 1fr);
           gap: 8px;
@@ -974,20 +1039,23 @@ function About() {
           width: 280px;
         }
 
-        .about-insta-thumb {
+        .about-insta-thumb,
+        .about-twitter-thumb {
           aspect-ratio: 1;
           border-radius: 10px;
           overflow: hidden;
         }
 
-        .about-insta-thumb img {
+        .about-insta-thumb img,
+        .about-twitter-thumb img {
           width: 100%;
           height: 100%;
           object-fit: cover;
           transition: transform 0.3s ease;
         }
 
-        .about-insta-thumb:hover img {
+        .about-insta-thumb:hover img,
+        .about-twitter-thumb:hover img {
           transform: scale(1.1);
         }
 
@@ -1093,14 +1161,25 @@ function About() {
             grid-template-columns: repeat(2, 1fr);
           }
 
-          .about-insta-card {
+          @media (max-width: 1024px) {
+          /* ... existing grid code ... */
+
+          .about-insta-card,
+          .about-twitter-card {
             flex-direction: column;
           }
 
-          .about-insta-grid {
+          /* Ensure content stays on top of images on mobile for both cards */
+          .about-twitter-content {
+            order: -1; 
+          }
+
+          .about-insta-grid,
+          .about-twitter-grid {
             width: 100%;
             max-width: 320px;
           }
+        }
         }
 
         @media (max-width: 768px) {

@@ -924,7 +924,7 @@ function Signup() {
         .signup-right {
           width: 50%;
           position: relative;
-          background: linear-gradient(135deg, #064e2b 0%, #0a6e3a 40%, #0d7c42 70%, #0d9488 100%);
+          background: linear-gradient(135deg, #064e2b 0%, #0d2818 40%, #0d2818 70%, #0d2818 100%);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -968,8 +968,12 @@ function Signup() {
         }
 
         .signup-right-title-green {
-         color: linear-gradient(135deg, var(--green), var(--teal));
-        }
+          background: linear-gradient(135deg, var(--green), var(--teal));
+          -webkit-background-clip: text;
+          background-clip: text;
+          -webkit-text-fill-color: transparent;
+           color: transparent;
+         }
 
         .signup-right-sub {
           font-size: 1.05rem;

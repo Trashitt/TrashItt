@@ -112,7 +112,7 @@ function Login() {
           <div className="login-left-main">
             <h1 className="login-left-title">
               Welcome Back,<br />
-              <span className="login-left-title-green">Eco Warrior!</span>
+              <span className="eco-warrior-text">Eco Warrior!</span>
             </h1>
             <p className="login-left-sub">
               Continue your journey towards making Ranchi cleaner.
@@ -312,7 +312,7 @@ function Login() {
         .login-left {
           width: 50%;
           position: relative;
-          background: linear-gradient(135deg, #064e2b 0%, #0a6e3a 40%, #0d7c42 70%, #0d9488 100%);
+          background: linear-gradient(135deg, #064e2b 0%, #0d2818 40%, #0d2818 70%, #0d2818 100%);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -357,10 +357,14 @@ function Login() {
           animation: fadeInUp 0.6s ease forwards;
         }
 
-        .login-left-title-green {
-          color: linear-gradient(135deg, var(--green), var(--teal)) !important ;
-
-        }
+        .eco-warrior-text {
+          background: linear-gradient(135deg, var(--green), var(--teal));
+          -webkit-background-clip: text;
+          background-clip: text;
+          -webkit-text-fill-color: transparent;
+           color: transparent;
+         }
+        
 
         .login-left-sub {
           font-size: 1.05rem;
@@ -622,7 +626,7 @@ function Login() {
           justify-content: center;
           gap: 10px;
           padding: 14px 28px;
-          background: linear-gradient(135deg, var(--green), var(--accent));
+          background: linear-gradient(135deg, var(--green), var(--teal));
           color: #ffffff;
           font-size: 1rem;
           font-weight: 700;
