@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import myLogo from '../logo.png';
+import myLogo from '../assets/logo.png';
 import {
   Leaf,
   Recycle,
