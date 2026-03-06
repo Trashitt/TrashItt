@@ -1,12 +1,12 @@
 import React from 'react';
 
 const tickerItems = [
-  '🔥 #ZeroWasteStreet • 234 joined today',
-  '♻️ #CollegeCleanWars • BIT Mesra leading!',
-  '🌊 #RiverRevival • 45 reports this week',
+  '🔥 #ZeroWasteStreet • 53 joined today',
+  '♻️ #CollegeCleanWars • YSM Dhurwa leading!',
+  '🌊 #RiverRevival • 17 reports this week',
   '⚡ #MyBinMyPride • New challenge live!',
-  '🌍 #30DayGreenStreak • 89 active streaks',
-  '🏆 #TrashIttRanchi • 1247 citizens joined',
+  '🌍 #30DayGreenStreak • 43 active streaks',
+  '🏆 #TrashIttRanchi • 124 citizens joined',
 ];
 
 function Ticker() {

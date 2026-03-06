@@ -24,8 +24,8 @@ import toast from 'react-hot-toast';
 const upcomingDrives = [
   {
     id: 1,
-    title: 'Jumar River Cleanup',
-    date: 'March 15, 2026',
+    title: 'Harmu River Cleanup',
+    date: 'February 27, 2026',
     time: '7:00 AM – 12:00 PM',
     location: 'Jumar River Bank, Ranchi',
     organizer: 'GreenRanchi NGO',
@@ -43,7 +43,7 @@ const upcomingDrives = [
   {
     id: 2,
     title: 'Hindpiri Market Cleanup',
-    date: 'March 20, 2026',
+    date: 'March 2, 2026',
     time: '6:00 AM – 11:00 AM',
     location: 'Hindpiri Market, Ranchi',
     organizer: 'SwachhJharkhand Foundation',
@@ -60,10 +60,10 @@ const upcomingDrives = [
   },
   {
     id: 3,
-    title: 'BIT Mesra Green Day',
+    title: 'YSM Green Day',
     date: 'March 22, 2026',
     time: '8:00 AM – 1:00 PM',
-    location: 'BIT Mesra Campus, Ranchi',
+    location: 'YSM Campus, Ranchi',
     organizer: 'BIT Eco Club',
     organizerLogo: '🎓',
     description: 'A campus-wide green initiative! Plant trees, set up compost stations, conduct waste audits, and make BIT Mesra the greenest campus in Jharkhand.',
@@ -79,7 +79,7 @@ const upcomingDrives = [
   {
     id: 4,
     title: 'Ranchi Lake Revival',
-    date: 'March 28, 2026',
+    date: 'February 28, 2026',
     time: '6:30 AM – 11:30 AM',
     location: 'Ranchi Lake, Ranchi',
     organizer: 'Lake Warriors',
@@ -497,9 +497,9 @@ function NgoDrives() {
         }
 
         .ngo-hero-stat strong {
-          font-family: var(--font-number);
-          font-weight: 500;
-          font-size: 2rem;
+          font-family: var(--text);
+          font-weight: 1000;
+          font-size: 2.2rem;
           color: #ffffff;
         }
           [data-theme=light] .ngo-hero-stat strong{

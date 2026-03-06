@@ -231,7 +231,7 @@ img {
 [data-theme='dark'] {
   --bg: #08080A;
   --bg2: #0d2818;
-  --card: #0f2d18;
+  --card: #000000;
   --text: #e8fdf0;
   --text2: #a3d9b0;
   --muted: #5a8a66;
@@ -1965,7 +1965,8 @@ input:focus:not(:focus-visible) {
 .gal-hero h1,
 .ngo-hero h1,
 .about-hero-content h1,
-.faq-hero h1{
+.faq-hero h1,
+.ch-hero h1{
   font-family: var(--font-heading) !important;
   font-size: clamp(2.2rem, 6vw, 4rem) !important;
   letter-spacing: 2px !important;

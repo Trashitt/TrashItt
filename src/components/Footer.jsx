@@ -81,7 +81,7 @@ function Footer() {
                   <Linkedin size={18} />
                 </a>
                 <a
-                  href="https://github.com"
+                  href="https://github.com/Trashitt"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="footer-social-link"

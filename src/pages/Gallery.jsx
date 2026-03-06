@@ -20,10 +20,10 @@ const galleryItems = [
     id: 1,
     before: 'https://picsum.photos/seed/gbefore1/600/450',
     after: 'https://picsum.photos/seed/gafter1/600/450',
-    location: 'Hindpiri Market, Ranchi',
-    user: 'Priya Sharma',
-    avatar: 'PS',
-    date: 'March 12, 2026',
+    location: 'Main Road, Ranchi',
+    user: 'Ruchi Sharma',
+    avatar: 'RS',
+    date: 'March 2, 2026',
     likes: 234,
     hashtag: '#ZeroWasteStreet',
     challenge: 'ZeroWasteStreet',
@@ -59,7 +59,7 @@ const galleryItems = [
     id: 4,
     before: 'https://picsum.photos/seed/gbefore4/600/450',
     after: 'https://picsum.photos/seed/gafter4/600/450',
-    location: 'Kanke Road, Ranchi',
+    location: 'Jagannathpur Mandir, Ranchi',
     user: 'Vikash Oraon',
     avatar: 'VO',
     date: 'March 6, 2026',
@@ -85,7 +85,7 @@ const galleryItems = [
     id: 6,
     before: 'https://picsum.photos/seed/gbefore6/600/450',
     after: 'https://picsum.photos/seed/gafter6/600/450',
-    location: 'Jumar River Bank',
+    location: 'Dhurwa Dam',
     user: 'Ravi Mahto',
     avatar: 'RM',
     date: 'March 3, 2026',
@@ -238,108 +238,112 @@ function Gallery() {
     return isLiked ? item.likes + 1 : item.likes;
   };
 
+  // FIX: Notice the empty <> tags wrapping the whole return statement below.
+  // This allows the lightbox to sit completely outside of the animated page-wrapper!
   return (
-    <div className="gallery-page page-wrapper">
-      <div className="container">
-        {/* Hero */}
-        <div className="gal-hero">
-          <div className="gal-hero-badge">
-            <Camera size={14} />
-            <span>Community Gallery</span>
+    <>
+      <div className="gallery-page page-wrapper">
+        <div className="container">
+          {/* Hero */}
+          <div className="gal-hero">
+            <div className="gal-hero-badge">
+              <Camera size={14} />
+              <span>Community Gallery</span>
+            </div>
+            <h1>Before<span className="hero-highlight"> & After</span></h1>
+            <p>
+              Witness the incredible transformations made by our TrashItt community.
+              Every cleanup tells a story of change!
+            </p>
           </div>
-          <h1>Before<span className="hero-highlight"> & After</span></h1>
-          <p>
-            Witness the incredible transformations made by our TrashItt community.
-            Every cleanup tells a story of change!
-          </p>
-        </div>
 
-        {/* Filters */}
-        <div className="gal-filters">
-          <div className="gal-filters-label">
-            <Filter size={16} />
-            <span>Filter:</span>
+          {/* Filters */}
+          <div className="gal-filters">
+            <div className="gal-filters-label">
+              <Filter size={16} />
+              <span>Filter:</span>
+            </div>
+            <div className="gal-filters-scroll">
+              {filterOptions.map((filter) => (
+                <button
+                  key={filter.id}
+                  className={`gal-filter-btn ${activeFilter === filter.id ? 'gal-filter-active' : ''}`}
+                  onClick={() => setActiveFilter(filter.id)}
+                >
+                  {filter.label}
+                </button>
+              ))}
+            </div>
           </div>
-          <div className="gal-filters-scroll">
-            {filterOptions.map((filter) => (
-              <button
-                key={filter.id}
-                className={`gal-filter-btn ${activeFilter === filter.id ? 'gal-filter-active' : ''}`}
-                onClick={() => setActiveFilter(filter.id)}
-              >
-                {filter.label}
-              </button>
-            ))}
-          </div>
-        </div>
 
-        {/* Gallery Grid */}
-        <div className="gal-grid">
-          {sortedItems.map((item, i) => {
-            const isLiked = likedItems.includes(item.id);
-            return (
-              <div
-                className="gal-card"
-                key={item.id}
-                style={{ animationDelay: `${i * 0.06}s` }}
-                onClick={() => openLightbox(item)}
-              >
-                <div className="gal-card-images">
-                  <div className="gal-card-img-wrap">
-                    <img src={item.before} alt={`Before - ${item.location}`} loading="lazy" />
-                    <span className="gal-label gal-label-before">Before</span>
-                  </div>
-                  <div className="gal-card-img-wrap">
-                    <img src={item.after} alt={`After - ${item.location}`} loading="lazy" />
-                    <span className="gal-label gal-label-after">After</span>
-                  </div>
-                  <div className="gal-card-overlay">
-                    <Eye size={22} />
-                    <span>View</span>
-                  </div>
-                </div>
-
-                <div className="gal-card-content">
-                  <div className="gal-card-top-row">
-                    <div className="gal-card-user">
-                      <div className="gal-card-avatar">{item.avatar}</div>
-                      <div className="gal-card-user-info">
-                        <span className="gal-card-username">{item.user}</span>
-                        <span className="gal-card-date">{item.date}</span>
-                      </div>
+          {/* Gallery Grid */}
+          <div className="gal-grid">
+            {sortedItems.map((item, i) => {
+              const isLiked = likedItems.includes(item.id);
+              return (
+                <div
+                  className="gal-card"
+                  key={item.id}
+                  style={{ animationDelay: `${i * 0.06}s` }}
+                  onClick={() => openLightbox(item)}
+                >
+                  <div className="gal-card-images">
+                    <div className="gal-card-img-wrap">
+                      <img src={item.before} alt={`Before - ${item.location}`} loading="lazy" />
+                      <span className="gal-label gal-label-before">Before</span>
                     </div>
-                    <button
-                      className={`gal-like-btn ${isLiked ? 'gal-like-active' : ''}`}
-                      onClick={(e) => toggleLike(item.id, e)}
-                      aria-label={isLiked ? 'Unlike' : 'Like'}
-                    >
-                      <Heart size={18} fill={isLiked ? '#dc2626' : 'none'} />
-                      <span>{getLikeCount(item)}</span>
-                    </button>
+                    <div className="gal-card-img-wrap">
+                      <img src={item.after} alt={`After - ${item.location}`} loading="lazy" />
+                      <span className="gal-label gal-label-after">After</span>
+                    </div>
+                    <div className="gal-card-overlay">
+                      <Eye size={22} />
+                      <span>View</span>
+                    </div>
                   </div>
 
-                  <div className="gal-card-location">
-                    <MapPin size={14} />
-                    <span>{item.location}</span>
-                  </div>
+                  <div className="gal-card-content">
+                    <div className="gal-card-top-row">
+                      <div className="gal-card-user">
+                        <div className="gal-card-avatar">{item.avatar}</div>
+                        <div className="gal-card-user-info">
+                          <span className="gal-card-username">{item.user}</span>
+                          <span className="gal-card-date">{item.date}</span>
+                        </div>
+                      </div>
+                      <button
+                        className={`gal-like-btn ${isLiked ? 'gal-like-active' : ''}`}
+                        onClick={(e) => toggleLike(item.id, e)}
+                        aria-label={isLiked ? 'Unlike' : 'Like'}
+                      >
+                        <Heart size={18} fill={isLiked ? '#dc2626' : 'none'} />
+                        <span>{getLikeCount(item)}</span>
+                      </button>
+                    </div>
 
-                  <span className="gal-card-hashtag">{item.hashtag}</span>
+                    <div className="gal-card-location">
+                      <MapPin size={14} />
+                      <span>{item.location}</span>
+                    </div>
+
+                    <span className="gal-card-hashtag">{item.hashtag}</span>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {sortedItems.length === 0 && (
-          <div className="gal-empty">
-            <Camera size={48} />
-            <h3>No photos found</h3>
-            <p>Try a different filter</p>
+              );
+            })}
           </div>
-        )}
+
+          {sortedItems.length === 0 && (
+            <div className="gal-empty">
+              <Camera size={48} />
+              <h3>No photos found</h3>
+              <p>Try a different filter</p>
+            </div>
+          )}
+        </div>
       </div>
 
-      {/* Lightbox Modal */}
+      {/* FIX: Lightbox Modal is now OUTSIDE of the gallery-page div! */}
       {lightbox && (
         <div className="gal-lightbox" onClick={closeLightbox}>
           <div className="gal-lightbox-content" onClick={(e) => e.stopPropagation()}>
@@ -763,6 +767,7 @@ function Gallery() {
           overflow-y: auto;
           position: relative;
           animation: scaleIn 0.3s ease;
+          
         }
 
         .gal-lightbox-close {
@@ -855,7 +860,7 @@ function Gallery() {
           width: 44px;
           height: 44px;
           border-radius: 50%;
-          background: linear-gradient(135deg, var(--green), var(--accent));
+          background: linear-gradient(135deg, var(--green), var(--teal));
           color: #ffffff;
           display: flex;
           align-items: center;
@@ -1033,7 +1038,7 @@ function Gallery() {
           }
         }
       `}</style>
-    </div>
+    </>
   );
 }
 

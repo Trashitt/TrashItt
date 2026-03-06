@@ -16,7 +16,7 @@ import {
   Calendar,
   Code,
   Palette,
-  Search,
+  Settings,
   Coffee,
   Star,
   Zap,
@@ -28,7 +28,7 @@ import {
 
 const teamMembers = [
   {
-    name: 'Member 1',
+    name: 'Trisha Singh',
     role: 'Project Lead',
     quote: 'Code is my superpower!',
     emoji: '🚀',
@@ -37,7 +37,7 @@ const teamMembers = [
     bg: 'rgba(22,163,74,0.1)',
   },
   {
-    name: 'Member 2',
+    name: 'Uttam Kumar',
     role: 'Frontend Dev',
     quote: 'Making pixels save the planet!',
     emoji: '🎨',
@@ -46,7 +46,7 @@ const teamMembers = [
     bg: 'rgba(37,99,235,0.1)',
   },
   {
-    name: 'Member 3',
+    name: 'Ruchi Kumari',
     role: 'UI/UX & Social',
     quote: 'If it\'s not on Instagram, did it even happen?',
     emoji: '📸',
@@ -55,11 +55,11 @@ const teamMembers = [
     bg: 'rgba(217,70,239,0.1)',
   },
   {
-    name: 'Member 4',
-    role: 'Research & Data',
-    quote: 'Data doesn\'t lie — Ranchi needs TrashItt!',
+    name: 'Manjeet Kumar',
+    role: 'Backend dev',
+    quote: 'Structuring the data that fuels a cleaner Ranchi',
     emoji: '📊',
-    icon: Search,
+    icon: Settings,
     color: '#d97706',
     bg: 'rgba(217,119,6,0.1)',
   },
@@ -67,41 +67,41 @@ const teamMembers = [
 
 const timeline = [
   {
-    date: 'January 2025',
+    date: 'January 2026',
     title: 'The Idea Was Born',
     desc: 'Four friends in a hostel room realized Ranchi deserves better waste management. The idea of TrashItt was born over chai at 2 AM.',
     emoji: '💡',
   },
   {
-    date: 'March 2025',
+    date: 'February 2026',
     title: 'Research Phase',
     desc: 'Surveyed 50+ localities in Ranchi, documented waste patterns, and studied existing waste management infrastructure.',
     emoji: '🔍',
   },
   {
-    date: 'June 2025',
+    date: 'March 2026',
     title: 'Development Begins',
     desc: 'Started building the TrashItt platform — AI scanner, waste guide, gamification system, and community features.',
     emoji: '⚡',
   },
   {
-    date: 'October 2025',
+    date: 'March 2026',
     title: 'Beta Launch',
     desc: 'First beta version launched with 50 early adopters from BIT Mesra. Received incredible feedback and iterated rapidly.',
     emoji: '🚀',
   },
   {
-    date: 'January 2026',
+    date: 'Stay Tuned',
     title: 'Public Launch',
     desc: 'TrashItt officially launched for all citizens of Ranchi. 500+ users in the first week! Partnership with 3 NGOs.',
     emoji: '🎉',
   },
-  {
-    date: 'March 2026',
-    title: 'Growing Strong',
-    desc: '1,247 citizens joined, 5 active challenges, 12,450 KG waste segregated. TrashItt is now a movement!',
-    emoji: '🌍',
-  },
+  // {
+  //   date: 'March 2026',
+  //   title: 'Growing Strong',
+  //   desc: '1,247 citizens joined, 5 active challenges, 12,450 KG waste segregated. TrashItt is now a movement!',
+  //   emoji: '🌍',
+  // },
 ];
 
 const ranchiFacts = [
@@ -269,7 +269,7 @@ function About() {
 <Ticker />
 
       {/* Hostel Story */}
-      <section className="about-story">
+      {/* <section className="about-story">
         <div className="container">
           <div className="about-story-card">
             <div className="about-story-glow" />
@@ -297,7 +297,7 @@ function About() {
           </div>
         </div>
       </section>
-<Ticker/>
+<Ticker/> */}
  {/* Team */}
       <section className="about-team">
         <div className="container">
@@ -887,63 +887,6 @@ function About() {
           line-height: 1.5;
         }
 
-        /* ========== STORY ========== */
-        .about-story {
-          padding: 80px 0;
-        }
-
-        .about-story-card {
-         background: linear-gradient(135deg, var(--green), var(--teal));
-         border-radius: 24px;
-          padding: 56px;
-          position: relative;
-          overflow: hidden;
-        }
-        .about-story-glow {
-          position: absolute;
-          top: -60px;
-          right: -60px;
-          width: 300px;
-          height: 300px;
-          background: radial-gradient(circle, rgba(217,119,6,0.15) 0%, transparent 60%);
-          pointer-events: none;
-        }
-
-        .about-story-content {
-          position: relative;
-          z-index: 1;
-          max-width: 700px;
-          margin: 0 auto;
-          text-align: center;
-          color: #ffffff;
-        }
-
-        .about-story-icon {
-          color: #d97706;
-          margin-bottom: 16px;
-        }
-
-        .about-story-content h3 {
-          font-family: 'Syne', sans-serif;
-          font-size: 1.5rem;
-          color: #ffffff;
-          margin-bottom: 20px;
-        }
-
-        .about-story-content p {
-          font-size: 1rem;
-          color: rgba(255,255,255,0.75);
-          line-height: 1.9;
-          margin-bottom: 20px;
-        }
-
-        .about-story-signature {
-          font-style: italic;
-          color: #d97706;
-          font-size: 0.95rem;
-          font-weight: 600;
-        }
-
         /* ========== SOCIALS (Instagram & Twitter) ========== */
         .about-socials {
           padding: 80px 0;
@@ -961,6 +904,7 @@ function About() {
           border-radius: 20px;
           padding: 40px;
         }
+          // [data-theme=light] .about-insta-card, .about-twitter-card { background: #ffffff; }
 
         /* --- Content Areas --- */
         .about-insta-content,
@@ -1065,7 +1009,7 @@ function About() {
         }
 
         .about-vision-card {
-          background: linear-gradient(135deg, #064e2b, #0a6e3a, #0d7c42);
+          background: linear-gradient(135deg, #064e2b, #0d2818, #0d2818);
           border-radius: 24px;
           padding: 56px;
           position: relative;

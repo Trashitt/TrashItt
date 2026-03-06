@@ -103,10 +103,10 @@ const leafParticles = Array.from({ length: 15 }, (_, i) => ({
 }));
 
 const statsData = [
-  { label: 'KG Waste Segregated', value: 12450, icon: Recycle, suffix: ' KG' },
+  { label: 'KG Waste Segregated', value: 450, icon: Recycle, suffix: ' KG' },
   { label: 'Active Challenges', value: 5, icon: Trophy, suffix: '' },
-  { label: 'Citizens Joined', value: 1247, icon: Users, suffix: '' },
-  { label: 'Areas Cleaned', value: 89, icon: MapPin, suffix: '' },
+  { label: 'Citizens Joined', value: 124, icon: Users, suffix: '' },
+  { label: 'Areas Cleaned', value: 23, icon: MapPin, suffix: '' },
 ];
 
 const binsData = [
@@ -706,7 +706,6 @@ function Home() {
   .section-badge{
   color: #ffffff !important;       
   background: rgba(255, 255, 255, 0.1) !important;
-  border: 1px solid rgba(255, 255, 255, 0.2);
   font-size: 0.90rem;
   font-weight: 400;
   // font-family: "Syne Mono", monospace;
@@ -786,9 +785,9 @@ function Home() {
 }
 
 .home-hero-mini-stat strong {
-  font-family: var(--font-number);
-  font-size: 2rem;
-  font-weight: 500;
+  font-family: var(--text);
+  font-size: 2.2rem;
+  font-weight: 1000;
     color : #ffffffdc;
 
 }
@@ -1068,9 +1067,9 @@ transform: translateX(60px);
         }
 
         .home-stat-value {
-          font-family: var(--font-number);
-          font-weight: 400;
-          font-size: 2.5rem;
+          font-family: var(--text);
+          font-weight: 1000;
+          font-size: 2.7rem;
           color: var(--text);
           line-height: 1;
         }
@@ -1676,6 +1675,14 @@ transform: translateX(60px);
         }
         /* ===================== RESPONSIVE ===================== */
         @media (max-width: 1024px) {
+          /* Reset the extreme horizontal shifts for smaller laptops/tablets */
+          .home-hero-content {
+            transform: translateX(0);
+          }
+          .landing-hero-visual {
+            transform: translateX(0) scale(0.9);
+          }
+
           .home-stats-grid {
             grid-template-columns: repeat(2, 1fr);
           }
@@ -1698,11 +1705,64 @@ transform: translateX(60px);
           }
         }
 
+        @media (max-width: 992px) {
+          /* Stack the hero section elements */
+          .home-hero-inner {
+            flex-direction: column;
+            text-align: center;
+            gap: 20px;
+          }
+          
+          /* Center the text and remove the shift completely */
+          .home-hero-content {
+            align-items: center;
+            text-align: center;
+            transform: none; 
+            max-width: 100%;
+          }
+          
+          .home-hero-ctas {
+            justify-content: center;
+          }
+          
+          .home-hero-stats-mini {
+            margin-left: 0;
+            justify-content: center;
+          }
+          
+          /* Scale down the 3D orb and pull it up slightly */
+          .landing-hero-visual {
+            transform: scale(0.8); 
+            margin: -20px 0; 
+            display: flex;
+            justify-content: center;
+            width: 100%;
+          }
+
+          /* Keep floating cards inside the viewport */
+          .fc-5 { right: 0; }
+          .fc-6 { left: 0; }
+        }
+
         @media (max-width: 768px) {
           .home-hero {
-            padding: 100px 16px 48px;
-            min-height: calc(100vh - 20px);
+            padding: 120px 16px 48px;
+            min-height: auto;
           }
+
+          /* Scale the visual down more to fit phone widths and reduce vertical gap */
+          .landing-hero-visual {
+            transform: scale(0.65);
+            margin: -80px 0;
+          }
+
+          /* Pull outer cards tighter to the orb on mobile */
+          .fc-1 { top: 0; right: 0; }
+          .fc-2 { bottom: 0; left: 0; }
+          .fc-3 { bottom: 0; right: 0; }
+          .fc-4 { top: 0; left: 0; }
+          .fc-5 { top: 40%; right: -5%; }
+          .fc-6 { top: 40%; left: -5%; }
 
           .home-hero-stats-mini {
             gap: 16px;
@@ -1772,6 +1832,16 @@ transform: translateX(60px);
         }
 
         @media (max-width: 480px) {
+          .home-hero-title {
+            font-size: clamp(2.2rem, 10vw, 3rem);
+          }
+
+          /* Maximum shrink for small phones like iPhone SE */
+          .landing-hero-visual {
+            transform: scale(0.48);
+            margin: -140px 0;
+          }
+
           .home-hero-stats-mini {
             flex-direction: column;
             gap: 12px;

@@ -110,13 +110,13 @@ const challenges = [
 ];
 
 const collegeLeaderboard = [
-  { rank: 1, name: 'BIT Mesra', points: 4520, members: 89, emoji: '🏆', trend: '+340' },
-  { rank: 2, name: 'Xavier\'s Ranchi', points: 3890, members: 67, emoji: '🥈', trend: '+280' },
-  { rank: 3, name: 'DPS Ranchi', points: 3210, members: 54, emoji: '🥉', trend: '+190' },
-  { rank: 4, name: 'Ranchi University', points: 2980, members: 72, emoji: '4️⃣', trend: '+150' },
-  { rank: 5, name: 'St. Xavier\'s College', points: 2640, members: 45, emoji: '5️⃣', trend: '+120' },
+  { rank: 1, name: 'YSM Dhurwa', points: 4520, members: 59, emoji: '🏆', trend: '+340' },
+  { rank: 2, name: 'DSPMU Ranchi', points: 3890, members: 37, emoji: '🥈', trend: '+280' },
+  { rank: 3, name: 'Xavier\'s Ranchi', points: 3210, members: 44, emoji: '🥉', trend: '+190' },
+  { rank: 4, name: 'Ranchi University', points: 2980, members: 62, emoji: '4️⃣', trend: '+150' },
+  { rank: 5, name: 'Nirmala College', points: 2640, members: 45, emoji: '5️⃣', trend: '+120' },
   { rank: 6, name: 'Marwari College', points: 2180, members: 38, emoji: '6️⃣', trend: '+95' },
-  { rank: 7, name: 'Nirmala College', points: 1920, members: 31, emoji: '7️⃣', trend: '+80' },
+  { rank: 7, name: 'BIT Mesra', points: 1920, members: 31, emoji: '7️⃣', trend: '+80' },
   { rank: 8, name: 'Gossner College', points: 1650, members: 28, emoji: '8️⃣', trend: '+65' },
 ];
 
@@ -457,10 +457,11 @@ function Challenges() {
         .ch-hero-bg {
           position: absolute;
           inset: 0;
-          background:
-            radial-gradient(ellipse at 30% 50%, rgba(251,146,60,0.15) 0%, transparent 60%),
-            radial-gradient(ellipse at 70% 20%, rgba(220,38,38,0.1) 0%, transparent 50%);
+          background: #ffffff;
         }
+          [data-theme=light] .ch-hero-bg{
+          background: #000000;
+          }
 
         .ch-hero-particles {
           position: absolute;
@@ -506,24 +507,30 @@ function Challenges() {
           align-items: center;
           gap: 8px;
           padding: 6px 16px;
-          background: rgba(255, 255, 255, 0.1);
-          color: #ffffff;
+          background: rgba(0, 0, 0, 0.1);
+          color: #000000;
           border-radius: 9999px;
           font-size: 0.8rem;
           font-weight: 700;
           text-transform: uppercase;
           letter-spacing: 0.08em;
         }
-
+          [data-theme=light] .ch-hero-badge{
+          background: rgba(255, 255, 255, 0.1);
+          color: #ffffff;
+          }
 
         .ch-hero h1 {
           font-family: 'Syne', sans-serif;
           font-weight: 800;
           font-size: clamp(2rem, 5vw, 3.2rem);
           line-height: 1.15;
-          color: #ffffff !important;
+          color: #000000 !important;
           margin-bottom: 16px;
         }
+          [data-theme=light] .ch-hero h1{
+          color: #ffffff !important;
+          }
 
         .ch-hero-highlight {
           color: #fb923c;
@@ -531,11 +538,14 @@ function Challenges() {
 
         .ch-hero p {
           font-size: 1.05rem;
-          color: rgba(255,255,255,0.7);
+          color: rgba(0, 0, 0, 0.7);
           max-width: 580px;
           margin: 0 auto 28px;
           line-height: 1.7;
         }
+          [data-theme=light] .ch-hero p {
+          color: rgba(255, 255, 255, 0.7); ;
+          }
 
         .ch-hero-stats {
           display: flex;
@@ -553,23 +563,31 @@ function Challenges() {
         }
 
         .ch-hero-stat strong {
-          font-family: var(--font-number);
-          font-weight: 500;
-          font-size: 2.5rem;
-          color: #ffffff;
+          font-family: var(--text);
+          font-weight: 1000;
+          font-size: 2.7rem;
+          color: #000000;
         }
+          [data-theme=light] .ch-hero-stat strong {
+          color: #ffffff; ;
+          }
 
         .ch-hero-stat span {
           font-size: 0.78rem;
-          color: rgba(255,255,255,0.55);
+          color: rgba(0, 0, 0, 0.55);
         }
+           [data-theme=light] .ch-hero-stat strong {
+          color: rgba(255,255,255,0.55) ;
+          }
 
         .ch-hero-stat-divider {
           width: 1px;
           height: 36px;
-          background: rgba(255,255,255,0.15);
+          background: rgba(0, 0, 0, 0.15);
         }
-
+         [data-theme=light] .ch-hero-stat-divider{
+          background: rgba(255,255,255,0.15);
+          }
         /* ========== MAIN ========== */
         .ch-main {
           padding: 48px 0 80px;
