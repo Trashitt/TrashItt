@@ -7,20 +7,12 @@ import { auth, db } from "../firebase";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 
-const getBadge = (points) => {
-  if (points >= 5000) return "TrashItt Hero 🏆";
-  if (points >= 1001) return "Recycling Legend ♻️";
-  if (points >= 501) return "Eco Champion 🌳";
-  if (points >= 101) return "Green Warrior 🌿";
-  return "Beginner 🌱";
-};
-
-const getNextBadge = (points) => {
-  if (points >= 5000) return { name: "Max Level!", needed: 0, target: 5000 };
-  if (points >= 1001) return { name: "TrashItt Hero 🏆", needed: 5000 - points, target: 5000 };
-  if (points >= 501) return { name: "Recycling Legend ♻️", needed: 1001 - points, target: 1001 };
-  if (points >= 101) return { name: "Eco Champion 🌳", needed: 501 - points, target: 501 };
-  return { name: "Green Warrior 🌿", needed: 101 - points, target: 101 };
+const getBadge = (pts) => {
+  if (pts >= 5000) return "TrashItt Hero";
+  if (pts >= 1001) return "Recycling Legend";
+  if (pts >= 501) return "Eco Champion";
+  if (pts >= 101) return "Green Warrior";
+  return "Beginner";
 };
 
 export default function Dashboard() {
@@ -30,33 +22,31 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+    const unsub = onAuthStateChanged(auth, async (firebaseUser) => {
       if (!firebaseUser) {
         navigate("/login");
         return;
       }
       setUser(firebaseUser);
       try {
-        const docRef = doc(db, "users", firebaseUser.uid);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          setUserData(docSnap.data());
+        const snap = await getDoc(doc(db, "users", firebaseUser.uid));
+        if (snap.exists()) {
+          setUserData(snap.data());
         } else {
           setUserData({
             name: firebaseUser.displayName || "TrashItt User",
             email: firebaseUser.email,
             points: 0,
-            badge: "Beginner 🌱",
+            badge: "Beginner",
             reportsCount: 0,
             challengesCount: 0,
             city: "Ranchi"
           });
         }
-      } catch (error) {
+      } catch {
         setUserData({
           name: firebaseUser.displayName || "TrashItt User",
           points: 0,
-          badge: "Beginner 🌱",
           reportsCount: 0,
           challengesCount: 0,
           city: "Ranchi"
@@ -65,25 +55,25 @@ export default function Dashboard() {
         setLoading(false);
       }
     });
-    return () => unsubscribe();
+    return () => unsub();
   }, [navigate]);
 
   const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      toast.success("Logged out! See you soon! 🌱");
-      navigate("/login");
-    } catch (error) {
-      toast.error("Logout failed!");
-    }
+    await signOut(auth);
+    toast.success("Logged out!");
+    navigate("/login");
   };
 
   if (loading) {
     return (
       <div style={{
-        minHeight: "100vh", display: "flex",
-        alignItems: "center", justifyContent: "center",
-        background: "var(--bg)", flexDirection: "column", gap: "16px"
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "var(--bg)",
+        flexDirection: "column",
+        gap: "16px"
       }}>
         <motion.div
           animate={{ rotate: 360 }}
@@ -101,29 +91,17 @@ export default function Dashboard() {
 
   const points = userData?.points || 0;
   const badge = getBadge(points);
-  const nextBadge = getNextBadge(points);
-  const progress = nextBadge.needed === 0
-    ? 100
-    : Math.round(((nextBadge.target - nextBadge.needed) / nextBadge.target) * 100);
 
-  const stats = [
-    { icon: "🏆", value: points, label: "Total Points", color: "#d97706" },
-    { icon: "📍", value: userData?.rank ? "#" + userData.rank : "--", label: "Your Rank", color: "#16a34a" },
-    { icon: "📸", value: userData?.reportsCount || 0, label: "Reports Filed", color: "#0d9488" },
-    { icon: "🔥", value: userData?.challengesCount || 0, label: "Challenges", color: "#dc2626" }
-  ];
-
-  const quickActions = [
-    { icon: <Camera size={22} />, label: "Scan Waste", sub: "+10 pts", color: "#16a34a", path: "/scanner" },
-    { icon: <Flame size={22} />, label: "Challenges", sub: "Earn pts", color: "#dc2626", path: "/challenges" },
-    { icon: <BookOpen size={22} />, label: "Waste Guide", sub: "Learn", color: "#0d9488", path: "/waste-guide" },
-    { icon: <Users size={22} />, label: "NGO Drives", sub: "+30 pts", color: "#d97706", path: "/ngo-drives" }
-  ];
+  const nextTarget = points >= 5000 ? 5000 : points >= 1001 ? 5000 : points >= 501 ? 1001 : points >= 101 ? 501 : 101;
+  const progress = Math.min(Math.round((points / nextTarget) * 100), 100);
+  const nextName = points >= 5000 ? "Max!" : points >= 1001 ? "TrashItt Hero" : points >= 501 ? "Recycling Legend" : points >= 101 ? "Eco Champion" : "Green Warrior";
 
   return (
     <div style={{
-      minHeight: "100vh", background: "var(--bg)",
-      paddingTop: "80px", paddingBottom: "60px"
+      minHeight: "100vh",
+      background: "var(--bg)",
+      paddingTop: "80px",
+      paddingBottom: "60px"
     }}>
       <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 20px" }}>
 
@@ -132,40 +110,57 @@ export default function Dashboard() {
           animate={{ opacity: 1, y: 0 }}
           style={{
             background: "linear-gradient(135deg, #0a2a14, #16a34a, #0d9488)",
-            borderRadius: "20px", padding: "32px",
-            marginBottom: "24px", position: "relative", overflow: "hidden"
+            borderRadius: "20px",
+            padding: "32px",
+            marginBottom: "24px",
+            position: "relative",
+            overflow: "hidden"
           }}
         >
           <div style={{
-            position: "absolute", right: "-20px", top: "-20px",
-            fontSize: "120px", opacity: 0.08
-          }}>🌿</div>
+            position: "absolute", right: "-20px",
+            top: "-20px", fontSize: "120px", opacity: 0.08
+          }}>
+            🌿
+          </div>
 
           <div style={{
-            display: "flex", justifyContent: "space-between",
-            alignItems: "flex-start", flexWrap: "wrap", gap: "16px"
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-start",
+            flexWrap: "wrap",
+            gap: "16px"
           }}>
             <div>
               <p style={{ color: "rgba(255,255,255,0.7)", fontSize: "14px", marginBottom: "4px" }}>
-                Welcome back! 👋
+                Welcome back!
               </p>
               <h1 style={{
-                fontFamily: "Syne, sans-serif", fontSize: "2rem",
-                fontWeight: "800", color: "white", marginBottom: "8px"
+                fontFamily: "Syne, sans-serif",
+                fontSize: "2rem",
+                fontWeight: "800",
+                color: "white",
+                marginBottom: "8px"
               }}>
                 {userData?.name || user?.displayName || "Eco Warrior"}!
               </h1>
-              <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                 <span style={{
-                  background: "rgba(255,255,255,0.15)", color: "white",
-                  padding: "4px 14px", borderRadius: "20px",
-                  fontSize: "14px", fontWeight: "600"
+                  background: "rgba(255,255,255,0.15)",
+                  color: "white",
+                  padding: "4px 14px",
+                  borderRadius: "20px",
+                  fontSize: "14px",
+                  fontWeight: "600"
                 }}>
                   {badge}
                 </span>
                 <span style={{
-                  color: "rgba(255,255,255,0.8)", fontSize: "14px",
-                  display: "flex", alignItems: "center", gap: "4px"
+                  color: "rgba(255,255,255,0.8)",
+                  fontSize: "14px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "4px"
                 }}>
                   <MapPin size={14} />
                   {userData?.city || "Ranchi"}
@@ -174,8 +169,11 @@ export default function Dashboard() {
             </div>
             <div style={{ textAlign: "right" }}>
               <div style={{
-                fontFamily: "Syne, sans-serif", fontSize: "2.5rem",
-                fontWeight: "800", color: "white", lineHeight: "1"
+                fontFamily: "Syne, sans-serif",
+                fontSize: "2.5rem",
+                fontWeight: "800",
+                color: "white",
+                lineHeight: "1"
               }}>
                 {points}
               </div>
@@ -186,12 +184,20 @@ export default function Dashboard() {
           </div>
 
           <button onClick={handleLogout} style={{
-            position: "absolute", top: "16px", right: "16px",
+            position: "absolute",
+            top: "16px",
+            right: "16px",
             background: "rgba(255,255,255,0.15)",
             border: "1px solid rgba(255,255,255,0.3)",
-            borderRadius: "10px", padding: "8px 14px",
-            color: "white", fontSize: "13px", cursor: "pointer",
-            display: "flex", alignItems: "center", gap: "6px", fontWeight: "600"
+            borderRadius: "10px",
+            padding: "8px 14px",
+            color: "white",
+            fontSize: "13px",
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            gap: "6px",
+            fontWeight: "600"
           }}>
             <LogOut size={14} />
             Logout
@@ -199,23 +205,36 @@ export default function Dashboard() {
         </motion.div>
 
         <div style={{
-          display: "grid", gridTemplateColumns: "repeat(4, 1fr)",
-          gap: "16px", marginBottom: "24px"
+          display: "grid",
+          gridTemplateColumns: "repeat(4, 1fr)",
+          gap: "16px",
+          marginBottom: "24px"
         }}>
-          {stats.map((stat, i) => (
+          {[
+            { icon: "🏆", value: points, label: "Total Points", color: "#d97706" },
+            { icon: "📍", value: userData?.rank ? "#" + userData.rank : "--", label: "Your Rank", color: "#16a34a" },
+            { icon: "📸", value: userData?.reportsCount || 0, label: "Reports Filed", color: "#0d9488" },
+            { icon: "🔥", value: userData?.challengesCount || 0, label: "Challenges", color: "#dc2626" }
+          ].map((stat, i) => (
             <motion.div key={i}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
               style={{
-                background: "var(--card)", border: "1px solid var(--border)",
-                borderRadius: "16px", padding: "20px", textAlign: "center"
+                background: "var(--card)",
+                border: "1px solid var(--border)",
+                borderRadius: "16px",
+                padding: "20px",
+                textAlign: "center"
               }}
             >
               <div style={{ fontSize: "28px", marginBottom: "8px" }}>{stat.icon}</div>
               <div style={{
-                fontFamily: "Syne, sans-serif", fontSize: "1.6rem",
-                fontWeight: "800", color: stat.color, marginBottom: "4px"
+                fontFamily: "Syne, sans-serif",
+                fontSize: "1.6rem",
+                fontWeight: "800",
+                color: stat.color,
+                marginBottom: "4px"
               }}>
                 {stat.value}
               </div>
@@ -227,8 +246,10 @@ export default function Dashboard() {
         </div>
 
         <div style={{
-          display: "grid", gridTemplateColumns: "1fr 1fr",
-          gap: "20px", marginBottom: "24px"
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: "20px",
+          marginBottom: "24px"
         }}>
 
           <motion.div
@@ -236,15 +257,19 @@ export default function Dashboard() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.3 }}
             style={{
-              background: "var(--card)", border: "1px solid var(--border)",
-              borderRadius: "16px", padding: "24px"
+              background: "var(--card)",
+              border: "1px solid var(--border)",
+              borderRadius: "16px",
+              padding: "24px"
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "16px" }}>
               <Trophy size={18} color="#16a34a" />
               <h3 style={{
-                fontFamily: "Syne, sans-serif", color: "var(--text)",
-                fontWeight: "700", fontSize: "1rem"
+                fontFamily: "Syne, sans-serif",
+                color: "var(--text)",
+                fontWeight: "700",
+                fontSize: "1rem"
               }}>
                 Badge Progress
               </h3>
@@ -254,8 +279,11 @@ export default function Dashboard() {
               <span style={{ color: "var(--muted)", fontSize: "13px" }}>{points} pts</span>
             </div>
             <div style={{
-              background: "var(--bg)", borderRadius: "10px",
-              height: "10px", marginBottom: "8px", overflow: "hidden"
+              background: "var(--bg)",
+              borderRadius: "10px",
+              height: "10px",
+              marginBottom: "8px",
+              overflow: "hidden"
             }}>
               <motion.div
                 initial={{ width: 0 }}
@@ -268,11 +296,9 @@ export default function Dashboard() {
                 }}
               />
             </div>
-            {nextBadge.needed > 0 && (
-              <p style={{ color: "var(--muted)", fontSize: "12px" }}>
-                {nextBadge.needed} more points to reach {nextBadge.name}
-              </p>
-            )}
+            <p style={{ color: "var(--muted)", fontSize: "12px" }}>
+              Next badge: {nextName}
+            </p>
           </motion.div>
 
           <motion.div
@@ -280,28 +306,41 @@ export default function Dashboard() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.3 }}
             style={{
-              background: "var(--card)", border: "1px solid var(--border)",
-              borderRadius: "16px", padding: "24px"
+              background: "var(--card)",
+              border: "1px solid var(--border)",
+              borderRadius: "16px",
+              padding: "24px"
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "16px" }}>
               <Star size={18} color="#16a34a" />
               <h3 style={{
-                fontFamily: "Syne, sans-serif", color: "var(--text)",
-                fontWeight: "700", fontSize: "1rem"
+                fontFamily: "Syne, sans-serif",
+                color: "var(--text)",
+                fontWeight: "700",
+                fontSize: "1rem"
               }}>
                 Quick Actions
               </h3>
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
-              {quickActions.map((action, i) => (
+              {[
+                { icon: <Camera size={22} />, label: "Scan Waste", sub: "+10 pts", color: "#16a34a", path: "/scanner" },
+                { icon: <Flame size={22} />, label: "Challenges", sub: "Earn pts", color: "#dc2626", path: "/challenges" },
+                { icon: <BookOpen size={22} />, label: "Waste Guide", sub: "Learn", color: "#0d9488", path: "/waste-guide" },
+                { icon: <Users size={22} />, label: "NGO Drives", sub: "+30 pts", color: "#d97706", path: "/ngo-drives" }
+              ].map((action, i) => (
                 <motion.button key={i}
-                  whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
                   onClick={() => navigate(action.path)}
                   style={{
-                    background: "var(--bg)", border: "1px solid var(--border)",
-                    borderRadius: "12px", padding: "14px 10px",
-                    cursor: "pointer", textAlign: "center"
+                    background: "var(--bg)",
+                    border: "1px solid var(--border)",
+                    borderRadius: "12px",
+                    padding: "14px 10px",
+                    cursor: "pointer",
+                    textAlign: "center"
                   }}
                 >
                   <div style={{ color: action.color, marginBottom: "6px" }}>{action.icon}</div>
@@ -323,17 +362,21 @@ export default function Dashboard() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
           style={{
-            background: "var(--card)", border: "1px solid var(--border)",
-            borderRadius: "16px", padding: "24px"
+            background: "var(--card)",
+            border: "1px solid var(--border)",
+            borderRadius: "16px",
+            padding: "24px"
           }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "20px" }}>
             <Leaf size={18} color="#16a34a" />
             <h3 style={{
-              fontFamily: "Syne, sans-serif", color: "var(--text)",
-              fontWeight: "700", fontSize: "1rem"
+              fontFamily: "Syne, sans-serif",
+              color: "var(--text)",
+              fontWeight: "700",
+              fontSize: "1rem"
             }}>
-              Getting Started 🌱
+              Getting Started
             </h3>
           </div>
 
@@ -350,16 +393,26 @@ export default function Dashboard() {
               transition={{ delay: 0.5 + i * 0.08 }}
               whileHover={{ x: 4 }}
               style={{
-                display: "flex", alignItems: "center", gap: "14px",
-                padding: "14px", background: "var(--bg)",
-                borderRadius: "12px", marginBottom: "10px", cursor: "pointer"
+                display: "flex",
+                alignItems: "center",
+                gap: "14px",
+                padding: "14px",
+                background: "var(--bg)",
+                borderRadius: "12px",
+                marginBottom: "10px",
+                cursor: "pointer"
               }}
             >
               <div style={{
-                width: "40px", height: "40px", background: "var(--card)",
-                borderRadius: "50%", display: "flex",
-                alignItems: "center", justifyContent: "center",
-                fontSize: "18px", flexShrink: 0
+                width: "40px",
+                height: "40px",
+                background: "var(--card)",
+                borderRadius: "50%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: "18px",
+                flexShrink: 0
               }}>
                 {item.emoji}
               </div>
