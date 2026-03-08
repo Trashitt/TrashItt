@@ -136,7 +136,7 @@ function Footer() {
                 </li>
                 <li className="footer-contact-item">
                   <Phone size={16} />
-                  <a href="tel:+919876543210">+91 98765 43210</a>
+                  <a href="tel:+919876543210">+91 8789736299</a>
                 </li>
                 <li className="footer-contact-item">
                   <Instagram size={16} />

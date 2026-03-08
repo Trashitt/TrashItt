@@ -262,21 +262,19 @@ function Navbar({ theme, toggleTheme }) {
 
         /* NEW LOGO IMAGE STYLES */
         .navbar-logo-img {
-          height: 70px; /* Adjust this number to make it bigger/smaller */
+          height: 70px;
           width: auto;
           object-fit: contain;
           transition: transform 0.3s ease;
         }
 
         .navbar-logo:hover .navbar-logo-img {
-          transform: scale(1.05); /* Slight pop effect on hover */
+          transform: scale(1.05);
         }
 
-        /* Invert logo color for dark mode if it is a black logo */
-        /* Invert black text to white, but keep the original green/yellow colors */
-[data-theme="dark"] .navbar-logo-img {
-  filter: invert(1) hue-rotate(180deg) brightness(1.2); 
-}
+        [data-theme="dark"] .navbar-logo-img {
+          filter: invert(1) hue-rotate(180deg) brightness(1.2); 
+        }
 
         .navbar-links-desktop {
           display: flex;
@@ -295,8 +293,9 @@ function Navbar({ theme, toggleTheme }) {
           transition: all 0.25s ease;
           white-space: nowrap;
         }
-          [data-theme='light'] .navbar-link {
-          color: #000000; /* Makes it pure white ONLY in dark mode */
+
+        [data-theme='light'] .navbar-link {
+          color: #000000;
         }
 
         .navbar-link:hover {
@@ -388,7 +387,6 @@ function Navbar({ theme, toggleTheme }) {
         }
 
         .navbar-btn-login {
-          background: linear-gradient(135deg, var(--green), var(--teal));
           background: transparent;
           border: 1.5px solid var(--green);
         }
@@ -598,10 +596,7 @@ function Navbar({ theme, toggleTheme }) {
             display: none;
           }
 
-          .navbar-btn-login,
-          .navbar-btn-signup {
-            display: none;
-          }
+          /* Removed the display: none for login/signup here so they appear on mobile! */
 
           .navbar-hamburger {
             display: flex;
@@ -614,11 +609,19 @@ function Navbar({ theme, toggleTheme }) {
           }
 
           .navbar-logo-img {
-            height: 36px; /* slightly smaller for mobile */
+            height: 36px;
           }
 
           .mobile-menu {
             width: 300px;
+          }
+
+          /* Convert top navbar auth buttons to icons-only so they fit well */
+          .navbar-actions .navbar-btn span {
+            display: none;
+          }
+          .navbar-actions .navbar-btn {
+            padding: 8px 10px;
           }
         }
 
@@ -634,6 +637,10 @@ function Navbar({ theme, toggleTheme }) {
 
           .navbar-theme-toggle {
             display: none;
+          }
+
+          .navbar-actions {
+            gap: 6px;
           }
         }
 

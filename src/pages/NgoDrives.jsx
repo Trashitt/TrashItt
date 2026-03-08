@@ -27,7 +27,7 @@ const upcomingDrives = [
     title: 'Harmu River Cleanup',
     date: 'February 27, 2026',
     time: '7:00 AM – 12:00 PM',
-    location: 'Jumar River Bank, Ranchi',
+    location: 'Harmu River Bank, Ranchi',
     organizer: 'GreenRanchi NGO',
     organizerLogo: '🌿',
     description: 'Join us for a massive cleanup drive along the Jumar River. We aim to remove 500+ kg of waste and restore the natural beauty of this vital water body. All cleaning equipment provided.',
