@@ -1,1225 +1,581 @@
-import React, { useState, useRef } from 'react';
-import {
-  Camera,
-  Upload,
-  ScanLine,
-  Recycle,
-  Leaf,
-  AlertTriangle,
-  Droplets,
-  Package,
-  CheckCircle,
-  XCircle,
-  ArrowRight,
-  Share2,
-  RotateCcw,
-  Sparkles,
-  Zap,
-  Star,
-  Info,
-  ShieldAlert,
-  Image,
-} from 'lucide-react';
-import toast from 'react-hot-toast';
+import { useState, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Upload, Camera, RotateCcw, Info, Trash2 } from "lucide-react";
+import toast from "react-hot-toast";
+import { analyzeWaste } from "../gemini";
 
-const mockResults = [
-  {
-    name: 'Plastic Bottle',
-    category: 'Dry Waste',
-    categoryColor: '#2563eb',
-    categoryBg: 'rgba(37,99,235,0.1)',
-    categoryEmoji: '🔵',
-    binColor: 'Blue',
-    recyclable: true,
-    biodegradable: false,
-    hazardous: false,
-    correctBin: 'Dry Waste Bin (Blue)',
-    tip: 'Rinse the bottle, remove the cap, crush it flat, and place in the dry waste recycling bin. Plastic bottles are 100% recyclable and can be turned into new products!',
-    image: 'https://picsum.photos/seed/plastic1/400/300',
-  },
-  {
-    name: 'Banana Peel',
-    category: 'Wet Waste',
-    categoryColor: '#16a34a',
-    categoryBg: 'rgba(22,163,74,0.1)',
-    categoryEmoji: '🟢',
-    binColor: 'Green',
-    recyclable: false,
-    biodegradable: true,
-    hazardous: false,
-    correctBin: 'Wet Waste Bin (Green)',
-    tip: 'Banana peels are excellent for composting. They decompose quickly and add potassium to the soil. You can also use them as natural fertilizer for plants!',
-    image: 'https://picsum.photos/seed/banana1/400/300',
-  },
-  {
-    name: 'Battery',
-    category: 'Hazardous Waste',
-    categoryColor: '#dc2626',
-    categoryBg: 'rgba(220,38,38,0.1)',
-    categoryEmoji: '🔴',
-    binColor: 'Red',
-    recyclable: false,
-    biodegradable: false,
-    hazardous: true,
-    correctBin: 'Hazardous Waste Bin (Red)',
-    tip: '⚠️ NEVER throw batteries in regular bins! They contain toxic chemicals like lead and mercury. Take them to the nearest e-waste collection center or designated drop-off point.',
-    image: 'https://picsum.photos/seed/battery1/400/300',
-  },
-  {
-    name: 'Newspaper',
-    category: 'Dry Waste',
-    categoryColor: '#2563eb',
-    categoryBg: 'rgba(37,99,235,0.1)',
-    categoryEmoji: '🔵',
-    binColor: 'Blue',
-    recyclable: true,
-    biodegradable: true,
-    hazardous: false,
-    correctBin: 'Dry Waste Bin (Blue)',
-    tip: 'Bundle old newspapers together and sell them to your local kabadiwala or place in the dry waste bin. Recycling 1 ton of newspaper saves 17 trees!',
-    image: 'https://picsum.photos/seed/newspaper1/400/300',
-  },
-  {
-    name: 'Food Scraps',
-    category: 'Wet Waste',
-    categoryColor: '#16a34a',
-    categoryBg: 'rgba(22,163,74,0.1)',
-    categoryEmoji: '🟢',
-    binColor: 'Green',
-    recyclable: false,
-    biodegradable: true,
-    hazardous: false,
-    correctBin: 'Wet Waste Bin (Green)',
-    tip: 'Food scraps should always go in the wet waste bin. Consider composting at home — it reduces landfill waste and creates nutrient-rich soil for your garden!',
-    image: 'https://picsum.photos/seed/food1/400/300',
-  },
-  {
-    name: 'Glass Bottle',
-    category: 'Dry Waste',
-    categoryColor: '#2563eb',
-    categoryBg: 'rgba(37,99,235,0.1)',
-    categoryEmoji: '🔵',
-    binColor: 'Blue',
-    recyclable: true,
-    biodegradable: false,
-    hazardous: false,
-    correctBin: 'Dry Waste Bin (Blue)',
-    tip: 'Glass is 100% recyclable and can be recycled endlessly without loss in quality. Rinse the bottle and handle carefully to avoid breakage. Remove caps before recycling.',
-    image: 'https://picsum.photos/seed/glass1/400/300',
-  },
-  {
-    name: 'Medicine Strip',
-    category: 'Hazardous Waste',
-    categoryColor: '#dc2626',
-    categoryBg: 'rgba(220,38,38,0.1)',
-    categoryEmoji: '🔴',
-    binColor: 'Red',
-    recyclable: false,
-    biodegradable: false,
-    hazardous: true,
-    correctBin: 'Hazardous Waste Bin (Red)',
-    tip: '⚠️ Never throw medicines in regular bins or flush them! Return expired or unused medicines to pharmacies. Medicine strips contain aluminium and chemicals that can contaminate soil and water.',
-    image: 'https://picsum.photos/seed/medicine1/400/300',
-  },
-  {
-    name: 'Cardboard Box',
-    category: 'Dry Waste',
-    categoryColor: '#2563eb',
-    categoryBg: 'rgba(37,99,235,0.1)',
-    categoryEmoji: '🔵',
-    binColor: 'Blue',
-    recyclable: true,
-    biodegradable: true,
-    hazardous: false,
-    correctBin: 'Dry Waste Bin (Blue)',
-    tip: 'Flatten cardboard boxes to save space. Remove any tape or labels if possible. Cardboard is one of the most recyclable materials and can be reused multiple times!',
-    image: 'https://picsum.photos/seed/cardboard1/400/300',
-  },
-];
-
-function WasteScanner() {
-  const [state, setState] = useState('idle');
+export default function WasteScanner() {
+  const [state, setState] = useState("idle");
+  const [image, setImage] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
   const [result, setResult] = useState(null);
-  const [uploadedImage, setUploadedImage] = useState(null);
   const fileInputRef = useRef(null);
   const cameraInputRef = useRef(null);
 
-  const handleFileUpload = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    if (!file.type.startsWith('image/')) {
-      toast.error('Please upload an image file');
+  const handleFile = (file) => {
+    if (!file || !file.type.startsWith("image/")) {
+      toast.error("Please upload an image!");
       return;
     }
-
-    if (file.size > 10 * 1024 * 1024) {
-      toast.error('Image must be less than 10MB');
-      return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      setUploadedImage(ev.target.result);
-      startScanning();
-    };
-    reader.readAsDataURL(file);
-  };
-
-  const startScanning = () => {
-    setState('uploading');
-    setTimeout(() => {
-      setState('scanning');
-      setTimeout(() => {
-        const randomResult = mockResults[Math.floor(Math.random() * mockResults.length)];
-        setResult(randomResult);
-        setState('result');
-        toast.success(`+10 Green Points earned! 🌿`);
-      }, 2000);
-    }, 800);
-  };
-
-  const handleScanAgain = () => {
-    setState('idle');
-    setResult(null);
-    setUploadedImage(null);
-    if (fileInputRef.current) fileInputRef.current.value = '';
-    if (cameraInputRef.current) cameraInputRef.current.value = '';
-  };
-
-  const handleShare = () => {
-    if (navigator.share && result) {
-      navigator.share({
-        title: `TrashItt - ${result.name}`,
-        text: `I just scanned "${result.name}" with TrashItt AI Scanner! It's ${result.category}. ${result.tip}`,
-        url: window.location.href,
-      }).catch(() => {});
-    } else {
-      navigator.clipboard.writeText(
-        `I just scanned "${result.name}" with TrashItt AI Scanner! It's ${result.category}. Check it out at trashitt.in`
-      );
-      toast.success('Result copied to clipboard! 📋');
-    }
+    setImageFile(file);
+    setImage(URL.createObjectURL(file));
+    setState("uploaded");
   };
 
   const handleDrop = (e) => {
     e.preventDefault();
-    e.stopPropagation();
-    const file = e.dataTransfer.files[0];
-    if (file && file.type.startsWith('image/')) {
-      const reader = new FileReader();
-      reader.onload = (ev) => {
-        setUploadedImage(ev.target.result);
-        startScanning();
-      };
-      reader.readAsDataURL(file);
+    handleFile(e.dataTransfer.files[0]);
+  };
+
+  const handleScan = async () => {
+    if (!imageFile) return;
+    setState("scanning");
+    try {
+      const res = await analyzeWaste(imageFile);
+      setResult(res);
+      setState("result");
+      toast.success("+10 points earned!");
+    } catch {
+      toast.error("Scan failed! Try again!");
+      setState("uploaded");
     }
   };
 
-  const handleDragOver = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const handleReset = () => {
+    setState("idle");
+    setImage(null);
+    setImageFile(null);
+    setResult(null);
+  };
+
+  const getBinColor = (bin) => {
+    if (!bin) return "#16a34a";
+    if (bin.includes("Green")) return "#16a34a";
+    if (bin.includes("Blue")) return "#2563eb";
+    if (bin.includes("Red")) return "#dc2626";
+    return "#16a34a";
+  };
+
+  const getCategoryColor = (cat) => {
+    if (!cat) return "#16a34a";
+    if (cat.includes("Wet")) return "#16a34a";
+    if (cat.includes("Dry")) return "#2563eb";
+    if (cat.includes("Hazardous")) return "#dc2626";
+    return "#16a34a";
   };
 
   return (
-    <div className="scanner-page page-wrapper">
-      <div className="container">
-        {/* Hero */}
-        <div className="scanner-hero">
-          <div className="scanner-hero-badge">
-            <Sparkles size={14} />
-            <span>AI-Powered</span>
-          </div>
-          <h1>Waste <span className="hero-highlight">Scanner</span></h1>
-          <p>
-            Upload or capture a photo of any waste item and our AI will instantly
-            identify it, tell you the correct bin, and give you disposal tips!
-          </p>
-        </div>
+    <div style={{
+      minHeight: "100vh",
+      background: "var(--bg)",
+      paddingTop: "80px",
+      paddingBottom: "60px"
+    }}>
+      <div style={{ maxWidth: "800px", margin: "0 auto", padding: "0 20px" }}>
 
-        {/* Scanner Area */}
-        <div className="scanner-main">
-          {/* IDLE STATE */}
-          {state === 'idle' && (
-            <div className="scanner-idle">
-              <div
-                className="scanner-upload-zone"
-                onClick={() => fileInputRef.current && fileInputRef.current.click()}
-                onDrop={handleDrop}
-                onDragOver={handleDragOver}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          style={{ textAlign: "center", marginBottom: "40px" }}
+        >
+          <div style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "8px",
+            background: "var(--card)",
+            border: "1px solid var(--border)",
+            borderRadius: "50px",
+            padding: "8px 20px",
+            marginBottom: "20px"
+          }}>
+            <span style={{ color: "#16a34a", fontSize: "14px", fontWeight: "600" }}>
+              AI Powered by Gemini
+            </span>
+          </div>
+
+          <h1 style={{
+            fontFamily: "Syne, sans-serif",
+            fontSize: "clamp(2rem, 5vw, 3.5rem)",
+            fontWeight: "800",
+            color: "var(--text)",
+            marginBottom: "16px",
+            lineHeight: "1.1"
+          }}>
+            AI Waste Scanner
+          </h1>
+
+          <p style={{
+            color: "var(--muted)",
+            fontSize: "1.1rem",
+            maxWidth: "500px",
+            margin: "0 auto",
+            lineHeight: "1.6"
+          }}>
+            Upload any waste photo and AI tells you exactly which bin to use!
+          </p>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          style={{
+            background: "var(--card)",
+            border: "1px solid var(--border)",
+            borderRadius: "24px",
+            padding: "40px",
+            marginBottom: "30px"
+          }}
+        >
+          <AnimatePresence mode="wait">
+
+            {state === "idle" && (
+              <motion.div
+                key="idle"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
               >
-                <div className="scanner-upload-icon">
-                  <Upload size={36} />
+                <div
+                  onDrop={handleDrop}
+                  onDragOver={(e) => e.preventDefault()}
+                  onClick={() => fileInputRef.current?.click()}
+                  style={{
+                    border: "2px dashed #16a34a",
+                    borderRadius: "20px",
+                    padding: "60px 20px",
+                    textAlign: "center",
+                    cursor: "pointer",
+                    background: "rgba(22,163,74,0.03)",
+                    transition: "all 0.3s"
+                  }}
+                >
+                  <div style={{ fontSize: "64px", marginBottom: "20px" }}>📷</div>
+                  <h3 style={{
+                    fontFamily: "Syne, sans-serif",
+                    color: "var(--text)",
+                    fontSize: "1.3rem",
+                    fontWeight: "700",
+                    marginBottom: "8px"
+                  }}>
+                    Drop your image here
+                  </h3>
+                  <p style={{ color: "var(--muted)", marginBottom: "24px" }}>
+                    or click to upload from your device
+                  </p>
+                  <div style={{
+                    display: "flex",
+                    gap: "12px",
+                    justifyContent: "center",
+                    flexWrap: "wrap"
+                  }}>
+                    <button
+                      onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}
+                      style={{
+                        background: "#16a34a",
+                        color: "white",
+                        border: "none",
+                        borderRadius: "12px",
+                        padding: "12px 24px",
+                        fontSize: "15px",
+                        fontWeight: "600",
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "8px"
+                      }}
+                    >
+                      <Upload size={18} />
+                      Upload Photo
+                    </button>
+                    <button
+                      onClick={(e) => { e.stopPropagation(); cameraInputRef.current?.click(); }}
+                      style={{
+                        background: "transparent",
+                        color: "#16a34a",
+                        border: "2px solid #16a34a",
+                        borderRadius: "12px",
+                        padding: "12px 24px",
+                        fontSize: "15px",
+                        fontWeight: "600",
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "8px"
+                      }}
+                    >
+                      <Camera size={18} />
+                      Use Camera
+                    </button>
+                  </div>
+                  <p style={{ color: "var(--muted)", fontSize: "13px", marginTop: "16px" }}>
+                    Supports JPG, PNG, WEBP
+                  </p>
                 </div>
-                <h3>Upload Waste Image</h3>
-                <p>Drag & drop an image here, or click to browse</p>
-                <span className="scanner-upload-formats">
-                  Supports: JPG, PNG, WEBP (max 10MB)
-                </span>
+
                 <input
                   ref={fileInputRef}
                   type="file"
                   accept="image/*"
-                  onChange={handleFileUpload}
-                  style={{ display: 'none' }}
+                  style={{ display: "none" }}
+                  onChange={(e) => handleFile(e.target.files[0])}
                 />
-              </div>
+                <input
+                  ref={cameraInputRef}
+                  type="file"
+                  accept="image/*"
+                  capture="environment"
+                  style={{ display: "none" }}
+                  onChange={(e) => handleFile(e.target.files[0])}
+                />
+              </motion.div>
+            )}
 
-              <div className="scanner-divider-or">
-                <span>OR</span>
-              </div>
-
-              <button
-                className="scanner-camera-btn"
-                onClick={() => cameraInputRef.current && cameraInputRef.current.click()}
+            {state === "uploaded" && (
+              <motion.div
+                key="uploaded"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                style={{ textAlign: "center" }}
               >
-                <Camera size={22} />
-                <span>Take Photo with Camera</span>
-              </button>
-              <input
-                ref={cameraInputRef}
-                type="file"
-                accept="image/*"
-                capture="environment"
-                onChange={handleFileUpload}
-                style={{ display: 'none' }}
-              />
-
-              {/* How it works mini */}
-              <div className="scanner-how-mini">
-                <h4>How it works</h4>
-                <div className="scanner-how-steps">
-                  <div className="scanner-how-step">
-                    <div className="scanner-how-num">1</div>
-                    <span>Upload or capture a photo</span>
-                  </div>
-                  <div className="scanner-how-step">
-                    <div className="scanner-how-num">2</div>
-                    <span>AI analyses the waste item</span>
-                  </div>
-                  <div className="scanner-how-step">
-                    <div className="scanner-how-num">3</div>
-                    <span>Get results + earn points!</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* UPLOADING STATE */}
-          {state === 'uploading' && (
-            <div className="scanner-processing">
-              <div className="scanner-processing-card">
-                {uploadedImage && (
-                  <div className="scanner-preview-img-wrap">
-                    <img src={uploadedImage} alt="Uploaded waste" className="scanner-preview-img" />
-                  </div>
-                )}
-                <div className="scanner-upload-progress">
-                  <div className="scanner-upload-progress-bar">
-                    <div className="scanner-upload-progress-fill" />
-                  </div>
-                  <span>Uploading image...</span>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* SCANNING STATE */}
-          {state === 'scanning' && (
-            <div className="scanner-processing">
-              <div className="scanner-processing-card">
-                {uploadedImage && (
-                  <div className="scanner-preview-img-wrap scanner-preview-scanning">
-                    <img src={uploadedImage} alt="Scanning waste" className="scanner-preview-img" />
-                    <div className="scanner-scan-overlay">
-                      <div className="scanner-scan-line" />
-                    </div>
-                    <div className="scanner-scan-corners">
-                      <span /><span /><span /><span />
-                    </div>
-                  </div>
-                )}
-                <div className="scanner-analyzing">
-                  <div className="scanner-spinner" />
-                  <h3>AI Analysing...</h3>
-                  <p>Identifying waste type, category, and disposal method</p>
-                  <div className="scanner-dots">
-                    <span /><span /><span />
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* RESULT STATE */}
-          {state === 'result' && result && (
-            <div className="scanner-result">
-              <div className="scanner-result-card">
-                {/* Result Header */}
-                <div className="scanner-result-header" style={{ background: result.categoryBg }}>
-                  <div className="scanner-result-header-content">
-                    <span className="scanner-result-emoji">{result.categoryEmoji}</span>
-                    <div>
-                      <h2 className="scanner-result-name">{result.name}</h2>
-                      <span
-                        className="scanner-result-category-badge"
-                        style={{ background: result.categoryColor, color: '#ffffff' }}
-                      >
-                        {result.category}
-                      </span>
-                    </div>
-                    <div className="scanner-result-pts-earned">
-                      <Star size={18} />
-                      <span>+10 pts</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Uploaded Image Preview */}
-                {uploadedImage && (
-                  <div className="scanner-result-image-wrap">
-                    <img src={uploadedImage} alt={result.name} className="scanner-result-image" />
-                    <div className="scanner-result-image-label" style={{ background: result.categoryColor }}>
-                      <ScanLine size={14} />
-                      <span>Scanned</span>
-                    </div>
-                  </div>
-                )}
-
-                {/* Info Boxes */}
-                <div className="scanner-result-info-grid">
-                  <div className="scanner-info-box">
-                    <div className="scanner-info-icon-wrap" style={{ background: result.recyclable ? 'rgba(22,163,74,0.1)' : 'rgba(220,38,38,0.1)' }}>
-                      {result.recyclable ? <CheckCircle size={20} color="#16a34a" /> : <XCircle size={20} color="#dc2626" />}
-                    </div>
-                    <div className="scanner-info-label">Recyclable</div>
-                    <div className="scanner-info-value" style={{ color: result.recyclable ? '#16a34a' : '#dc2626' }}>
-                      {result.recyclable ? 'Yes' : 'No'}
-                    </div>
-                  </div>
-
-                  <div className="scanner-info-box">
-                    <div className="scanner-info-icon-wrap" style={{ background: result.biodegradable ? 'rgba(22,163,74,0.1)' : 'rgba(220,38,38,0.1)' }}>
-                      {result.biodegradable ? <Leaf size={20} color="#16a34a" /> : <XCircle size={20} color="#dc2626" />}
-                    </div>
-                    <div className="scanner-info-label">Biodegradable</div>
-                    <div className="scanner-info-value" style={{ color: result.biodegradable ? '#16a34a' : '#dc2626' }}>
-                      {result.biodegradable ? 'Yes' : 'No'}
-                    </div>
-                  </div>
-
-                  <div className="scanner-info-box">
-                    <div className="scanner-info-icon-wrap" style={{ background: result.hazardous ? 'rgba(220,38,38,0.1)' : 'rgba(22,163,74,0.1)' }}>
-                      {result.hazardous ? <ShieldAlert size={20} color="#dc2626" /> : <CheckCircle size={20} color="#16a34a" />}
-                    </div>
-                    <div className="scanner-info-label">Hazardous</div>
-                    <div className="scanner-info-value" style={{ color: result.hazardous ? '#dc2626' : '#16a34a' }}>
-                      {result.hazardous ? '⚠️ Yes' : 'No'}
-                    </div>
-                  </div>
-
-                  <div className="scanner-info-box">
-                    <div className="scanner-info-icon-wrap" style={{ background: result.categoryBg }}>
-                      <Recycle size={20} style={{ color: result.categoryColor }} />
-                    </div>
-                    <div className="scanner-info-label">Correct Bin</div>
-                    <div className="scanner-info-value" style={{ color: result.categoryColor, fontSize: '0.82rem' }}>
-                      {result.correctBin}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Disposal Tip */}
-                <div className="scanner-result-tip" style={{ borderLeftColor: result.categoryColor }}>
-                  <div className="scanner-tip-header">
-                    <Info size={18} style={{ color: result.categoryColor }} />
-                    <strong>Disposal Tip</strong>
-                  </div>
-                  <p>{result.tip}</p>
-                </div>
-
-                {/* Points Earned Banner */}
-                <div className="scanner-result-points-banner">
-                  <div className="scanner-points-content">
-                    <Zap size={22} />
-                    <div>
-                      <strong>+10 Green Points Earned!</strong>
-                      <span>Keep scanning to earn more points and climb the leaderboard</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Action Buttons */}
-                <div className="scanner-result-actions">
-                  <button className="scanner-action-btn scanner-action-primary" onClick={handleScanAgain}>
-                    <RotateCcw size={18} />
-                    <span>Scan Again</span>
+                <img
+                  src={image}
+                  alt="Uploaded"
+                  style={{
+                    maxWidth: "100%",
+                    maxHeight: "350px",
+                    borderRadius: "16px",
+                    objectFit: "contain",
+                    marginBottom: "24px",
+                    border: "2px solid var(--border)"
+                  }}
+                />
+                <div style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap" }}>
+                  <button
+                    onClick={handleScan}
+                    style={{
+                      background: "linear-gradient(135deg, #16a34a, #0d9488)",
+                      color: "white",
+                      border: "none",
+                      borderRadius: "14px",
+                      padding: "16px 40px",
+                      fontSize: "17px",
+                      fontWeight: "700",
+                      cursor: "pointer",
+                      fontFamily: "Syne, sans-serif"
+                    }}
+                  >
+                    Scan This Item
                   </button>
-                  <button className="scanner-action-btn scanner-action-secondary" onClick={handleShare}>
-                    <Share2 size={18} />
-                    <span>Share Result</span>
+                  <button
+                    onClick={handleReset}
+                    style={{
+                      background: "transparent",
+                      color: "var(--muted)",
+                      border: "1px solid var(--border)",
+                      borderRadius: "14px",
+                      padding: "16px 24px",
+                      fontSize: "15px",
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px"
+                    }}
+                  >
+                    <RotateCcw size={16} />
+                    Choose Different
                   </button>
                 </div>
-              </div>
+              </motion.div>
+            )}
+
+            {state === "scanning" && (
+              <motion.div
+                key="scanning"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                style={{ textAlign: "center", padding: "40px 0" }}
+              >
+                <div style={{ position: "relative", marginBottom: "30px" }}>
+                  <img
+                    src={image}
+                    alt="Scanning"
+                    style={{
+                      maxWidth: "100%",
+                      maxHeight: "250px",
+                      borderRadius: "16px",
+                      objectFit: "contain",
+                      opacity: 0.4,
+                      filter: "blur(2px)"
+                    }}
+                  />
+                  <div style={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)"
+                  }}>
+                    <motion.div
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                      style={{ fontSize: "48px" }}
+                    >
+                      🌿
+                    </motion.div>
+                  </div>
+                </div>
+                <h3 style={{
+                  fontFamily: "Syne, sans-serif",
+                  color: "var(--text)",
+                  fontSize: "1.3rem",
+                  fontWeight: "700",
+                  marginBottom: "8px"
+                }}>
+                  AI is analysing your waste...
+                </h3>
+                <p style={{ color: "var(--muted)" }}>
+                  Gemini AI is identifying the item!
+                </p>
+                <div style={{ display: "flex", justifyContent: "center", gap: "6px", marginTop: "16px" }}>
+                  {[0, 1, 2].map(i => (
+                    <motion.div
+                      key={i}
+                      animate={{ opacity: [0.3, 1, 0.3] }}
+                      transition={{ duration: 1, repeat: Infinity, delay: i * 0.2 }}
+                      style={{
+                        width: "8px",
+                        height: "8px",
+                        borderRadius: "50%",
+                        background: "#16a34a"
+                      }}
+                    />
+                  ))}
+                </div>
+              </motion.div>
+            )}
+
+            {state === "result" && result && (
+              <motion.div
+                key="result"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+              >
+                <motion.div
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  style={{
+                    background: "linear-gradient(135deg, #16a34a, #0d9488)",
+                    borderRadius: "14px",
+                    padding: "12px 20px",
+                    textAlign: "center",
+                    marginBottom: "24px",
+                    color: "white",
+                    fontWeight: "700",
+                    fontSize: "16px"
+                  }}
+                >
+                  +10 Points Earned for Scanning!
+                </motion.div>
+
+                <div style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: "20px",
+                  marginBottom: "24px"
+                }}>
+                  <img
+                    src={image}
+                    alt="Scanned"
+                    style={{
+                      width: "100%",
+                      height: "200px",
+                      objectFit: "cover",
+                      borderRadius: "16px",
+                      border: "2px solid var(--border)"
+                    }}
+                  />
+                  <div>
+                    <h2 style={{
+                      fontFamily: "Syne, sans-serif",
+                      color: "var(--text)",
+                      fontSize: "1.5rem",
+                      fontWeight: "800",
+                      marginBottom: "12px"
+                    }}>
+                      {result.itemName}
+                    </h2>
+                    <div style={{
+                      display: "inline-block",
+                      background: getCategoryColor(result.category),
+                      color: "white",
+                      borderRadius: "8px",
+                      padding: "6px 16px",
+                      fontSize: "14px",
+                      fontWeight: "700",
+                      marginBottom: "16px"
+                    }}>
+                      {result.category}
+                    </div>
+                    <div style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "10px",
+                      padding: "12px",
+                      background: "var(--bg)",
+                      borderRadius: "12px",
+                      border: "2px solid " + getBinColor(result.bin)
+                    }}>
+                      <Trash2 size={24} color={getBinColor(result.bin)} />
+                      <div>
+                        <div style={{ fontSize: "11px", color: "var(--muted)", fontWeight: "600" }}>
+                          CORRECT BIN
+                        </div>
+                        <div style={{ color: getBinColor(result.bin), fontWeight: "700", fontSize: "15px" }}>
+                          {result.bin}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(3, 1fr)",
+                  gap: "12px",
+                  marginBottom: "20px"
+                }}>
+                  {[
+                    { label: "Recyclable", value: result.recyclable, emoji: "♻️" },
+                    { label: "Biodegradable", value: result.biodegradable, emoji: "🌱" },
+                    { label: "Hazardous", value: result.hazardous, emoji: "⚠️", invert: true }
+                  ].map(item => (
+                    <div key={item.label} style={{
+                      background: "var(--bg)",
+                      border: "1px solid var(--border)",
+                      borderRadius: "12px",
+                      padding: "16px",
+                      textAlign: "center"
+                    }}>
+                      <div style={{ fontSize: "24px", marginBottom: "6px" }}>{item.emoji}</div>
+                      <div style={{ fontSize: "11px", color: "var(--muted)", fontWeight: "600", marginBottom: "4px" }}>
+                        {item.label.toUpperCase()}
+                      </div>
+                      <div style={{
+                        fontWeight: "700",
+                        fontSize: "15px",
+                        color: item.invert
+                          ? (item.value ? "#dc2626" : "#16a34a")
+                          : (item.value ? "#16a34a" : "#dc2626")
+                      }}>
+                        {item.value ? "YES" : "NO"}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div style={{
+                  background: "rgba(22,163,74,0.08)",
+                  border: "1px solid rgba(22,163,74,0.3)",
+                  borderRadius: "14px",
+                  padding: "16px 20px",
+                  marginBottom: "20px",
+                  display: "flex",
+                  gap: "12px",
+                  alignItems: "flex-start"
+                }}>
+                  <Info size={20} color="#16a34a" style={{ flexShrink: 0, marginTop: "2px" }} />
+                  <div>
+                    <div style={{ fontSize: "12px", color: "#16a34a", fontWeight: "700", marginBottom: "4px" }}>
+                      DISPOSAL TIP
+                    </div>
+                    <p style={{ color: "var(--text2)", margin: 0, lineHeight: "1.5" }}>
+                      {result.disposalTip}
+                    </p>
+                  </div>
+                </div>
+
+                <div style={{ textAlign: "center", color: "var(--muted)", fontSize: "13px", marginBottom: "20px" }}>
+                  AI Confidence: {result.confidence} - Powered by Gemini AI
+                </div>
+
+                <button
+                  onClick={handleReset}
+                  style={{
+                    width: "100%",
+                    background: "linear-gradient(135deg, #16a34a, #0d9488)",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "12px",
+                    padding: "14px",
+                    fontSize: "15px",
+                    fontWeight: "700",
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "8px",
+                    fontFamily: "Syne, sans-serif"
+                  }}
+                >
+                  <RotateCcw size={16} />
+                  Scan Another Item
+                </button>
+              </motion.div>
+            )}
+
+          </AnimatePresence>
+        </motion.div>
+
+        {state === "idle" && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+          >
+            <h3 style={{
+              fontFamily: "Syne, sans-serif",
+              color: "var(--text)",
+              textAlign: "center",
+              marginBottom: "20px",
+              fontSize: "1.2rem",
+              fontWeight: "700"
+            }}>
+              How It Works
+            </h3>
+            <div style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(3, 1fr)",
+              gap: "16px"
+            }}>
+              {[
+                { emoji: "📸", title: "Upload Photo", desc: "Take or upload any waste item photo" },
+                { emoji: "🤖", title: "AI Analyses", desc: "Gemini AI identifies the waste item" },
+                { emoji: "✅", title: "Get Result", desc: "Know the bin and earn points!" }
+              ].map(item => (
+                <div key={item.title} style={{
+                  background: "var(--card)",
+                  border: "1px solid var(--border)",
+                  borderRadius: "16px",
+                  padding: "20px",
+                  textAlign: "center"
+                }}>
+                  <div style={{ fontSize: "32px", marginBottom: "8px" }}>{item.emoji}</div>
+                  <h4 style={{ color: "var(--text)", fontWeight: "700", marginBottom: "6px", fontSize: "14px" }}>
+                    {item.title}
+                  </h4>
+                  <p style={{ color: "var(--muted)", fontSize: "12px", lineHeight: "1.4", margin: 0 }}>
+                    {item.desc}
+                  </p>
+                </div>
+              ))}
             </div>
-          )}
-        </div>
+          </motion.div>
+        )}
+
       </div>
-
-      <style>{`
-        .scanner-page {
-          padding-top: calc(var(--navbar-height) + 24px);
-          padding-bottom: 80px;
-          animation: fadeInUp 0.5s ease forwards;
-        }
-
-        /* ========== HERO ========== */
-        .scanner-hero {
-          text-align: center;
-          margin-bottom: 40px;
-          padding: 24px 0;
-        }
-
-        .scanner-hero-badge {
-           display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          padding: 6px 16px;
-          background: rgba(255, 255, 255, 0.1);
-          color: #ffffff;
-          border-radius: 9999px;
-          font-size: 0.8rem;
-          font-weight: 700;
-          text-transform: uppercase;
-          letter-spacing: 0.08em;
-          margin-bottom: 12px;
-        }
-          [data-theme='light'] .scanner-hero-badge {
-          color: #000000 ;
-          background: rgba(0, 0, 0, 0.1);
-
-      }
-
-        .scanner-hero h1 {
-          font-family: 'Syne', sans-serif;
-          font-weight: 800;
-          font-size: clamp(2rem, 5vw, 3rem);
-          margin-bottom: 12px;
-          background: linear-gradient(135deg, var(--green), var(--teal));
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-        }
-
-        .scanner-hero p {
-          color: var(--muted);
-          font-size: 1.05rem;
-          max-width: 620px;
-          margin: 0 auto;
-          line-height: 1.7;
-        }
-
-        /* ========== MAIN AREA ========== */
-        .scanner-main {
-          max-width: 680px;
-          margin: 0 auto;
-        }
-
-        /* ========== IDLE STATE ========== */
-        .scanner-idle {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 24px;
-          animation: fadeInUp 0.5s ease;
-        }
-
-        .scanner-upload-zone {
-          width: 100%;
-          padding: 56px 32px;
-          border: 3px dashed var(--border);
-          border-radius: 20px;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 14px;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          background: var(--card);
-          text-align: center;
-        }
-
-        .scanner-upload-zone:hover {
-          border-color: var(--green);
-          background: rgba(22,163,74,0.03);
-          transform: translateY(-2px);
-          box-shadow: var(--shadow-md);
-        }
-
-        .scanner-upload-icon {
-          width: 80px;
-          height: 80px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: rgba(22,163,74,0.1);
-          color: var(--green);
-          border-radius: 20px;
-          margin-bottom: 8px;
-          animation: float 3s ease-in-out infinite;
-        }
-
-        .scanner-upload-zone h3 {
-          font-family: 'Syne', sans-serif;
-          font-size: 1.3rem;
-          color: var(--text);
-        }
-
-        .scanner-upload-zone p {
-          font-size: 0.92rem;
-          color: var(--muted);
-        }
-
-        .scanner-upload-formats {
-          font-size: 0.78rem;
-          color: var(--muted);
-          opacity: 0.7;
-        }
-
-        .scanner-divider-or {
-          display: flex;
-          align-items: center;
-          gap: 16px;
-          width: 100%;
-          max-width: 300px;
-          color: var(--muted);
-          font-size: 0.85rem;
-          font-weight: 600;
-        }
-
-        .scanner-divider-or::before,
-        .scanner-divider-or::after {
-          content: '';
-          flex: 1;
-          height: 1px;
-          background: var(--border);
-        }
-
-        .scanner-camera-btn {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-          padding: 16px 36px;
-          background: linear-gradient(135deg, var(--green), var(--teal));
-          color: #ffffff;
-          border: none;
-          border-radius: 14px;
-          font-size: 1rem;
-          font-weight: 700;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          box-shadow: 0 4px 16px rgba(22,163,74,0.25);
-          font-family: 'DM Sans', sans-serif;
-        }
-
-        .scanner-camera-btn:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 6px 24px rgba(22,163,74,0.35);
-        }
-
-        .scanner-camera-btn:active {
-          transform: scale(0.97);
-        }
-
-        /* How Mini */
-        .scanner-how-mini {
-          width: 100%;
-          background: var(--card);
-          border: 1px solid var(--border);
-          border-radius: 16px;
-          padding: 24px;
-          margin-top: 16px;
-        }
-
-        .scanner-how-mini h4 {
-          font-family: 'Syne', sans-serif;
-          font-size: 1rem;
-          color: var(--text);
-          margin-bottom: 16px;
-          text-align: center;
-        }
-
-        .scanner-how-steps {
-          display: flex;
-          justify-content: center;
-          gap: 24px;
-          flex-wrap: wrap;
-        }
-
-        .scanner-how-step {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          font-size: 0.88rem;
-          color: var(--text2);
-        }
-
-        .scanner-how-num {
-          width: 28px;
-          height: 28px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: rgba(255, 255, 255, 0.1);
-          color: #ffffff;
-          border-radius: 50%;
-          font-size: 0.8rem;
-          font-weight: 800;
-          font-family: 'Syne', sans-serif;
-          flex-shrink: 0;
-        }
-          [data-theme=light] .scanner-how-num{
-          color: #000000;
-          background: rgba(0, 0, 0, 0.1);
-          }
-
-        /* ========== PROCESSING STATES ========== */
-        .scanner-processing {
-          display: flex;
-          justify-content: center;
-          animation: fadeInScale 0.4s ease;
-        }
-
-        .scanner-processing-card {
-          width: 100%;
-          background: var(--card);
-          border: 1px solid var(--border);
-          border-radius: 20px;
-          padding: 32px;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 24px;
-        }
-
-        .scanner-preview-img-wrap {
-          width: 100%;
-          max-width: 400px;
-          aspect-ratio: 4/3;
-          border-radius: 14px;
-          overflow: hidden;
-          position: relative;
-        }
-
-        .scanner-preview-img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
-
-        .scanner-preview-scanning {
-          position: relative;
-        }
-
-        .scanner-scan-overlay {
-          position: absolute;
-          inset: 0;
-          overflow: hidden;
-        }
-
-        .scanner-scan-line {
-          position: absolute;
-          left: 0;
-          right: 0;
-          height: 3px;
-          background: linear-gradient(90deg, transparent, var(--green), var(--lime), var(--green), transparent);
-          box-shadow: 0 0 15px var(--green), 0 0 30px rgba(22,163,74,0.3);
-          animation: scanLineMove 1.5s ease-in-out infinite;
-        }
-
-        @keyframes scanLineMove {
-          0% { top: 0; }
-          50% { top: calc(100% - 3px); }
-          100% { top: 0; }
-        }
-
-        .scanner-scan-corners {
-          position: absolute;
-          inset: 12px;
-        }
-
-        .scanner-scan-corners span {
-          position: absolute;
-          width: 28px;
-          height: 28px;
-          border-color: var(--green);
-          border-style: solid;
-          border-width: 0;
-        }
-
-        .scanner-scan-corners span:nth-child(1) {
-          top: 0; left: 0;
-          border-top-width: 3px; border-left-width: 3px;
-          border-top-left-radius: 8px;
-        }
-
-        .scanner-scan-corners span:nth-child(2) {
-          top: 0; right: 0;
-          border-top-width: 3px; border-right-width: 3px;
-          border-top-right-radius: 8px;
-        }
-
-        .scanner-scan-corners span:nth-child(3) {
-          bottom: 0; left: 0;
-          border-bottom-width: 3px; border-left-width: 3px;
-          border-bottom-left-radius: 8px;
-        }
-
-        .scanner-scan-corners span:nth-child(4) {
-          bottom: 0; right: 0;
-          border-bottom-width: 3px; border-right-width: 3px;
-          border-bottom-right-radius: 8px;
-        }
-
-        .scanner-upload-progress {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 10px;
-          width: 100%;
-          max-width: 300px;
-        }
-
-        .scanner-upload-progress span {
-          font-size: 0.88rem;
-          color: var(--muted);
-          font-weight: 500;
-        }
-
-        .scanner-upload-progress-bar {
-          width: 100%;
-          height: 6px;
-          background: var(--bg2);
-          border-radius: 9999px;
-          overflow: hidden;
-        }
-
-        .scanner-upload-progress-fill {
-          height: 100%;
-          background: linear-gradient(90deg, var(--green), var(--lime));
-          border-radius: 9999px;
-          animation: progressAnim 0.8s ease forwards;
-        }
-
-        @keyframes progressAnim {
-          0% { width: 0; }
-          100% { width: 100%; }
-        }
-
-        .scanner-analyzing {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 14px;
-          text-align: center;
-        }
-
-        .scanner-spinner {
-          width: 52px;
-          height: 52px;
-          border: 4px solid var(--border);
-          border-top-color: var(--green);
-          border-radius: 50%;
-          animation: spin 0.8s linear infinite;
-        }
-
-        .scanner-analyzing h3 {
-          font-family: 'Syne', sans-serif;
-          font-size: 1.3rem;
-          color: var(--text);
-        }
-
-        .scanner-analyzing p {
-          font-size: 0.9rem;
-          color: var(--muted);
-        }
-
-        .scanner-dots {
-          display: flex;
-          gap: 6px;
-        }
-
-        .scanner-dots span {
-          width: 8px;
-          height: 8px;
-          background: var(--green);
-          border-radius: 50%;
-          animation: dotPulse 1.4s ease-in-out infinite;
-        }
-
-        .scanner-dots span:nth-child(2) { animation-delay: 0.2s; }
-        .scanner-dots span:nth-child(3) { animation-delay: 0.4s; }
-
-        /* ========== RESULT STATE ========== */
-        .scanner-result {
-          animation: fadeInUp 0.5s ease;
-        }
-
-        .scanner-result-card {
-          background: var(--card);
-          border: 1px solid var(--border);
-          border-radius: 20px;
-          overflow: hidden;
-        }
-
-        .scanner-result-header {
-          padding: 28px;
-        }
-
-        .scanner-result-header-content {
-          display: flex;
-          align-items: center;
-          gap: 16px;
-        }
-
-        .scanner-result-emoji {
-          font-size: 2.5rem;
-          flex-shrink: 0;
-        }
-
-        .scanner-result-name {
-          font-family: 'Syne', sans-serif;
-          font-weight: 800;
-          font-size: 1.6rem;
-          color: var(--text);
-          margin-bottom: 6px;
-        }
-
-        .scanner-result-category-badge {
-          display: inline-flex;
-          padding: 4px 14px;
-          border-radius: 9999px;
-          font-size: 0.78rem;
-          font-weight: 700;
-          text-transform: uppercase;
-          letter-spacing: 0.06em;
-        }
-
-        .scanner-result-pts-earned {
-          margin-left: auto;
-          display: flex;
-          align-items: center;
-          gap: 6px;
-          background: rgba(217,119,6,0.1);
-          color: var(--yellow);
-          padding: 8px 16px;
-          border-radius: 9999px;
-          font-weight: 800;
-          font-size: 0.95rem;
-          flex-shrink: 0;
-          animation: pulse 2s ease-in-out infinite;
-        }
-
-        /* Uploaded Image */
-        .scanner-result-image-wrap {
-          position: relative;
-          margin: 0 24px;
-          border-radius: 14px;
-          overflow: hidden;
-          max-height: 280px;
-        }
-
-        .scanner-result-image {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          max-height: 280px;
-        }
-
-        .scanner-result-image-label {
-          position: absolute;
-          top: 12px;
-          right: 12px;
-          display: flex;
-          align-items: center;
-          gap: 6px;
-          padding: 6px 14px;
-          border-radius: 9999px;
-          color: #ffffff;
-          font-size: 0.75rem;
-          font-weight: 700;
-          text-transform: uppercase;
-        }
-
-        /* Info Grid */
-        .scanner-result-info-grid {
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 12px;
-          padding: 24px;
-        }
-
-        .scanner-info-box {
-          background: var(--bg);
-          border: 1px solid var(--border);
-          border-radius: 14px;
-          padding: 18px 14px;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 8px;
-          text-align: center;
-          transition: all 0.3s ease;
-        }
-
-        .scanner-info-box:hover {
-          transform: translateY(-2px);
-          box-shadow: var(--shadow-sm);
-        }
-
-        .scanner-info-icon-wrap {
-          width: 42px;
-          height: 42px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          border-radius: 12px;
-        }
-
-        .scanner-info-label {
-          font-size: 0.75rem;
-          color: var(--muted);
-          font-weight: 600;
-          text-transform: uppercase;
-          letter-spacing: 0.06em;
-        }
-
-        .scanner-info-value {
-          font-size: 0.92rem;
-          font-weight: 800;
-          font-family: 'Syne', sans-serif;
-        }
-
-        /* Tip */
-        .scanner-result-tip {
-          margin: 0 24px;
-          padding: 20px;
-          background: var(--bg);
-          border-radius: 14px;
-          border-left: 4px solid;
-          display: flex;
-          flex-direction: column;
-          gap: 8px;
-        }
-
-        .scanner-tip-header {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-        }
-
-        .scanner-tip-header strong {
-          font-size: 0.95rem;
-          font-family: 'Syne', sans-serif;
-          color: var(--text);
-        }
-
-        .scanner-result-tip p {
-          font-size: 0.9rem;
-          color: var(--text2);
-          line-height: 1.7;
-        }
-
-        /* Points Banner */
-        .scanner-result-points-banner {
-          margin: 24px;
-          padding: 18px 24px;
-          background: linear-gradient(135deg, rgba(22,163,74,0.1), rgba(132,204,22,0.08));
-          border: 1px solid rgba(22,163,74,0.15);
-          border-radius: 14px;
-        }
-
-        .scanner-points-content {
-          display: flex;
-          align-items: center;
-          gap: 14px;
-          color: var(--green);
-        }
-
-        .scanner-points-content svg {
-          flex-shrink: 0;
-        }
-
-        .scanner-points-content strong {
-          display: block;
-          font-family: 'Syne', sans-serif;
-          font-size: 1rem;
-          color: var(--green);
-          margin-bottom: 2px;
-        }
-
-        .scanner-points-content span {
-          font-size: 0.82rem;
-          color: var(--muted);
-        }
-
-        /* Actions */
-        .scanner-result-actions {
-          display: flex;
-          gap: 12px;
-          padding: 0 24px 24px;
-        }
-
-        .scanner-action-btn {
-          flex: 1;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 10px;
-          padding: 14px 24px;
-          border-radius: 12px;
-          font-size: 0.95rem;
-          font-weight: 700;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          border: none;
-          font-family: 'DM Sans', sans-serif;
-        }
-
-        .scanner-action-btn:active {
-          transform: scale(0.97);
-        }
-
-        .scanner-action-primary {
-          background: linear-gradient(135deg, var(--green), var(--accent));
-          color: #ffffff;
-          box-shadow: 0 4px 16px rgba(22,163,74,0.25);
-        }
-
-        .scanner-action-primary:hover {
-          box-shadow: 0 6px 24px rgba(22,163,74,0.35);
-          transform: translateY(-2px);
-        }
-
-        .scanner-action-secondary {
-          background: transparent;
-          color: var(--green);
-          border: 2px solid var(--green);
-        }
-
-        .scanner-action-secondary:hover {
-          background: var(--green);
-          color: #ffffff;
-        }
-
-        /* ========== RESPONSIVE ========== */
-        @media (max-width: 768px) {
-          .scanner-page {
-            padding-top: calc(var(--navbar-height) + 16px);
-            padding-bottom: 56px;
-          }
-
-          .scanner-hero {
-            margin-bottom: 28px;
-            padding: 16px 0;
-          }
-
-          .scanner-hero h1 {
-            font-size: 1.8rem;
-          }
-
-          .scanner-upload-zone {
-            padding: 40px 20px;
-          }
-
-          .scanner-upload-icon {
-            width: 64px;
-            height: 64px;
-          }
-
-          .scanner-upload-icon svg {
-            width: 28px;
-            height: 28px;
-          }
-
-          .scanner-how-steps {
-            flex-direction: column;
-            gap: 12px;
-            align-items: flex-start;
-            padding-left: 16px;
-          }
-
-          .scanner-result-header-content {
-            flex-wrap: wrap;
-          }
-
-          .scanner-result-pts-earned {
-            margin-left: 0;
-          }
-
-          .scanner-result-info-grid {
-            grid-template-columns: repeat(2, 1fr);
-            padding: 16px;
-          }
-
-          .scanner-result-tip {
-            margin: 0 16px;
-          }
-
-          .scanner-result-points-banner {
-            margin: 16px;
-          }
-
-          .scanner-result-actions {
-            flex-direction: column;
-            padding: 0 16px 16px;
-          }
-
-          .scanner-result-image-wrap {
-            margin: 0 16px;
-          }
-
-          .scanner-processing-card {
-            padding: 24px 16px;
-          }
-        }
-
-        @media (max-width: 480px) {
-          .scanner-upload-zone h3 {
-            font-size: 1.1rem;
-          }
-
-          .scanner-result-name {
-            font-size: 1.3rem;
-          }
-
-          .scanner-result-emoji {
-            font-size: 2rem;
-          }
-
-          .scanner-result-info-grid {
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-            padding: 12px;
-          }
-
-          .scanner-info-box {
-            padding: 14px 10px;
-          }
-
-          .scanner-result-header {
-            padding: 20px 16px;
-          }
-
-          .scanner-camera-btn {
-            width: 100%;
-            justify-content: center;
-          }
-        }
-      `}</style>
     </div>
   );
 }
-
-export default WasteScanner;
