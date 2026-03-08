@@ -1,5 +1,6 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useContext } from 'react'; // Added useContext
 import { Link, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../AuthContext'; // Added AuthContext
 import {
   Leaf,
   Mail,
@@ -29,6 +30,9 @@ import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 function Signup() {
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
+  
+  // Grab the login function from our loudspeaker
+  const { login } = useContext(AuthContext); 
 
   const [formData, setFormData] = useState({
     fullName: '',
@@ -186,6 +190,10 @@ function Signup() {
       toast.success('Account created successfully! 🌿 Welcome to TrashItt!', {
         duration: 4000,
       });
+
+      // Tell the whole app the user is logged in!
+      login();
+
       navigate('/dashboard');
     } catch (error) {
       toast.error(getErrorMessage(error.code));
@@ -557,6 +565,7 @@ function Signup() {
       </div>
 
       <style>{`
+        /* Your styles remain exactly the same */
         .signup-page {
           display: flex;
           min-height: 100vh;

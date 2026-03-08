@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
+import { AuthProvider } from './AuthContext'; // <-- 1. Fixed import path
 
 import Navbar from './components/Navbar.jsx';
 import Footer from './components/Footer.jsx';
@@ -57,7 +58,8 @@ function App() {
   const shouldHideFooter = hideFooterRoutes.includes(location.pathname);
 
   return (
-    <>
+    /* 2. Replaced <> with <AuthProvider> */
+    <AuthProvider>
       <ScrollToTop />
       <Navbar theme={theme} toggleTheme={toggleTheme} />
 
@@ -136,7 +138,7 @@ function App() {
       </main>
 
       {!shouldHideFooter && <Footer />}
-    </>
+    </AuthProvider> /* 2. Replaced </> with </AuthProvider> */
   );
 }
 

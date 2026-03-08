@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState , useContext} from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../AuthContext';
 import {
   Leaf,
   Mail,
@@ -21,6 +22,9 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 
 function Login() {
   const navigate = useNavigate();
+  // 1. ADD THIS LINE: Grab the login function from our loudspeaker
+  const { login } = useContext(AuthContext); 
+  
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -98,6 +102,10 @@ function Login() {
       toast.success("Welcome back! 🌿", {
         duration: 3000,
       });
+      
+      // 2. ADD THIS LINE: Tell the whole app the user is logged in!
+      login(); 
+      
       navigate("/dashboard");
     } catch (error) {
       toast.error(getErrorMessage(error.code));
@@ -109,7 +117,7 @@ function Login() {
   const handleGoogleLogin = () => {
     toast('Google signin coming soon! 🚀');
   };
-
+  
   return (
     <div className="login-page">
       {/* Left Panel */}
@@ -311,6 +319,7 @@ function Login() {
       </div>
 
       <style>{`
+        /* ... Your styles remain exactly the same ... */
         .login-page {
           display: flex;
           min-height: 100vh;

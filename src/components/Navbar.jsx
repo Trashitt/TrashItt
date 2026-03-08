@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef , useContext } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
+import { AuthContext } from '../AuthContext';
 import myLogo from '../assets/logo.png';
 import {
   Home,
@@ -17,6 +18,7 @@ import {
   X,
   LogIn,
   UserPlus,
+  UserCircle, // Added UserCircle for the profile icon
 } from 'lucide-react';
 
 const navLinks = [
@@ -31,11 +33,13 @@ const navLinks = [
   { path: '/faq', label: 'FAQ', icon: HelpCircle },
 ];
 
-function Navbar({ theme, toggleTheme }) {
+// Added isAuthenticated prop (defaulting to false)
+function Navbar({ theme, toggleTheme  }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const mobileMenuRef = useRef(null);
   const location = useLocation();
+  const { isAuthenticated } = useContext(AuthContext);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -85,8 +89,8 @@ function Navbar({ theme, toggleTheme }) {
       <nav className={`navbar ${scrolled ? 'navbar-scrolled' : ''}`}>
         <div className="navbar-inner">
           {/* DESKTOP LOGO */}
-          <Link to="/" className="navbar-logo" aria-label="TrashItt Home">
-            <img src={myLogo} alt="TrashItt Logo" className="navbar-logo-img" />
+          <Link to="/" className="navbar-logo" aria-label="Home">
+            <img src={myLogo} alt="Logo" className="navbar-logo-img" />
           </Link>
 
           <div className="navbar-links-desktop">
@@ -118,15 +122,26 @@ function Navbar({ theme, toggleTheme }) {
               </div>
             </button>
 
-            <Link to="/login" className="navbar-btn navbar-btn-login">
-              <LogIn size={16} />
-              <span>Login</span>
-            </Link>
+            {/* CONDITIONAL RENDERING FOR DESKTOP AUTH BUTTONS */}
+            {/* ENHANCED PROFILE ICON FOR DESKTOP */}
+{isAuthenticated ? (
+  <Link to="/dashboard" className="navbar-profile-container" aria-label="Dashboard">
+      <UserCircle size={32} strokeWidth={1.2} />
+      <div className="profile-online-indicator"></div>
+  </Link>
+) : (
+  <>
+    <Link to="/login" className="navbar-btn navbar-btn-login">
+      <LogIn size={16} />
+      <span>Login</span>
+    </Link>
 
-            <Link to="/signup" className="navbar-btn navbar-btn-signup">
-              <UserPlus size={16} />
-              <span>Sign Up</span>
-            </Link>
+    <Link to="/signup" className="navbar-btn navbar-btn-signup">
+      <UserPlus size={16} />
+      <span>Sign Up</span>
+    </Link>
+  </>
+)}
 
             <button
               className="navbar-hamburger"
@@ -149,7 +164,7 @@ function Navbar({ theme, toggleTheme }) {
         <div className="mobile-menu-header">
           {/* MOBILE MENU LOGO */}
           <Link to="/" className="navbar-logo" onClick={() => setMobileOpen(false)}>
-            <img src={myLogo} alt="TrashItt Logo" className="navbar-logo-img" />
+            <img src={myLogo} alt="Logo" className="navbar-logo-img" />
           </Link>
           <button
             className="mobile-menu-close"
@@ -183,22 +198,36 @@ function Navbar({ theme, toggleTheme }) {
 
         <div className="mobile-menu-footer">
           <div className="mobile-menu-auth">
-            <Link
-              to="/login"
-              className="navbar-btn navbar-btn-login mobile-auth-btn"
-              onClick={() => setMobileOpen(false)}
-            >
-              <LogIn size={16} />
-              <span>Login</span>
-            </Link>
-            <Link
-              to="/signup"
-              className="navbar-btn navbar-btn-signup mobile-auth-btn"
-              onClick={() => setMobileOpen(false)}
-            >
-              <UserPlus size={16} />
-              <span>Sign Up</span>
-            </Link>
+            {/* CONDITIONAL RENDERING FOR MOBILE AUTH BUTTONS */}
+            {isAuthenticated ? (
+              <Link
+                to="/dashboard"
+                className="navbar-btn navbar-btn-signup mobile-auth-btn"
+                onClick={() => setMobileOpen(false)}
+              >
+                <UserCircle size={18} />
+                <span>Dashboard</span>
+              </Link>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  className="navbar-btn navbar-btn-login mobile-auth-btn"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  <LogIn size={16} />
+                  <span>Login</span>
+                </Link>
+                <Link
+                  to="/signup"
+                  className="navbar-btn navbar-btn-signup mobile-auth-btn"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  <UserPlus size={16} />
+                  <span>Sign Up</span>
+                </Link>
+              </>
+            )}
           </div>
 
           <button
@@ -212,6 +241,7 @@ function Navbar({ theme, toggleTheme }) {
       </div>
 
       <style>{`
+        /* EXISTING STYLES... */
         .navbar {
           position: fixed;
           top: 0;
@@ -260,7 +290,6 @@ function Navbar({ theme, toggleTheme }) {
           z-index: 10;
         }
 
-        /* NEW LOGO IMAGE STYLES */
         .navbar-logo-img {
           height: 70px;
           width: auto;
@@ -408,6 +437,40 @@ function Navbar({ theme, toggleTheme }) {
           transform: translateY(-1px);
         }
 
+.navbar-profile-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  text-decoration: none;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  margin-left: 10px;
+}
+
+.navbar-profile-container:hover {
+  transform: scale(1.1);
+}
+
+.navbar-profile-container:hover {
+border-radius:50%;  
+background: linear-gradient(135deg, var(--green), var(--teal));
+  color: #ffffff;
+  border-color: transparent;
+  box-shadow: 0 4px 15px rgba(22, 163, 74, 0.3);
+}
+
+
+/* Adjustments for Mobile */
+@media (max-width: 768px) {
+  .profile-avatar-wrapper {
+    width: 38px;
+    height: 38px;
+  }
+  
+  .navbar-profile-container:hover {
+    transform: none; /* Disable hover scale on touch devices */
+  }
+}
         .navbar-hamburger {
           display: none;
           width: 42px;
@@ -427,7 +490,6 @@ function Navbar({ theme, toggleTheme }) {
           color: var(--green);
         }
 
-        /* Mobile Overlay */
         .mobile-overlay {
           position: fixed;
           top: 0;
@@ -446,7 +508,6 @@ function Navbar({ theme, toggleTheme }) {
           to { opacity: 1; }
         }
 
-        /* Mobile Menu */
         .mobile-menu {
           position: fixed;
           top: 0;
@@ -579,7 +640,6 @@ function Navbar({ theme, toggleTheme }) {
           border-color: var(--green);
         }
 
-        /* Responsive */
         @media (max-width: 1200px) {
           .navbar-links-desktop {
             gap: 2px;
@@ -595,8 +655,6 @@ function Navbar({ theme, toggleTheme }) {
           .navbar-links-desktop {
             display: none;
           }
-
-          /* Removed the display: none for login/signup here so they appear on mobile! */
 
           .navbar-hamburger {
             display: flex;
@@ -616,7 +674,6 @@ function Navbar({ theme, toggleTheme }) {
             width: 300px;
           }
 
-          /* Convert top navbar auth buttons to icons-only so they fit well */
           .navbar-actions .navbar-btn span {
             display: none;
           }

@@ -113,7 +113,8 @@ export default function Dashboard() {
             padding: "32px",
             marginBottom: "24px",
             position: "relative",
-            overflow: "hidden"
+            overflow: "hidden",
+            marginTop: "20px"
           }}
         >
           <div style={{
@@ -166,7 +167,7 @@ export default function Dashboard() {
                 </span>
               </div>
             </div>
-            <div style={{ textAlign: "right" }}>
+            <div style={{ textAlign: "right" , marginTop: "40px" }}>
               <div style={{
                 fontFamily: "Syne, sans-serif",
                 fontSize: "2.5rem",
@@ -176,7 +177,7 @@ export default function Dashboard() {
               }}>
                 {points}
               </div>
-              <div style={{ color: "rgba(255,255,255,0.7)", fontSize: "13px" }}>
+              <div style={{ color: "rgba(255,255,255,0.7)", fontSize: "13px"}}>
                 Total Points
               </div>
             </div>
