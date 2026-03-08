@@ -91,7 +91,6 @@ export default function Dashboard() {
 
   const points = userData?.points || 0;
   const badge = getBadge(points);
-
   const nextTarget = points >= 5000 ? 5000 : points >= 1001 ? 5000 : points >= 501 ? 1001 : points >= 101 ? 501 : 101;
   const progress = Math.min(Math.round((points / nextTarget) * 100), 100);
   const nextName = points >= 5000 ? "Max!" : points >= 1001 ? "TrashItt Hero" : points >= 501 ? "Recycling Legend" : points >= 101 ? "Eco Champion" : "Green Warrior";
@@ -251,7 +250,6 @@ export default function Dashboard() {
           gap: "20px",
           marginBottom: "24px"
         }}>
-
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -354,7 +352,6 @@ export default function Dashboard() {
               ))}
             </div>
           </motion.div>
-
         </div>
 
         <motion.div
@@ -379,7 +376,6 @@ export default function Dashboard() {
               Getting Started
             </h3>
           </div>
-
           {[
             { emoji: "🌿", text: "Account created! Welcome to TrashItt!", time: "Done!", pts: "+10" },
             { emoji: "🔍", text: "Scan a waste item with AI Scanner", time: "Try now", pts: "+10" },
