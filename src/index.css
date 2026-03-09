@@ -1966,7 +1966,9 @@ input:focus:not(:focus-visible) {
 .ngo-hero h1,
 .about-hero-content h1,
 .faq-hero h1,
-.ch-hero h1{
+.ch-hero h1,
+.pickup-hero h1,
+.recycling-header h1{
   font-family: var(--font-heading) !important;
   font-size: clamp(2.2rem, 6vw, 4rem) !important;
   letter-spacing: 2px !important;

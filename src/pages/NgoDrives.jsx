@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Heart,
   MapPin,
@@ -166,6 +167,7 @@ function NgoDrives() {
   const toggleExpand = (id) => {
     setExpandedDrive(expandedDrive === id ? null : id);
   };
+  const navigate = useNavigate();
 
   return (
     <div className="ngo-page page-wrapper">
@@ -418,7 +420,7 @@ function NgoDrives() {
               </p>
               <button
                 className="ngo-cta-btn"
-                onClick={() => toast.success('Thank you! Our team will contact you soon. 📞')}
+                onClick={() => navigate('/Login')}
               >
                 <span>Get in Touch</span>
                 <ArrowRight size={18} />

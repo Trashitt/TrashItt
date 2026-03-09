@@ -213,7 +213,7 @@ export default function Dashboard() {
           {[
             { icon: "🏆", value: points, label: "Total Points", color: "#d97706" },
             { icon: "📍", value: userData?.rank ? "#" + userData.rank : "--", label: "Your Rank", color: "#16a34a" },
-            { icon: "📸", value: userData?.reportsCount || 0, label: "Reports Filed", color: "#0d9488" },
+            { icon: "📸", value: userData?.reportsCount || 0, label: "Pickups Scheduled", color: "#0d9488" },
             { icon: "🔥", value: userData?.challengesCount || 0, label: "Challenges", color: "#dc2626" }
           ].map((stat, i) => (
             <motion.div key={i}

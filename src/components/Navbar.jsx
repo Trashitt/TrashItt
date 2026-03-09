@@ -18,7 +18,7 @@ import {
   X,
   LogIn,
   UserPlus,
-  UserCircle, // Added UserCircle for the profile icon
+  UserCircle, 
 } from 'lucide-react';
 
 const navLinks = [
@@ -33,7 +33,6 @@ const navLinks = [
   { path: '/faq', label: 'FAQ', icon: HelpCircle },
 ];
 
-// Added isAuthenticated prop (defaulting to false)
 function Navbar({ theme, toggleTheme  }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -88,7 +87,7 @@ function Navbar({ theme, toggleTheme  }) {
     <>
       <nav className={`navbar ${scrolled ? 'navbar-scrolled' : ''}`}>
         <div className="navbar-inner">
-          {/* DESKTOP LOGO */}
+          
           <Link to="/" className="navbar-logo" aria-label="Home">
             <img src={myLogo} alt="Logo" className="navbar-logo-img" />
           </Link>
@@ -345,7 +344,7 @@ function Navbar({ theme, toggleTheme  }) {
           width: 80%;
           height: 2px;
           background: var(--green);
-          border-radius: 100%;
+          border-radius: 2px;
           transition: transform 0.25s ease;
         }
 

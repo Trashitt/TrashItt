@@ -17,6 +17,10 @@ import Gallery from './pages/Gallery.jsx';
 import NgoDrives from './pages/NgoDrives.jsx';
 import About from './pages/About.jsx';
 import FAQ from './pages/FAQ.jsx';
+import CollectorDashboard from './pages/CollectorDashboard.jsx';
+import SchedulePickup from './pages/SchedulePickup.jsx';
+import LocalRecycling from './pages/LocalRecycling.jsx';
+
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -77,6 +81,9 @@ function App() {
           <Route path="/ngo-drives" element={<NgoDrives />} />
           <Route path="/about" element={<About />} />
           <Route path="/faq" element={<FAQ />} />
+          <Route path="/schedule-pickup" element={<SchedulePickup />} />
+          <Route path="/collector-dashboard" element={<CollectorDashboard />} />
+          <Route path="/local-recycling" element={<LocalRecycling />} />
           <Route
             path="*"
             element={
