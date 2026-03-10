@@ -363,7 +363,8 @@ export default function SchedulePickup() {
         .req-icon-fallback { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
         
         .req-details { flex: 1; min-width: 0; }
-        .req-details h4 { font-size: 1rem; margin-bottom: 4px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .req-details h4 { font-size: 1rem; margin-bottom: 4px; 
+        color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .req-details span { display: flex; align-items: center; gap: 4px; font-size: 0.8rem; color: var(--muted); }
         
         .req-status { display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 9999px; font-size: 0.8rem; font-weight: 600; flex-shrink: 0; }
