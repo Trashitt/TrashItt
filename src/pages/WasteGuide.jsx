@@ -130,12 +130,26 @@ function WasteGuide() {
   }, []);
 
   const filteredItems = useMemo(() => {
-    const items = allItems[activeTab];
-    if (!searchQuery.trim()) return items;
-    return items.filter((item) =>
-      item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.tip.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    const query = searchQuery.trim().toLowerCase();
+
+    // when there's no search text, just show items from the current tab
+    if (!query) {
+      return allItems[activeTab].map((item) => ({ ...item, category: activeTab }));
+    }
+
+    // otherwise search across every category and tag each match with its category
+    const results = [];
+    Object.entries(allItems).forEach(([cat, items]) => {
+      items.forEach((item) => {
+        if (
+          item.name.toLowerCase().includes(query) ||
+          item.tip.toLowerCase().includes(query)
+        ) {
+          results.push({ ...item, category: cat });
+        }
+      });
+    });
+    return results;
   }, [activeTab, searchQuery, allItems]);
 
   const allFilteredCount = useMemo(() => {
@@ -154,13 +168,15 @@ function WasteGuide() {
     return count;
   }, [searchQuery, allItems]);
 
-  const getTabColor = () => {
-    const tab = tabs.find((t) => t.id === activeTab);
+  // helper that can be used either with the active tab or with an arbitrary
+  // category (needed when search results span multiple tabs)
+  const getTabColor = (cat = activeTab) => {
+    const tab = tabs.find((t) => t.id === cat);
     return tab ? tab.color : '#16a34a';
   };
 
-  const getTabBg = () => {
-    const tab = tabs.find((t) => t.id === activeTab);
+  const getTabBg = (cat = activeTab) => {
+    const tab = tabs.find((t) => t.id === cat);
     return tab ? tab.bg : 'rgba(22,163,74,0.1)';
   };
 
@@ -244,8 +260,8 @@ function WasteGuide() {
                 className={`wg-item-card ${expandedItem === item.name ? 'wg-item-expanded' : ''}`}
                 key={item.name}
                 style={{
-                  '--item-color': getTabColor(),
-                  '--item-bg': getTabBg(),
+                  '--item-color': getTabColor(item.category),
+                  '--item-bg': getTabBg(item.category),
                   animationDelay: `${index * 0.04}s`,
                 }}
                 onClick={() => toggleItem(item.name)}
@@ -254,10 +270,13 @@ function WasteGuide() {
                   <span className="wg-item-emoji">{item.icon}</span>
                   <div className="wg-item-info">
                     <h4 className="wg-item-name">{item.name}</h4>
-                    <span className="wg-item-category" style={{ color: getTabColor(), background: getTabBg() }}>
-                      {activeTab === 'wet' && '🟢 Wet Waste'}
-                      {activeTab === 'dry' && '🔵 Dry Waste'}
-                      {activeTab === 'hazardous' && '🔴 Hazardous'}
+                    <span
+                      className="wg-item-category"
+                      style={{ color: getTabColor(item.category), background: getTabBg(item.category) }}
+                    >
+                      {item.category === 'wet' && '🟢 Wet Waste'}
+                      {item.category === 'dry' && '🔵 Dry Waste'}
+                      {item.category === 'hazardous' && '🔴 Hazardous'}
                     </span>
                   </div>
                   {item.warning && (
