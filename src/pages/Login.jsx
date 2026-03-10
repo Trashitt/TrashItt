@@ -17,8 +17,9 @@ import {
 import toast from 'react-hot-toast';
 
 // Firebase Imports
-import { auth } from "../firebase";
+import { auth, db } from "../firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
 
 function Login() {
   const navigate = useNavigate();
@@ -98,15 +99,26 @@ function Login() {
 
     setLoading(true);
     try {
-      await signInWithEmailAndPassword(auth, formData.email, formData.password);
+      const userCredential = await signInWithEmailAndPassword(auth, formData.email, formData.password);
+      const user = userCredential.user;
+      
+      // Fetch user role from Firestore
+      const userDoc = await getDoc(doc(db, 'users', user.uid));
+      const userRole = userDoc.exists() ? (userDoc.data().role || 'Citizen') : 'Citizen';
+      
       toast.success("Welcome back! 🌿", {
         duration: 3000,
       });
       
-      // 2. ADD THIS LINE: Tell the whole app the user is logged in!
-      login(); 
+      // Tell the whole app the user is logged in and pass the role!
+      login(userRole); 
       
-      navigate("/dashboard");
+      // Redirect based on role
+      if (userRole === 'Waste Collector') {
+        navigate("/collector-dashboard");
+      } else {
+        navigate("/dashboard");
+      }
     } catch (error) {
       toast.error(getErrorMessage(error.code));
     } finally {

@@ -51,7 +51,7 @@ function Signup() {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
 
-  const roles = ['Citizen', 'Student', 'NGO'];
+  const roles = ['Citizen', 'Student', 'NGO', 'Waste Collector'];
 
   // Password Strength Logic
   const getPasswordStrength = (password) => {
@@ -191,10 +191,15 @@ function Signup() {
         duration: 4000,
       });
 
-      // Tell the whole app the user is logged in!
-      login();
+      // Tell the whole app the user is logged in and pass the role!
+      login(formData.role);
 
-      navigate('/dashboard');
+      // Redirect based on role
+      if (formData.role === 'Waste Collector') {
+        navigate('/collector-dashboard');
+      } else {
+        navigate('/dashboard');
+      }
     } catch (error) {
       toast.error(getErrorMessage(error.code));
     } finally {
@@ -524,7 +529,7 @@ function Signup() {
               </div>
             </div>
 
-            <div className="signup-right-stats">
+            {/* <div className="signup-right-stats">
               <div className="signup-right-stat">
                 <strong>1,247+</strong>
                 <span>Citizens</span>
@@ -539,7 +544,7 @@ function Signup() {
                 <strong>89</strong>
                 <span>Areas</span>
               </div>
-            </div>
+            </div> */}
           </div>
 
           <div className="signup-right-footer">
@@ -1072,32 +1077,6 @@ function Signup() {
         .signup-feature span {
           color: rgba(255,255,255,0.6);
           font-size: 0.83rem;
-        }
-
-        .signup-right-stats {
-          display: flex;
-          align-items: center;
-          gap: 20px;
-          margin-top: 8px;
-        }
-
-        .signup-right-stat {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 2px;
-        }
-
-        .signup-right-stat strong {
-          font-family: 'Syne', sans-serif;
-          font-weight: 800;
-          font-size: 1.3rem;
-          color: #ffffff;
-        }
-
-        .signup-right-stat span {
-          font-size: 0.78rem;
-          color: rgba(255,255,255,0.6);
         }
 
         .signup-right-stat-divider {

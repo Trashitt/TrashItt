@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState , useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { AuthContext } from '../AuthContext';
 import { 
   MapPin, Package, CheckCircle, Navigation, 
   Trash2, ShieldCheck, Clock, Award, LogOut
@@ -7,6 +9,7 @@ import {
 import toast from 'react-hot-toast';
 
 export default function CollectorDashboard() {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('available');
   
   // Mock Data
@@ -30,10 +33,11 @@ export default function CollectorDashboard() {
     toast.success('Pickup marked as completed! Points awarded to user. 🏆');
   };
 
-  const handleLogout = () => {
-    toast.success('Logged out successfully!');
-    // Add your actual logout routing logic here
-  };
+ const { logout } = useContext(AuthContext);
+const handleLogout = async () => {
+  await logout(); // Clears auth + role
+  navigate('/');
+};
 
   return (
     <div className="collector-page page-wrapper">

@@ -18,17 +18,19 @@ import {
   X,
   LogIn,
   UserPlus,
-  UserCircle, 
+  UserCircle,
+  Truck,
 } from 'lucide-react';
 
-const navLinks = [
+const allNavLinks = [
   { path: '/', label: 'Home', icon: Home },
   { path: '/waste-guide', label: 'Waste Guide', icon: BookOpen },
-  { path: '/scanner', label: 'Scanner', icon: ScanLine },
+  { path: '/scanner', label: 'Scanner', icon: ScanLine, hideFor: ['Waste Collector'] },
   { path: '/challenges', label: 'Challenges', icon: Trophy },
   { path: '/leaderboard', label: 'Leaderboard', icon: Medal },
   { path: '/gallery', label: 'Gallery', icon: Image },
   { path: '/ngo-drives', label: 'NGO Drives', icon: Heart },
+  { path: '/schedule-pickup', label: 'Schedule Pickup', icon: Truck, hideFor: ['Waste Collector'] },
   { path: '/about', label: 'About', icon: Info },
   { path: '/faq', label: 'FAQ', icon: HelpCircle },
 ];
@@ -38,7 +40,7 @@ function Navbar({ theme, toggleTheme  }) {
   const [scrolled, setScrolled] = useState(false);
   const mobileMenuRef = useRef(null);
   const location = useLocation();
-  const { isAuthenticated } = useContext(AuthContext);
+  const { isAuthenticated, userRole, loading } = useContext(AuthContext);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -83,6 +85,18 @@ function Navbar({ theme, toggleTheme  }) {
     return () => document.removeEventListener('keydown', handleKey);
   }, []);
 
+  // Filter nav links based on user role
+  const getFilteredNavLinks = () => {
+    return allNavLinks.filter(link => {
+      if (link.hideFor && link.hideFor.includes(userRole)) {
+        return false;
+      }
+      return true;
+    });
+  };
+
+  const navLinks = getFilteredNavLinks();
+
   return (
     <>
       <nav className={`navbar ${scrolled ? 'navbar-scrolled' : ''}`}>
@@ -124,7 +138,7 @@ function Navbar({ theme, toggleTheme  }) {
             {/* CONDITIONAL RENDERING FOR DESKTOP AUTH BUTTONS */}
             {/* ENHANCED PROFILE ICON FOR DESKTOP */}
 {isAuthenticated ? (
-  <Link to="/dashboard" className="navbar-profile-container" aria-label="Dashboard">
+  <Link to={userRole === 'Waste Collector' ? "/collector-dashboard" : "/dashboard"} className="navbar-profile-container" aria-label="Dashboard">
       <UserCircle size={32} strokeWidth={1.2} />
       <div className="profile-online-indicator"></div>
   </Link>
@@ -200,7 +214,7 @@ function Navbar({ theme, toggleTheme  }) {
             {/* CONDITIONAL RENDERING FOR MOBILE AUTH BUTTONS */}
             {isAuthenticated ? (
               <Link
-                to="/dashboard"
+                to={userRole === 'Waste Collector' ? "/collector-dashboard" : "/dashboard"}
                 className="navbar-btn navbar-btn-signup mobile-auth-btn"
                 onClick={() => setMobileOpen(false)}
               >

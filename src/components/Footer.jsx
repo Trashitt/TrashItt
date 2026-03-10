@@ -23,7 +23,6 @@ function Footer() {
     { label: 'Home', path: '/' },
     { label: 'Waste Guide', path: '/waste-guide' },
     { label: 'AI Scanner', path: '/scanner' },
-    { label: 'Dashboard', path: '/dashboard' },
     { label: 'Leaderboard', path: '/leaderboard' },
     { label: 'FAQ', path: '/faq' },
   ];
