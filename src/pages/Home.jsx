@@ -20,6 +20,7 @@ import {
   Star,
   Clock,
   ArrowUpRight,
+  BookOpen,
 } from 'lucide-react';
 import Ticker from '../components/Ticker.jsx';
 
@@ -280,9 +281,9 @@ function Home() {
           <ScanLine size={20} />
           <span>Try AI Scanner</span>
         </Link>
-        <Link to="/challenges" className="btn btn-secondary btn-lg home-hero-btn">
-          <Trophy size={20} />
-          <span>Join Challenges</span>
+        <Link to="/local-recycling" className="btn btn-secondary btn-lg home-hero-btn">
+          <Recycle size={20} />
+          <span>Recycling Centers</span>
         </Link>
       </div>
 
@@ -347,15 +348,17 @@ function Home() {
       </div>
 
       <div className="floating-card fc-5">
-        <AlertTriangle size={20} className="fc-icon" style={{ color: '#7c3aed' }}/>
-        <strong>Report Issues</strong>
-        <span>Fix your city</span>
+        <Link to="/waste-pickup" style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
+          <Package size={20} className="fc-icon" style={{ color: '#7c3aed' }}/>
+          <strong>Schedule Pickup</strong>
+          <span>Doorstep collection</span>
+        </Link>
       </div>
 
       <div className="floating-card fc-6">
-        <TrendingUp size={20} className="fc-icon" style={{ color: 'var(--teal)' }}/>
-        <strong>Impact Tracker</strong>
-        <span>Live CO₂ stats</span>
+        <BookOpen size={20} className="fc-icon" style={{ color: 'var(--teal)' }}/>
+        <strong>Waste Guide</strong>
+        <span>How to segregate</span>
       </div>
     </div>
     

@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
-import { AuthProvider } from './AuthContext'; // <-- 1. Fixed import path
+import React, { useState, useEffect, useContext } from 'react';
+import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
+import { AuthProvider, AuthContext } from './AuthContext'; // <-- 1. Fixed import path
 
 import Navbar from './components/Navbar.jsx';
 import Footer from './components/Footer.jsx';
@@ -18,7 +18,7 @@ import NgoDrives from './pages/NgoDrives.jsx';
 import About from './pages/About.jsx';
 import FAQ from './pages/FAQ.jsx';
 import CollectorDashboard from './pages/CollectorDashboard.jsx';
-import SchedulePickup from './pages/SchedulePickup.jsx';
+import WastePickup from './pages/WastePickup.jsx';
 import LocalRecycling from './pages/LocalRecycling.jsx';
 
 
@@ -30,6 +30,31 @@ function ScrollToTop() {
   }, [pathname]);
 
   return null;
+}
+
+// Protected Route Component
+function ProtectedRoute({ children, allowedRoles }) {
+  const { isAuthenticated, userRole, loading } = useContext(AuthContext);
+
+  if (loading) {
+    // Don't show loading here, let the component handle it
+    return null;
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (!allowedRoles.includes(userRole)) {
+    // Redirect collectors to their dashboard if trying to access normal dashboard
+    if (userRole === 'Waste Collector') {
+      return <Navigate to="/collector-dashboard" replace />;
+    }
+    // Redirect normal users to dashboard if trying to access collector dashboard
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  return children;
 }
 
 function App() {
@@ -81,7 +106,7 @@ function App() {
           <Route path="/ngo-drives" element={<NgoDrives />} />
           <Route path="/about" element={<About />} />
           <Route path="/faq" element={<FAQ />} />
-          <Route path="/schedule-pickup" element={<SchedulePickup />} />
+          <Route path="/waste-pickup" element={<WastePickup />} />
           <Route path="/collector-dashboard" element={<CollectorDashboard />} />
           <Route path="/local-recycling" element={<LocalRecycling />} />
           <Route

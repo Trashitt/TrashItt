@@ -23,40 +23,39 @@ export default function Dashboard() {
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, async (firebaseUser) => {
-      if (!firebaseUser) {
-        navigate("/login");
-        return;
-      }
-      setUser(firebaseUser);
-      try {
-        const snap = await getDoc(doc(db, "users", firebaseUser.uid));
-        if (snap.exists()) {
-          setUserData(snap.data());
-        } else {
+      if (firebaseUser) {
+        setUser(firebaseUser);
+        try {
+          const snap = await getDoc(doc(db, "users", firebaseUser.uid));
+          if (snap.exists()) {
+            setUserData(snap.data());
+          } else {
+            setUserData({
+              name: firebaseUser.displayName || "TrashItt User",
+              email: firebaseUser.email,
+              points: 0,
+              badge: "Beginner",
+              reportsCount: 0,
+              challengesCount: 0,
+              city: "Ranchi"
+            });
+          }
+        } catch (error) {
+          console.error('Error fetching user data:', error);
           setUserData({
             name: firebaseUser.displayName || "TrashItt User",
             email: firebaseUser.email,
             points: 0,
-            badge: "Beginner",
             reportsCount: 0,
             challengesCount: 0,
             city: "Ranchi"
           });
         }
-      } catch {
-        setUserData({
-          name: firebaseUser.displayName || "TrashItt User",
-          points: 0,
-          reportsCount: 0,
-          challengesCount: 0,
-          city: "Ranchi"
-        });
-      } finally {
-        setLoading(false);
       }
+      setLoading(false);
     });
     return () => unsub();
-  }, [navigate]);
+  }, []);
 
   const handleLogout = async () => {
     await signOut(auth);

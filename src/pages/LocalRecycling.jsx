@@ -61,6 +61,20 @@ export default function LocalRecycling() {
   const [activeCategory, setActiveCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
 
+  // Helper function to open Google Maps directions
+  const openDirections = (address) => {
+    const encodedAddress = encodeURIComponent(address);
+    const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodedAddress}`;
+    window.open(mapsUrl, '_blank');
+  };
+
+  // Helper function to open interactive map
+  const openInteractiveMap = () => {
+    // Open Google Maps showing Ranchi area
+    const mapsUrl = `https://www.google.com/maps/place/Ranchi,+Jharkhand/@23.3432048,85.239322,12z`;
+    window.open(mapsUrl, '_blank');
+  };
+
   // Filter logic
   const filteredCenters = recyclingCenters.filter(center => {
     const matchesCategory = activeCategory === 'All' || center.categories.includes(activeCategory);
@@ -149,7 +163,7 @@ export default function LocalRecycling() {
                     </div>
 
                     <div className="center-actions">
-                      <button className="direction-btn">
+                      <button className="direction-btn" onClick={() => openDirections(center.address)}>
                         <Navigation size={16} /> Get Directions
                       </button>
                     </div>
@@ -183,7 +197,7 @@ export default function LocalRecycling() {
                 title="Ranchi Recycling Map"
               ></iframe>
               <div className="map-overlay-btn">
-                <button className="interactive-map-btn">Open Interactive Map <ArrowRight size={16}/></button>
+                <button className="interactive-map-btn" onClick={openInteractiveMap}>Open Interactive Map <ArrowRight size={16}/></button>
               </div>
             </div>
           </motion.div>

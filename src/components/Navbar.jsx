@@ -30,7 +30,7 @@ const allNavLinks = [
   { path: '/leaderboard', label: 'Leaderboard', icon: Medal },
   { path: '/gallery', label: 'Gallery', icon: Image },
   { path: '/ngo-drives', label: 'NGO Drives', icon: Heart },
-  { path: '/schedule-pickup', label: 'Schedule Pickup', icon: Truck, hideFor: ['Waste Collector'] },
+  { path: '/waste-pickup', label: 'Waste Pickup', icon: Truck, hideFor: ['Waste Collector'] },
   { path: '/about', label: 'About', icon: Info },
   { path: '/faq', label: 'FAQ', icon: HelpCircle },
 ];

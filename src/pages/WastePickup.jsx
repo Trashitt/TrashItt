@@ -1,29 +1,63 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import mapImg from '../assets/map.png';
-import { 
-  Truck, MapPin, Calendar, Package, CheckCircle, Clock, 
+import { AuthContext } from '../AuthContext';
+import { PickupService } from '../services/pickupService';
+import {
+  Truck, MapPin, Calendar, Package, CheckCircle, Clock,
   ArrowRight, Droplets, AlertTriangle, Recycle, Navigation,
   Camera, Upload, X, Image as ImageIcon
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function SchedulePickup() {
+  const { user, userRole, loading: authLoading } = useContext(AuthContext);
+  const navigate = useNavigate();
   const [wasteType, setWasteType] = useState('Recyclable');
   const [address, setAddress] = useState('');
   const [date, setDate] = useState('');
   const [isDetecting, setIsDetecting] = useState(false);
-  
+
   // Image Upload State
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const fileInputRef = useRef(null);
   const cameraInputRef = useRef(null);
 
-  const [requests, setRequests] = useState([
-    { id: 1, type: 'Recyclable', date: 'March 10, 2026', status: 'Pending', img: 'https://picsum.photos/seed/waste1/100/100' },
-    { id: 2, type: 'Hazardous Waste', date: 'Feb 25, 2026', status: 'Completed', img: null }
-  ]);
+  // Requests state - will be populated from Firestore
+  const [requests, setRequests] = useState([]);
+  const [loading, setLoading] = useState(true);
+  // Subscribe to user's pickup requests
+  useEffect(() => {
+    if (!user) {
+      setLoading(false);
+      return;
+    }
+
+    const unsubscribe = PickupService.subscribeToUserRequests(user.uid, (userRequests) => {
+      setRequests(userRequests);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, [user]);
+
+  // Redirect if not authenticated or not a regular user
+  useEffect(() => {
+    if (authLoading) return; // wait until auth state resolved
+
+    if (!user || !userRole) {
+      // not logged in or role missing -> send to homepage
+      navigate('/');
+      return;
+    }
+
+    if (userRole === 'Waste Collector') {
+      // collectors should not use this page
+      navigate('/collector-dashboard');
+    }
+  }, [authLoading, user, userRole, navigate]);
 
   const wasteCategories = [
     { id: 'Wet Waste', icon: Droplets, color: '#16a34a' },
@@ -60,29 +94,50 @@ export default function SchedulePickup() {
   };
 
   // Submit Handler
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!user) {
+      toast.error('Please login to schedule a pickup!');
+      return;
+    }
+
     if (!address || !date || !wasteType) {
       toast.error('Please fill in all required fields!');
       return;
     }
-    
-    const newReq = {
-      id: Date.now(),
-      type: wasteType,
-      date: new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-      status: 'Pending',
-      img: imagePreview
-    };
-    
-    setRequests([newReq, ...requests]);
-    toast.success('Pickup scheduled successfully! We will notify you when a collector accepts it.');
-    
-    // Reset Form
-    setAddress('');
-    setDate('');
-    setImageFile(null);
-    setImagePreview(null);
+
+    try {
+      const pickupData = {
+        userId: user.uid,
+        userName: user.displayName || user.email,
+        userEmail: user.email,
+        wasteType,
+        address,
+        preferredDate: date,
+        imageUrl: imagePreview || null,
+        location: {
+          // You can add actual coordinates here if available
+          address: address
+        }
+      };
+
+      console.log('Submitting pickup request:', pickupData);
+      await PickupService.createPickupRequest(pickupData);
+
+      toast.success('Pickup scheduled successfully! We will notify you when a collector accepts it.');
+
+      // Reset form
+      setAddress('');
+      setDate('');
+      setImageFile(null);
+      setImagePreview(null);
+      setWasteType('Recyclable');
+
+    } catch (error) {
+      console.error('Error scheduling pickup:', error);
+      toast.error('Failed to schedule pickup. Please try again.');
+    }
   };
 
   const getCategoryIcon = (type) => {
@@ -91,6 +146,16 @@ export default function SchedulePickup() {
     const IconComp = cat.icon;
     return <IconComp size={20} color={cat.color} />;
   };
+
+  if (authLoading) {
+    return (
+      <div className="pickup-page page-wrapper">
+        <div className="container">
+          <p>Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="pickup-page page-wrapper">
@@ -106,7 +171,7 @@ export default function SchedulePickup() {
             <Truck size={14} />
             <span>Doorstep Service</span>
           </div>
-          <h1>Schedule a <span className="hero-highlight">Pickup</span></h1>
+          <h1>Schedule a <span className="hero-highlight"> Waste Pickup</span></h1>
           <p>Got bulky waste or hazardous materials? Don't dump it. Schedule a pickup, upload a photo, and our verified collectors will take it off your hands.</p>
         </motion.div>
 
@@ -262,23 +327,23 @@ export default function SchedulePickup() {
                     className="request-card"
                   >
                     <div className="req-img-box">
-                      {req.img ? (
-                        <img src={req.img} alt="waste" className="req-thumbnail" />
+                      {req.imageUrl ? (
+                        <img src={req.imageUrl} alt="waste" className="req-thumbnail" />
                       ) : (
                         <div className="req-icon-fallback" style={{ background: 'rgba(13,148,136,0.1)' }}>
-                          {getCategoryIcon(req.type)}
+                          {getCategoryIcon(req.wasteType)}
                         </div>
                       )}
                     </div>
-                    
+
                     <div className="req-details">
-                      <h4>{req.type}</h4>
-                      <span><Calendar size={12} /> {req.date}</span>
+                      <h4>{req.wasteType}</h4>
+                      <span><Calendar size={12} /> {req.preferredDate}</span>
                     </div>
-                    
+
                     <div className={`req-status ${req.status.toLowerCase()}`}>
-                      {req.status === 'Pending' ? <Clock size={14} /> : <CheckCircle size={14} />}
-                      {req.status}
+                      {req.status === 'pending' ? <Clock size={14} /> : req.status === 'completed' ? <CheckCircle size={14} /> : <Package size={14} />}
+                      {req.status === 'pending' ? 'Pending' : req.status === 'accepted' ? 'Accepted' : req.status === 'in_progress' ? 'In Progress' : req.status === 'completed' ? 'Completed' : req.status}
                     </div>
                   </motion.div>
                 ))}

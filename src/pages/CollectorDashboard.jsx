@@ -1,36 +1,73 @@
-import React, { useState , useContext } from 'react';
+import React, { useState , useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AuthContext } from '../AuthContext';
-import { 
-  MapPin, Package, CheckCircle, Navigation, 
-  Trash2, ShieldCheck, Clock, Award, LogOut
+import { PickupService } from '../services/pickupService';
+import {
+  MapPin, Package, CheckCircle, Navigation, Truck,
+  Trash2, ShieldCheck, Clock, Award, LogOut, Phone, User
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function CollectorDashboard() {
   const navigate = useNavigate();
+  const { user, userRole, loading: authLoading } = useContext(AuthContext);
   const [activeTab, setActiveTab] = useState('available');
   
-  // Mock Data
-  const [availableRequests, setAvailableRequests] = useState([
-    { id: 101, user: 'Rahul Verma', type: 'E-Waste', qty: 'Medium (TV, Wires)', address: 'Lalpur Chowk, Ranchi', points: 50 },
-    { id: 102, user: 'Priya Singh', type: 'Bulk Dry', qty: 'Large (Cardboards)', address: 'Kanke Road, Ranchi', points: 30 },
-  ]);
-  
-  const [myTasks, setMyTasks] = useState([
-    { id: 103, user: 'Amit K.', type: 'E-Waste', qty: 'Small (Batteries)', address: 'Harmu, Ranchi', status: 'Accepted' }
-  ]);
+  // Real data from Firestore
+  const [availableRequests, setAvailableRequests] = useState([]);
+  const [myTasks, setMyTasks] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const handleAccept = (req) => {
-    setAvailableRequests(availableRequests.filter(r => r.id !== req.id));
-    setMyTasks([{ ...req, status: 'Accepted' }, ...myTasks]);
-    toast.success(`Accepted pickup for ${req.user}!`);
+  // Subscribe to available requests and collector's tasks
+  useEffect(() => {
+    if (authLoading) {
+      // wait for auth to finish before doing anything
+      return;
+    }
+
+    if (!user) {
+      setLoading(false);
+      return;
+    }
+
+    // Subscribe to pending requests
+    const unsubscribePending = PickupService.subscribeToPendingRequests((requests) => {
+      console.log('Pending requests received:', requests);
+      setAvailableRequests(requests);
+    });
+
+    // Subscribe to collector's accepted tasks
+    const unsubscribeTasks = PickupService.subscribeToCollectorRequests(user.uid, (tasks) => {
+      console.log('Collector tasks received:', tasks);
+      setMyTasks(tasks);
+      setLoading(false);
+    });
+
+    return () => {
+      unsubscribePending();
+      unsubscribeTasks();
+    };
+  }, [authLoading, user, userRole, navigate]);
+
+  const handleAccept = async (req) => {
+    try {
+      await PickupService.acceptPickupRequest(req.id, user.uid, user.displayName || user.email);
+      toast.success(`Accepted pickup for ${req.userName}!`);
+    } catch (error) {
+      console.error('Error accepting pickup:', error);
+      toast.error('Failed to accept pickup. Please try again.');
+    }
   };
 
-  const handleComplete = (id) => {
-    setMyTasks(myTasks.filter(t => t.id !== id));
-    toast.success('Pickup marked as completed! Points awarded to user. 🏆');
+  const handleComplete = async (task) => {
+    try {
+      await PickupService.completePickup(task.id, task.userId, 25); // Award 25 points
+      toast.success('Pickup marked as completed! Points awarded to user. 🏆');
+    } catch (error) {
+      console.error('Error completing pickup:', error);
+      toast.error('Failed to complete pickup. Please try again.');
+    }
   };
 
  const { logout } = useContext(AuthContext);
@@ -38,6 +75,16 @@ const handleLogout = async () => {
   await logout(); // Clears auth + role
   navigate('/');
 };
+
+  if (authLoading) {
+    return (
+      <div className="collector-page page-wrapper">
+        <div className="container">
+          <p>Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="collector-page page-wrapper">
@@ -65,12 +112,12 @@ const handleLogout = async () => {
 
           <div className="collector-stats">
             <div className="stat-box">
-              <h3>24</h3>
-              <span>Pickups Today</span>
+              <h3>{myTasks.filter(t => t.status === 'completed').length}</h3>
+              <span>Pickups Completed</span>
             </div>
             <div className="stat-box highlight-box">
-              <h3>340 KG</h3>
-              <span>Waste Recovered</span>
+              <h3>{availableRequests.length}</h3>
+              <span>Available Requests</span>
             </div>
           </div>
         </motion.div>
@@ -93,10 +140,20 @@ const handleLogout = async () => {
 
         {/* Task Grid */}
         <div className="task-grid">
-          <AnimatePresence mode="popLayout">
+          {loading ? (
+            <div className="loading-state">
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
+                style={{ width: 40, height: 40, border: '3px solid var(--border)', borderTop: '3px solid var(--green)', borderRadius: '50%' }}
+              />
+              <p>Loading pickup requests...</p>
+            </div>
+          ) : (
+            <AnimatePresence mode="popLayout">
             
             {activeTab === 'available' && availableRequests.map((req) => (
-              <motion.div 
+              <motion.div
                 key={req.id}
                 layout
                 initial={{ opacity: 0, scale: 0.9 }}
@@ -106,20 +163,20 @@ const handleLogout = async () => {
               >
                 <div className="task-top">
                   <div className="task-type">
-                    {req.type === 'E-Waste' ? <Trash2 size={18} color="#dc2626"/> : <Package size={18} color="#2563eb"/>}
-                    {req.type}
+                    {req.wasteType === 'Hazardous Waste' ? <Trash2 size={18} color="#dc2626"/> : <Package size={18} color="#2563eb"/>}
+                    {req.wasteType}
                   </div>
-                  <div className="task-reward"><Award size={14}/> User gets +{req.points} pts</div>
+                  <div className="task-reward"><Award size={14}/> User gets +25 pts</div>
                 </div>
-                
-                <h3>{req.user}</h3>
-                <p className="task-qty">Quantity: {req.qty}</p>
-                
+
+                <h3>{req.userName}</h3>
+                <p className="task-qty">Preferred Date: {req.preferredDate}</p>
+
                 <div className="task-address">
                   <MapPin size={16} color="var(--green)" />
                   {req.address}
                 </div>
-                
+
                 <button className="accept-btn" onClick={() => handleAccept(req)}>
                   Accept Pickup
                 </button>
@@ -127,7 +184,7 @@ const handleLogout = async () => {
             ))}
 
             {activeTab === 'mytasks' && myTasks.map((task) => (
-              <motion.div 
+              <motion.div
                 key={task.id}
                 layout
                 initial={{ opacity: 0, scale: 0.9 }}
@@ -136,22 +193,38 @@ const handleLogout = async () => {
                 className="task-card active-task"
               >
                 <div className="task-top">
-                  <span className="status-badge"><Clock size={14}/> In Progress</span>
+                  <span className="status-badge">
+                    {task.status === 'accepted' ? <><Clock size={14}/> Accepted</> :
+                     task.status === 'in_progress' ? <><Navigation size={14}/> In Progress</> :
+                     <><CheckCircle size={14}/> {task.status}</>}
+                  </span>
                 </div>
-                
-                <h3>{task.user}</h3>
-                <p className="task-qty">Quantity: {task.qty}</p>
-                
+
+                <h3>{task.userName}</h3>
+                <p className="task-qty">Type: {task.wasteType}</p>
+                <p className="task-date">Preferred: {task.preferredDate}</p>
+
                 <div className="task-address">
                   <MapPin size={16} color="var(--green)" />
                   {task.address}
                 </div>
-                
+
                 <div className="task-actions">
-                  <button className="nav-btn">
+                  <button
+                    className="nav-btn"
+                    onClick={() => {
+                      // Open Google Maps with the address
+                      const encodedAddress = encodeURIComponent(task.address);
+                      window.open(`https://www.google.com/maps/search/?api=1&query=${encodedAddress}`, '_blank');
+                    }}
+                  >
                     <Navigation size={16} /> Navigate
                   </button>
-                  <button className="complete-btn" onClick={() => handleComplete(task.id)}>
+                  <button
+                    className="complete-btn"
+                    onClick={() => handleComplete(task)}
+                    disabled={task.status === 'completed'}
+                  >
                     <CheckCircle size={16} /> Mark Completed
                   </button>
                 </div>
@@ -166,6 +239,7 @@ const handleLogout = async () => {
             )}
 
           </AnimatePresence>
+          )}
         </div>
 
       </div>
@@ -219,6 +293,8 @@ const handleLogout = async () => {
         .complete-btn { flex: 1.5; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 12px; background: var(--green); color: white; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; }
         
         .empty-state { grid-column: 1 / -1; padding: 40px; text-align: center; color: var(--muted); font-size: 1.1rem; }
+
+        .loading-state { grid-column: 1 / -1; padding: 40px; display: flex; flex-direction: column; align-items: center; gap: 16px; color: var(--muted); font-size: 1.1rem; }
 
         @media (max-width: 768px) {
           .collector-header { flex-direction: column; align-items: flex-start; padding-top: 60px; }
