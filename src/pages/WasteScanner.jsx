@@ -21,37 +21,125 @@ import {
   Image,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { analyzeWaste, isAPIConfigured } from '../gemini.js';
 
-// Import your Gemini API function
-import { analyzeWaste } from "../gemini";
+const mockResults = [
+  {
+    name: 'Plastic Bottle',
+    category: 'Dry Waste',
+    categoryColor: '#2563eb',
+    categoryBg: 'rgba(37,99,235,0.1)',
+    categoryEmoji: '🔵',
+    binColor: 'Blue',
+    recyclable: true,
+    biodegradable: false,
+    hazardous: false,
+    correctBin: 'Dry Waste Bin (Blue)',
+    tip: 'Rinse the bottle, remove the cap, crush it flat, and place in the dry waste recycling bin. Plastic bottles are 100% recyclable and can be turned into new products!',
+  },
+  {
+    name: 'Banana Peel',
+    category: 'Wet Waste',
+    categoryColor: '#16a34a',
+    categoryBg: 'rgba(22,163,74,0.1)',
+    categoryEmoji: '🟢',
+    binColor: 'Green',
+    recyclable: false,
+    biodegradable: true,
+    hazardous: false,
+    correctBin: 'Wet Waste Bin (Green)',
+    tip: 'Banana peels are excellent for composting. They decompose quickly and add potassium to the soil. You can also use them as natural fertilizer for plants!',
+  },
+  {
+    name: 'Battery',
+    category: 'Hazardous Waste',
+    categoryColor: '#dc2626',
+    categoryBg: 'rgba(220,38,38,0.1)',
+    categoryEmoji: '🔴',
+    binColor: 'Red',
+    recyclable: false,
+    biodegradable: false,
+    hazardous: true,
+    correctBin: 'Hazardous Waste Bin (Red)',
+    tip: '⚠️ NEVER throw batteries in regular bins! They contain toxic chemicals like lead and mercury. Take them to the nearest e-waste collection center or designated drop-off point.',
+  },
+  {
+    name: 'Newspaper',
+    category: 'Dry Waste',
+    categoryColor: '#2563eb',
+    categoryBg: 'rgba(37,99,235,0.1)',
+    categoryEmoji: '🔵',
+    binColor: 'Blue',
+    recyclable: true,
+    biodegradable: true,
+    hazardous: false,
+    correctBin: 'Dry Waste Bin (Blue)',
+    tip: 'Bundle old newspapers together and sell them to your local kabadiwala or place in the dry waste bin. Recycling 1 ton of newspaper saves 17 trees!',
+  },
+  {
+    name: 'Food Scraps',
+    category: 'Wet Waste',
+    categoryColor: '#16a34a',
+    categoryBg: 'rgba(22,163,74,0.1)',
+    categoryEmoji: '🟢',
+    binColor: 'Green',
+    recyclable: false,
+    biodegradable: true,
+    hazardous: false,
+    correctBin: 'Wet Waste Bin (Green)',
+    tip: 'Food scraps should always go in the wet waste bin. Consider composting at home — it reduces landfill waste and creates nutrient-rich soil for your garden!',
+  },
+  {
+    name: 'Glass Bottle',
+    category: 'Dry Waste',
+    categoryColor: '#2563eb',
+    categoryBg: 'rgba(37,99,235,0.1)',
+    categoryEmoji: '🔵',
+    binColor: 'Blue',
+    recyclable: true,
+    biodegradable: false,
+    hazardous: false,
+    correctBin: 'Dry Waste Bin (Blue)',
+    tip: 'Glass is 100% recyclable and can be recycled endlessly without loss in quality. Rinse the bottle and handle carefully to avoid breakage. Remove caps before recycling.',
+  },
+  {
+    name: 'Medicine Strip',
+    category: 'Hazardous Waste',
+    categoryColor: '#dc2626',
+    categoryBg: 'rgba(220,38,38,0.1)',
+    categoryEmoji: '🔴',
+    binColor: 'Red',
+    recyclable: false,
+    biodegradable: false,
+    hazardous: true,
+    correctBin: 'Hazardous Waste Bin (Red)',
+    tip: '⚠️ Never throw medicines in regular bins or flush them! Return expired or unused medicines to pharmacies. Medicine strips contain aluminium and chemicals that can contaminate soil and water.',
+  },
+  {
+    name: 'Cardboard Box',
+    category: 'Dry Waste',
+    categoryColor: '#2563eb',
+    categoryBg: 'rgba(37,99,235,0.1)',
+    categoryEmoji: '🔵',
+    binColor: 'Blue',
+    recyclable: true,
+    biodegradable: true,
+    hazardous: false,
+    correctBin: 'Dry Waste Bin (Blue)',
+    tip: 'Flatten cardboard boxes to save space. Remove any tape or labels if possible. Cardboard is one of the most recyclable materials and can be reused multiple times!',
+  },
+];
 
 function WasteScanner() {
   const [state, setState] = useState('idle');
   const [result, setResult] = useState(null);
   const [uploadedImage, setUploadedImage] = useState(null);
-  const [imageFile, setImageFile] = useState(null); // Keep track of the actual file for the API
+  const [uploadedFile, setUploadedFile] = useState(null);
   const fileInputRef = useRef(null);
   const cameraInputRef = useRef(null);
 
-  // Helper to map Gemini categories to the beautiful UI styles
-  const getCategoryStyles = (category) => {
-    if (!category) return { color: '#16a34a', bg: 'rgba(22,163,74,0.1)', emoji: '🟢' };
-    const lowerCat = category.toLowerCase();
-    
-    if (lowerCat.includes('wet') || lowerCat.includes('biodegradable')) {
-      return { color: '#16a34a', bg: 'rgba(22,163,74,0.1)', emoji: '🟢' };
-    }
-    if (lowerCat.includes('dry') || lowerCat.includes('recyclable')) {
-      return { color: '#2563eb', bg: 'rgba(37,99,235,0.1)', emoji: '🔵' };
-    }
-    if (lowerCat.includes('hazardous') || lowerCat.includes('e-waste')) {
-      return { color: '#dc2626', bg: 'rgba(220,38,38,0.1)', emoji: '🔴' };
-    }
-    
-    return { color: '#16a34a', bg: 'rgba(22,163,74,0.1)', emoji: '🟢' };
-  };
-
-  const processFile = async (file) => {
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
     if (!file) return;
 
     if (!file.type.startsWith('image/')) {
@@ -59,68 +147,56 @@ function WasteScanner() {
       return;
     }
 
-    if (file.size > 10 * 1024 * 1024) {
-      toast.error('Image must be less than 10MB');
+    if (file.size > 20 * 1024 * 1024) {
+      toast.error('Image must be less than 20MB');
       return;
     }
 
-    setImageFile(file);
-    setUploadedImage(URL.createObjectURL(file));
-    
-    // Switch to uploading animation
-    setState('uploading');
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      setUploadedImage(ev.target.result);
+      setUploadedFile(file);
+      startScanning(file);
+    };
+    reader.readAsDataURL(file);
+  };
 
-    // Simulate a brief upload delay, then hit the Gemini API
+  const startScanning = (file) => {
+    setState('uploading');
     setTimeout(async () => {
       setState('scanning');
-      try {
-        const apiResponse = await analyzeWaste(file);
-        
-        // Map the Gemini response to the format expected by the new UI
-        const styles = getCategoryStyles(apiResponse.category);
-        const mappedResult = {
-          name: apiResponse.itemName,
-          category: apiResponse.category,
-          categoryColor: styles.color,
-          categoryBg: styles.bg,
-          categoryEmoji: styles.emoji,
-          correctBin: apiResponse.bin,
-          recyclable: apiResponse.recyclable,
-          biodegradable: apiResponse.biodegradable,
-          hazardous: apiResponse.hazardous,
-          tip: apiResponse.disposalTip
-        };
 
-        setResult(mappedResult);
+      if (!isAPIConfigured()) {
+        console.log('⚠️ No Gemini API key — using mock results');
+        setTimeout(() => {
+          const randomResult = mockResults[Math.floor(Math.random() * mockResults.length)];
+          setResult(randomResult);
+          setState('result');
+          toast.success('+10 Green Points earned! 🌿');
+        }, 2000);
+        return;
+      }
+
+      try {
+        const aiResult = await analyzeWaste(file);
+        setResult(aiResult);
         setState('result');
         toast.success('+10 Green Points earned! 🌿');
-      } catch (error) {
-        toast.error('Scan failed! Please try again.');
-        handleScanAgain(); // Reset on failure
+      } catch (err) {
+        console.error('AI scan failed:', err.message);
+        toast.error('AI scan failed — showing sample result');
+        const randomResult = mockResults[Math.floor(Math.random() * mockResults.length)];
+        setResult(randomResult);
+        setState('result');
       }
     }, 800);
-  };
-
-  const handleFileUpload = (e) => {
-    processFile(e.target.files[0]);
-  };
-
-  const handleDrop = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    processFile(e.dataTransfer.files[0]);
-  };
-
-  const handleDragOver = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
   };
 
   const handleScanAgain = () => {
     setState('idle');
     setResult(null);
     setUploadedImage(null);
-    setImageFile(null);
+    setUploadedFile(null);
     if (fileInputRef.current) fileInputRef.current.value = '';
     if (cameraInputRef.current) cameraInputRef.current.value = '';
   };
@@ -140,6 +216,26 @@ function WasteScanner() {
     }
   };
 
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        setUploadedImage(ev.target.result);
+        setUploadedFile(file);
+        startScanning(file);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
   return (
     <div className="scanner-page page-wrapper">
       <div className="container">
@@ -149,7 +245,7 @@ function WasteScanner() {
             <Sparkles size={14} />
             <span>AI-Powered</span>
           </div>
-          <h1>Waste <span className="hero-highlight">Scanner</span></h1>
+          <h1>Waste Scanner</h1>
           <p>
             Upload or capture a photo of any waste item and our AI will instantly
             identify it, tell you the correct bin, and give you disposal tips!
@@ -173,7 +269,7 @@ function WasteScanner() {
                 <h3>Upload Waste Image</h3>
                 <p>Drag & drop an image here, or click to browse</p>
                 <span className="scanner-upload-formats">
-                  Supports: JPG, PNG, WEBP (max 10MB)
+                  Supports: JPG, PNG, WEBP (max 20MB)
                 </span>
                 <input
                   ref={fileInputRef}
@@ -401,24 +497,19 @@ function WasteScanner() {
         }
 
         .scanner-hero-badge {
-           display: inline-flex;
+          display: inline-flex;
           align-items: center;
           gap: 8px;
-          padding: 6px 16px;
-          background: rgba(255, 255, 255, 0.1);
-          color: #ffffff;
+          padding: 6px 18px;
+          background: rgba(22,163,74,0.1);
+          color: var(--green);
           border-radius: 9999px;
-          font-size: 0.8rem;
+          font-size: 0.82rem;
           font-weight: 700;
           text-transform: uppercase;
           letter-spacing: 0.08em;
-          margin-bottom: 12px;
+          margin-bottom: 14px;
         }
-          [data-theme='light'] .scanner-hero-badge {
-          color: #000000 ;
-          background: rgba(0, 0, 0, 0.1);
-
-      }
 
         .scanner-hero h1 {
           font-family: 'Syne', sans-serif;
@@ -530,7 +621,7 @@ function WasteScanner() {
           align-items: center;
           gap: 12px;
           padding: 16px 36px;
-          background: linear-gradient(135deg, var(--green), var(--teal));
+          background: linear-gradient(135deg, var(--green), var(--accent));
           color: #ffffff;
           border: none;
           border-radius: 14px;
@@ -590,18 +681,14 @@ function WasteScanner() {
           display: flex;
           align-items: center;
           justify-content: center;
-          background: rgba(255, 255, 255, 0.1);
-          color: #ffffff;
+          background: rgba(22,163,74,0.1);
+          color: var(--green);
           border-radius: 50%;
           font-size: 0.8rem;
           font-weight: 800;
           font-family: 'Syne', sans-serif;
           flex-shrink: 0;
         }
-          [data-theme=light] .scanner-how-num{
-          color: #000000;
-          background: rgba(0, 0, 0, 0.1);
-          }
 
         /* ========== PROCESSING STATES ========== */
         .scanner-processing {
