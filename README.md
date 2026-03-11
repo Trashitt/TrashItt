@@ -61,6 +61,10 @@ By promoting source-level segregation and community collaboration, TrashItt aims
 
 <img width="1919" height="1199" alt="image" src="https://github.com/user-attachments/assets/e480ffa8-c482-4681-b754-069609f94b9e" />
 
+## Sign Up Page 
+
+<img width="1919" height="1199" alt="image" src="https://github.com/user-attachments/assets/28a3477c-ee44-4286-84d9-3e225d78a938" />
+
 ## User Dashboard 
 
 <img width="1919" height="1199" alt="image" src="https://github.com/user-attachments/assets/e27de78d-5b11-4821-883b-5d508b75d49d" />
