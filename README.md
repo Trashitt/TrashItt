@@ -1,98 +1,123 @@
-# Trashitt
+## TrashItt – Smart Waste Management Platform ♻️
 
-## SMART WASTE SEGREGATION & RECYCLING PLATFORM
+ ## Project Overview
 
-## Project Overview:
-
-The Smart Waste Segregation & Recycling Platform is a web-based solution designed to help users properly identify and segregate different types of waste.
-Urban areas generate large amounts of mixed waste due to lack of awareness and proper segregation systems. This platform aims to educate users and encourage responsible waste disposal.
+TrashItt is a smart waste management platform designed to improve waste reporting, tracking, and disposal in communities.
+The platform allows users to report waste problems, view nearby waste locations, and contribute to keeping their surroundings clean.
+Our goal of this project is to use technology to simplify waste segregation and promote a cleaner environment.
 
 ## Problem Statement:
 
-Many households and institutions mix different types of waste such as:
-
-- Wet waste
-- Dry waste
-- Plastic waste
-- E-waste
-
-This makes recycling difficult and increases landfill waste, causing environmental damage.
+Urban waste systems fail at the **point of origin**. Most households mix biodegradable, recyclable, and hazardous waste into **a single waste stream**, largely due to **low public awareness** and the **absence of a unified platform connecting citizens with environmental NGOs and community initiatives**. As a result, recycling becomes inefficient, valuable materials are lost, pollution increases, and **community participation in sustainable waste management weakens**. ♻️
 
 ## Solution
 
-Our platform helps users:
+To address the challenge of improper waste segregation, TrashItt introduces a digital platform designed to encourage waste segregation at the household level while connecting citizens with environmental organizations.
 
-- Identify the type of waste
-- Learn how to segregate waste properly
-- Understand recycling methods
-- Promote sustainable waste management
+The platform guides users to separate biodegradable, recyclable, and hazardous waste correctly, promoting responsible disposal practices. It also creates a bridge between citizens and NGOs, enabling communities to participate in waste collection drives, awareness programs, and sustainability initiatives.
 
-## Features
+By promoting source-level segregation and community collaboration, TrashItt aims to improve recycling efficiency, reduce environmental pollution, and strengthen civic engagement in sustainable waste management. ♻️
 
-- User Login & Signup system
-- Waste classification information
-- Dark Mode toggle
-- User-friendly interface
-- Responsive design
-- Firebase Authentication for user login
+## Key Features
 
-## Technologies Used
+- **AI Waste Scanner** — Uses AI to identify and classify waste into biodegradable, recyclable, and hazardous categories, helping users segregate waste accurately.
 
-### Frontend:
+- **Waste Segregation Guidance** — Provides clear instructions for proper disposal based on waste type.
 
-- HTML
-- CSS
-- JavaScript
- 
-### Backend / Authentication:
+- **Citizen–NGO Collaboration** — Connects users with NGOs and community organizations for environmental drives.
 
-- Firebase Authentication
+- **Community Participation** — Encourages citizens to actively contribute to cleaner surroundings.
 
-## Hosting:
+## Technology Stack
 
- - Vercel
-   
-## How to Run the Project
+- **Frontend:** HTML, CSS, JavaScript  
+- **Framework:** React / Next.js  
+- **Backend:** Node.js  
+- **AI Model:** Machine Learning / Computer Vision  
+- **Deployment:** Vercel
+- 
+## Screenshots : 
 
-Follow these steps to run the project locally on your system.
+## Home Page
 
-### Step 1: Clone the Repository
-Download the project from GitHub.
+<img width="1919" height="1199" alt="image" src="https://github.com/user-attachments/assets/f19e93ba-68f3-4dd2-a77e-d7d7ce0c1ac5" />
 
-git clone https://github.com/Trashitt/Trashitt.git
+## AI Waste Scanner
 
-### Step 2: Open the Project Folder
-Navigate to the downloaded project folder.
+<img width="1919" height="1199" alt="image" src="https://github.com/user-attachments/assets/7f7070ca-7777-4a9f-8d4a-2a1fb8f9ab9a" />
 
-### Step 3: Open the Project
-Open the folder in any code editor such as VS Code.
+## NGO Drives
 
-### Step 4: Run the Website
-Open the `index.html` file in your web browser.
+<img width="1919" height="1199" alt="image" src="https://github.com/user-attachments/assets/a22d78f0-ce7d-4339-b7f7-81add478ff41" />
 
-### Step 5: Use the Website
-You can now explore the website features such as:
-- Login
-- Signup
-- Waste segregation information
-- Dark mode toggle
-- scan the waste
-- join challanges
-- win points
-- leaderboard 
+## Waste Pickup
 
- ## Future Improvements
+<img width="1919" height="1199" alt="image" src="https://github.com/user-attachments/assets/e480ffa8-c482-4681-b754-069609f94b9e" />
 
-- connecting NGOs
-- Location-based recycling centers
-- Reward system for proper waste disposal
-- Mobile application support
+## Live Demo
+Try the platform here: https://trash-itt.vercel.app/
+
+## 🧭 How to Use
+
+1. **Sign Up / Login** – Create an account or log in to access the TrashItt platform.
+2. **Explore Waste Segregation Guide** – Learn how to properly separate biodegradable, recyclable, and hazardous waste.
+3. **Scan the Waste** – Use the **AI Waste Scanner** to upload or capture an image of waste for instant classification.
+4. **Follow Smart Suggestions** – The system provides guidance for correct waste disposal.
+5. **Join Eco Challenges** – Participate in environmental challenges organized on the platform.
+6. **Earn EcoPoints** – Gain points by completing sustainable activities and contributions.
+7. **Compete on the Leaderboard** – Track your progress and compete with other users promoting sustainability.
+
+
+
+## ⚙️ Installation (Optional for Developers)
+
+If you want to run the project locally:
+
+1. **Clone the repository**
+
+git clone https://github.com/Trashitt/TrashItt.git
+
+2. **Navigate to the project directory**
+
+cd TrashItt
+
+3. **Install dependencies**
+
+npm install
+
+4. **Run the development server**
+
+npm run dev
+
+**The application will start on a local development port (e.g., `localhost:3000`).**
+
+
+**Access the deployed application here:**
+
+https://trash-itt.vercel.app/
+
+## Future Improvements
+
+- **Expanded NGO Network** – Connect with more environmental NGOs to organize large-scale community clean-up and awareness drives.
+- **Government Collaboration** – Partner with local government and municipal bodies to improve waste management coordination.
+- **Location-Based Recycling Centers** – Help users find nearby recycling centers for easier and responsible waste disposal.
+- **Reward System for Responsible Disposal** – Introduce incentives and rewards for users who consistently follow proper waste segregation practices.
+- **Mobile Application Support** – Develop a dedicated mobile app to make AI waste scanning and eco-participation more accessible.
+- **Expansion Across Jharkhand** – Scale the platform to support waste management initiatives across multiple cities in Jharkhand.
+
+## Project Impact
+
+**TrashItt** aims to promote responsible waste management by encouraging waste segregation at the source.  
+By combining **AI-powered waste identification**, **community participation**, and **NGO collaboration**, the platform helps reduce environmental pollution and strengthens sustainable practices within communities.
   
-## Author
+## 👥 Contributors
 
 - Trisha kumari
 - Uttam kumar
 - Ruchi kumari
-- Manjeet gupta
+- Manjeet Kumar
+
 ## License
- * This project is created for educational and hackathon purposes.
+
+This project was developed during a hackathon as a prototype for an AI-powered waste segregation platform.  
+It is intended for **educational, research, and innovation purposes** and may be expanded into a scalable solution in the future.
