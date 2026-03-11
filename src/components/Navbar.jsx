@@ -26,10 +26,9 @@ const allNavLinks = [
   { path: '/', label: 'Home', icon: Home },
   { path: '/waste-guide', label: 'Waste Guide', icon: BookOpen },
   { path: '/scanner', label: 'Scanner', icon: ScanLine, hideFor: ['Waste Collector'] },
-  { path: '/challenges', label: 'Challenges', icon: Trophy },
-  { path: '/leaderboard', label: 'Leaderboard', icon: Medal },
-  { path: '/gallery', label: 'Gallery', icon: Image },
-  { path: '/ngo-drives', label: 'NGO Drives', icon: Heart },
+  { path: '/challenges', label: 'Challenges', icon: Trophy, comingSoon: true },
+  { path: '/leaderboard', label: 'Leaderboard', icon: Medal, comingSoon: true },
+  { path: '/ngo-drives', label: 'NGO Drives', icon: Heart, comingSoon: true },
   { path: '/waste-pickup', label: 'Waste Pickup', icon: Truck, hideFor: ['Waste Collector'] },
   { path: '/about', label: 'About', icon: Info },
   { path: '/faq', label: 'FAQ', icon: HelpCircle },
@@ -38,6 +37,7 @@ const allNavLinks = [
 function Navbar({ theme, toggleTheme  }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [showToast, setShowToast] = useState(false);
   const mobileMenuRef = useRef(null);
   const location = useLocation();
   const { isAuthenticated, userRole, loading } = useContext(AuthContext);
@@ -53,6 +53,13 @@ function Navbar({ theme, toggleTheme  }) {
   useEffect(() => {
     setMobileOpen(false);
   }, [location.pathname]);
+
+  useEffect(() => {
+    if (showToast) {
+      const timer = setTimeout(() => setShowToast(false), 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [showToast]);
 
   useEffect(() => {
     if (mobileOpen) {
@@ -111,6 +118,12 @@ function Navbar({ theme, toggleTheme  }) {
               <NavLink
                 key={link.path}
                 to={link.path}
+                onClick={(e) => {
+                  if (link.comingSoon) {
+                    e.preventDefault();
+                    setShowToast(true);
+                  }
+                }}
                 className={({ isActive }) =>
                   `navbar-link ${isActive ? 'navbar-link-active' : ''}`
                 }
@@ -168,6 +181,14 @@ function Navbar({ theme, toggleTheme  }) {
         </div>
       </nav>
 
+      {showToast && (
+        <div className="navbar-toast">
+          <div className="navbar-toast-content">
+            <span className="navbar-toast-text">Coming Soon! This feature will be live very soon!</span>
+          </div>
+        </div>
+      )}
+
       {mobileOpen && <div className="mobile-overlay" onClick={() => setMobileOpen(false)} />}
 
       <div
@@ -199,7 +220,13 @@ function Navbar({ theme, toggleTheme  }) {
                   `mobile-menu-link ${isActive ? 'mobile-menu-link-active' : ''}`
                 }
                 end={link.path === '/'}
-                onClick={() => setMobileOpen(false)}
+                onClick={(e) => {
+                  if (link.comingSoon) {
+                    e.preventDefault();
+                    setShowToast(true);
+                  }
+                  setMobileOpen(false);
+                }}
                 style={{ animationDelay: `${index * 0.05}s` }}
               >
                 <IconComp size={20} />
@@ -503,6 +530,47 @@ background: linear-gradient(135deg, var(--green), var(--teal));
           color: var(--green);
         }
 
+        .navbar-toast {
+          position: fixed;
+          top: 100px;
+          left: 50%;
+          transform: translateX(-50%);
+          z-index: 999;
+          animation: slideDown 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes slideDown {
+          from {
+            opacity: 0;
+            transform: translateX(-50%) translateY(-20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+          }
+        }
+
+        .navbar-toast-content {
+          background: linear-gradient(135deg, var(--green), var(--teal));
+          color: #ffffff;
+          padding: 14px 24px;
+          border-radius: 12px;
+          box-shadow: 0 8px 24px rgba(22, 163, 74, 0.3);
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          font-weight: 500;
+          font-size: 0.95rem;
+          backdrop-filter: blur(10px);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          min-width: 300px;
+          justify-content: center;
+        }
+
+        .navbar-toast-text {
+          text-align: center;
+        }
+
         .mobile-overlay {
           position: fixed;
           top: 0;
@@ -692,6 +760,12 @@ background: linear-gradient(135deg, var(--green), var(--teal));
           }
           .navbar-actions .navbar-btn {
             padding: 8px 10px;
+          }
+
+          .navbar-toast-content {
+            min-width: 250px;
+            font-size: 0.9rem;
+            padding: 12px 20px;
           }
         }
 
