@@ -1,6 +1,6 @@
-import React, { useState, useRef, useContext } from 'react'; // Added useContext
+import React, { useState, useRef, useContext } from 'react'; 
 import { Link, useNavigate } from 'react-router-dom';
-import { AuthContext } from '../AuthContext'; // Added AuthContext
+import { AuthContext } from '../AuthContext'; 
 import {
   Leaf,
   Mail,
@@ -22,7 +22,6 @@ import {
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-// Firebase Imports
 import { auth, db } from "../firebase";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
@@ -31,7 +30,6 @@ function Signup() {
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
   
-  // Grab the login function from our loudspeaker
   const { login } = useContext(AuthContext); 
 
   const [formData, setFormData] = useState({
@@ -53,7 +51,6 @@ function Signup() {
 
   const roles = ['Citizen', 'Student', 'NGO', 'Waste Collector'];
 
-  // Password Strength Logic
   const getPasswordStrength = (password) => {
     if (!password) return { level: 0, label: '', color: '' };
     let score = 0;
@@ -72,7 +69,6 @@ function Signup() {
 
   const passwordStrength = getPasswordStrength(formData.password);
 
-  // Error messaging from original Firebase logic
   const getErrorMessage = (code) => {
     switch (code) {
       case "auth/email-already-in-use": return "Email already registered! Please login!";
@@ -155,7 +151,6 @@ function Signup() {
     }
   };
 
-  // Firebase Submit Logic
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) {
@@ -165,14 +160,13 @@ function Signup() {
 
     setLoading(true);
     try {
-      // Create user
       const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
       const user = userCredential.user;
       
-      // Update Auth Profile
+      
       await updateProfile(user, { displayName: formData.fullName });
       
-      // Save to Firestore
+      
       await setDoc(doc(db, "users", user.uid), {
         name: formData.fullName,
         email: formData.email,
@@ -191,10 +185,8 @@ function Signup() {
         duration: 4000,
       });
 
-      // Tell the whole app the user is logged in and pass the role!
       login(formData.role);
 
-      // Redirect based on role
       if (formData.role === 'Waste Collector') {
         navigate('/collector-dashboard');
       } else {
@@ -215,7 +207,7 @@ function Signup() {
         
           <div className="signup-form-header">
             <h2>Create Account</h2>
-            <p>Join 1,247+ citizens making Ranchi cleaner</p>
+            
           </div>
 
           <form className="signup-form" onSubmit={handleSubmit} noValidate>
@@ -264,7 +256,7 @@ function Signup() {
                   id="fullName"
                   name="fullName"
                   type="text"
-                  placeholder="Rahul Kumar"
+                  placeholder="Enter your name"
                   value={formData.fullName}
                   onChange={handleChange}
                   autoComplete="name"
@@ -391,7 +383,7 @@ function Signup() {
                   id="college"
                   name="college"
                   type="text"
-                  placeholder="BIT Mesra"
+                  placeholder="YSM Dhurwa"
                   value={formData.college}
                   onChange={handleChange}
                 />

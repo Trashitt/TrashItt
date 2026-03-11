@@ -14,15 +14,12 @@ export default function CollectorDashboard() {
   const { user, userRole, loading: authLoading } = useContext(AuthContext);
   const [activeTab, setActiveTab] = useState('available');
   
-  // Real data from Firestore
   const [availableRequests, setAvailableRequests] = useState([]);
   const [myTasks, setMyTasks] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Subscribe to available requests and collector's tasks
   useEffect(() => {
     if (authLoading) {
-      // wait for auth to finish before doing anything
       return;
     }
 
@@ -31,13 +28,11 @@ export default function CollectorDashboard() {
       return;
     }
 
-    // Subscribe to pending requests
     const unsubscribePending = PickupService.subscribeToPendingRequests((requests) => {
       console.log('Pending requests received:', requests);
       setAvailableRequests(requests);
     });
 
-    // Subscribe to collector's accepted tasks
     const unsubscribeTasks = PickupService.subscribeToCollectorRequests(user.uid, (tasks) => {
       console.log('Collector tasks received:', tasks);
       setMyTasks(tasks);
@@ -72,7 +67,7 @@ export default function CollectorDashboard() {
 
  const { logout } = useContext(AuthContext);
 const handleLogout = async () => {
-  await logout(); // Clears auth + role
+  await logout(); 
   navigate('/');
 };
 
@@ -90,7 +85,6 @@ const handleLogout = async () => {
     <div className="collector-page page-wrapper">
       <div className="container">
         
-        {/* Collector Header */}
         <motion.div 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -213,7 +207,6 @@ const handleLogout = async () => {
                   <button
                     className="nav-btn"
                     onClick={() => {
-                      // Open Google Maps with the address
                       const encodedAddress = encodeURIComponent(task.address);
                       window.open(`https://www.google.com/maps/search/?api=1&query=${encodedAddress}`, '_blank');
                     }}

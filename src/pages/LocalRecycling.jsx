@@ -61,21 +61,17 @@ export default function LocalRecycling() {
   const [activeCategory, setActiveCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Helper function to open Google Maps directions
   const openDirections = (address) => {
     const encodedAddress = encodeURIComponent(address);
     const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodedAddress}`;
     window.open(mapsUrl, '_blank');
   };
 
-  // Helper function to open interactive map
   const openInteractiveMap = () => {
-    // Open Google Maps showing Ranchi area
     const mapsUrl = `https://www.google.com/maps/place/Ranchi,+Jharkhand/@23.3432048,85.239322,12z`;
     window.open(mapsUrl, '_blank');
   };
 
-  // Filter logic
   const filteredCenters = recyclingCenters.filter(center => {
     const matchesCategory = activeCategory === 'All' || center.categories.includes(activeCategory);
     const matchesSearch = center.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
@@ -179,7 +175,6 @@ export default function LocalRecycling() {
             </AnimatePresence>
           </div>
 
-          {/* Map View (Hackathon Trick: Embedded Iframe of Ranchi) */}
           <motion.div 
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}

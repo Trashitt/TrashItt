@@ -16,14 +16,12 @@ import {
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-// Firebase Imports
 import { auth, db } from "../firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 
 function Login() {
   const navigate = useNavigate();
-  // 1. ADD THIS LINE: Grab the login function from our loudspeaker
   const { login } = useContext(AuthContext); 
   
   const [formData, setFormData] = useState({
@@ -92,7 +90,6 @@ function Login() {
     }
   };
 
-  // Firebase Submit Logic
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
@@ -102,7 +99,6 @@ function Login() {
       const userCredential = await signInWithEmailAndPassword(auth, formData.email, formData.password);
       const user = userCredential.user;
       
-      // Fetch user role from Firestore
       const userDoc = await getDoc(doc(db, 'users', user.uid));
       const userRole = userDoc.exists() ? (userDoc.data().role || 'Citizen') : 'Citizen';
       
@@ -110,10 +106,8 @@ function Login() {
         duration: 3000,
       });
       
-      // Tell the whole app the user is logged in and pass the role!
       login(userRole); 
       
-      // Redirect based on role
       if (userRole === 'Waste Collector') {
         navigate("/collector-dashboard");
       } else {

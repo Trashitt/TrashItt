@@ -245,7 +245,7 @@ function WasteScanner() {
             <Sparkles size={14} />
             <span>AI-Powered</span>
           </div>
-          <h1>Waste Scanner</h1>
+          <h1>Waste <span className="hero-highlight">Scanner</span></h1>
           <p>
             Upload or capture a photo of any waste item and our AI will instantly
             identify it, tell you the correct bin, and give you disposal tips!
@@ -376,7 +376,6 @@ function WasteScanner() {
                   <div className="scanner-result-header-content">
                     <span className="scanner-result-emoji">{result.categoryEmoji}</span>
                     <div>
-                      <h2 className="scanner-result-name">{result.name}</h2>
                       <span
                         className="scanner-result-category-badge"
                         style={{ background: result.categoryColor, color: '#ffffff' }}
@@ -501,8 +500,8 @@ function WasteScanner() {
           align-items: center;
           gap: 8px;
           padding: 6px 18px;
-          background: rgba(22,163,74,0.1);
-          color: var(--green);
+          background: rgba(255, 255, 255, 0.1);
+          color: #ffffff;
           border-radius: 9999px;
           font-size: 0.82rem;
           font-weight: 700;
@@ -510,6 +509,10 @@ function WasteScanner() {
           letter-spacing: 0.08em;
           margin-bottom: 14px;
         }
+          [data-theme=light] .scanner-hero-badge {
+          background: rgba(0, 0, 0, 0.1);
+          color: #000000;
+      }
 
         .scanner-hero h1 {
           font-family: 'Syne', sans-serif;
@@ -621,7 +624,7 @@ function WasteScanner() {
           align-items: center;
           gap: 12px;
           padding: 16px 36px;
-          background: linear-gradient(135deg, var(--green), var(--accent));
+          background: linear-gradient(135deg, var(--green), var(--teal));
           color: #ffffff;
           border: none;
           border-radius: 14px;

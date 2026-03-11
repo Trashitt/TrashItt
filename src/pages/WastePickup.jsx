@@ -43,21 +43,16 @@ export default function SchedulePickup() {
     return () => unsubscribe();
   }, [user]);
 
-  // Redirect if not authenticated or not a regular user
+  // Redirect only if a collector somehow lands here; regular users (logged out or not)
+  // can still view the form. submission is blocked by handleSubmit when not logged in.
   useEffect(() => {
     if (authLoading) return; // wait until auth state resolved
-
-    if (!user || !userRole) {
-      // not logged in or role missing -> send to homepage
-      navigate('/');
-      return;
-    }
 
     if (userRole === 'Waste Collector') {
       // collectors should not use this page
       navigate('/collector-dashboard');
     }
-  }, [authLoading, user, userRole, navigate]);
+  }, [authLoading, userRole, navigate]);
 
   const wasteCategories = [
     { id: 'Wet Waste', icon: Droplets, color: '#16a34a' },
@@ -81,16 +76,12 @@ export default function SchedulePickup() {
     handleFile(e.dataTransfer.files[0]);
   };
 
-  // Location Handler
+  // Location Handler – open Google Maps for user to pick address manually
   const handleDetectLocation = (e) => {
     e.preventDefault();
-    setIsDetecting(true);
-    // Simulate GPS fetch delay
-    setTimeout(() => {
-      setAddress('Main Road, Near Albert Ekka Chowk, Ranchi, Jharkhand 834001');
-      setIsDetecting(false);
-      toast.success('Location detected accurately! 📍');
-    }, 1500);
+    // open maps in new tab; user can select a point and then paste the address here
+    window.open('https://www.google.com/maps', '_blank');
+    toast('Please select your location on the map and copy the address into the field.', { icon: '🗺️' });
   };
 
   // Submit Handler
@@ -160,7 +151,7 @@ export default function SchedulePickup() {
   return (
     <div className="pickup-page page-wrapper">
       <div className="container">
-        
+
         {/* Hero Section */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
@@ -223,15 +214,8 @@ export default function SchedulePickup() {
                       <button 
                         className="detect-btn" 
                         onClick={handleDetectLocation}
-                        disabled={isDetecting}
                       >
-                        {isDetecting ? (
-                          <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: "linear" }}>
-                            <Navigation size={18} />
-                          </motion.div>
-                        ) : (
-                          <><Navigation size={18} /> Detect My Location</>
-                        )}
+                        <Navigation size={18} /> Choose Location
                       </button>
                     </div>
                   </div>
@@ -380,20 +364,7 @@ export default function SchedulePickup() {
 
         /* Map & Location */
         .location-wrapper { display: flex; flex-direction: column; gap: 12px; }
-        .map-placeholder { 
-  height: 140px; 
-  border-radius: 12px; 
-  background-color: var(--bg2); 
-  
-  /* Use cover and center for real images */
-  background-size: cover; 
-  background-position: center; 
-  
-  position: relative; 
-  overflow: hidden; 
-  border: 1px solid var(--border); 
-}        .map-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: color-mix(in srgb, var(--card) 50%, transparent); backdrop-filter: blur(1px);
-}        .detect-btn { display: flex; align-items: center; gap: 8px; padding: 10px 20px; background: var(--text); color: var(--bg); border: none; border-radius: 9999px; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        .map-placeholder { height: 140px; border-radius: 12px; background-color: var(--bg2); background-size: cover; background-position: center; position: relative; overflow: hidden; border: 1px solid var(--border); }        .map-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: color-mix(in srgb, var(--card) 50%, transparent); backdrop-filter: blur(1px); }        .detect-btn { display: flex; align-items: center; gap: 8px; padding: 10px 20px; background: var(--text); color: var(--bg); border: none; border-radius: 9999px; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
         .detect-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.2); }
         .detect-btn:disabled { opacity: 0.8; cursor: wait; }
         .address-input, .date-input { width: 100%; padding: 14px 16px; background: var(--bg); border: 1.5px solid var(--border); border-radius: 12px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.95rem; transition: all 0.3s; resize: vertical; }

@@ -132,12 +132,10 @@ function WasteGuide() {
   const filteredItems = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
 
-    // when there's no search text, just show items from the current tab
     if (!query) {
       return allItems[activeTab].map((item) => ({ ...item, category: activeTab }));
     }
 
-    // otherwise search across every category and tag each match with its category
     const results = [];
     Object.entries(allItems).forEach(([cat, items]) => {
       items.forEach((item) => {
@@ -168,8 +166,7 @@ function WasteGuide() {
     return count;
   }, [searchQuery, allItems]);
 
-  // helper that can be used either with the active tab or with an arbitrary
-  // category (needed when search results span multiple tabs)
+  
   const getTabColor = (cat = activeTab) => {
     const tab = tabs.find((t) => t.id === cat);
     return tab ? tab.color : '#16a34a';

@@ -268,36 +268,6 @@ function About() {
       </section>
 <Ticker />
 
-      {/* Hostel Story */}
-      {/* <section className="about-story">
-        <div className="container">
-          <div className="about-story-card">
-            <div className="about-story-glow" />
-            <div className="about-story-content">
-              <Coffee size={32} className="about-story-icon" />
-              <h3>The Hostel Room Story</h3>
-              <p>
-                It all started in a cramped hostel room at 2 AM. Four friends,
-                exhausted from assignments, were sipping chai and complaining
-                about the overflowing dustbins outside their window. "Why can't
-                someone just make an app that tells people where to throw their
-                waste?" one of us joked. But the joke stuck. We couldn't sleep
-                that night — not because of the chai, but because we realized
-                WE could be that "someone." We opened our laptops, started
-                sketching wireframes on the back of old assignment papers, and
-                by sunrise, TrashItt had a name, a logo, and a mission. What
-                started as a midnight rant became a platform that now serves
-                over 1,200 citizens of Ranchi. Turns out, the best ideas really
-                do come at 2 AM — with the right amount of chai and frustration.
-              </p>
-              <div className="about-story-signature">
-                — Team TrashItt, Hostel Room 304 ☕🌿
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-<Ticker/> */}
  {/* Team */}
       <section className="about-team">
         <div className="container">

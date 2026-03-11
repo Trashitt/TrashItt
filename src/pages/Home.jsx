@@ -104,10 +104,10 @@ const leafParticles = Array.from({ length: 15 }, (_, i) => ({
 }));
 
 const statsData = [
-  { label: 'KG Waste Segregated', value: 450, icon: Recycle, suffix: ' KG' },
-  { label: 'Active Challenges', value: 5, icon: Trophy, suffix: '' },
-  { label: 'Citizens Joined', value: 124, icon: Users, suffix: '' },
-  { label: 'Areas Cleaned', value: 23, icon: MapPin, suffix: '' },
+  { label: 'Waste Segregated', value: 50, icon: Recycle, suffix: ' KG' },
+  { label: 'Active Challenges', value: 0, icon: Trophy, suffix: '' },
+  { label: 'Citizens Joined', value: 36, icon: Users, suffix: '' },
+  { label: 'Areas Cleaned', value: 5, icon: MapPin, suffix: '' },
 ];
 
 const binsData = [
@@ -249,7 +249,6 @@ function Home() {
     </div>
   ))}
 
-  {/* NEW: Wrapper to hold the left and right sides next to each other */}
   <div className="home-hero-inner container">
     
     {/* LEFT SIDE: Your existing text content */}
@@ -289,17 +288,17 @@ function Home() {
 
       <div className="home-hero-stats-mini">
         <div className="home-hero-mini-stat">
-          <strong>1,247</strong>
+          <strong>36</strong>
           <span>Citizens</span>
         </div>
         <div className="home-hero-mini-divider" />
         <div className="home-hero-mini-stat">
-          <strong>12,450</strong>
+          <strong>50</strong>
           <span>KG Segregated</span>
         </div>
         <div className="home-hero-mini-divider" />
         <div className="home-hero-mini-stat">
-          <strong>5</strong>
+          <strong>0</strong>
           <span>Live Challenges</span>
         </div>
       </div>
@@ -326,7 +325,7 @@ function Home() {
       <div className="floating-card fc-1">
         <Camera size={20} className="fc-icon" style={{ color: 'var(--green)' }}/>
         <strong>AI Scanner</strong>
-        <span>94% Accuracy</span>
+        <span>70% Accuracy</span>
       </div>
 
       <div className="floating-card fc-2">
