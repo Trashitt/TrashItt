@@ -24,7 +24,7 @@ By promoting source-level segregation and community collaboration, TrashItt aims
 ## Key Features:
 
 - **AI Waste Scanner (Core Feature)** — Uses Computer Vision to analyze waste images and automatically classify them into biodegradable, recyclable, or hazardous categories, helping users segregate waste accurately.
-- 
+  
 - **Waste Segregation Guidance** — Provides clear instructions for proper disposal based on waste type.
 
 - **Citizen–NGO Collaboration** — Connects users with NGOs and community organizations for environmental drives.
