@@ -43,31 +43,27 @@ By promoting source-level segregation and community collaboration, TrashItt aims
 
 ## Home Page
 
-<img width="1919" height="1199" alt="image" src="https://github.com/user-attachments/assets/f19e93ba-68f3-4dd2-a77e-d7d7ce0c1ac5" />
+<img width="1917" height="1197" alt="image" src="https://github.com/user-attachments/assets/52f4bbce-3163-4cfa-a7de-de633507a4b0" />
 
 ## AI Waste Scanner
 
-<img width="1919" height="1199" alt="image" src="https://github.com/user-attachments/assets/7f7070ca-7777-4a9f-8d4a-2a1fb8f9ab9a" />
-
-## NGO Drives
-
-<img width="1919" height="1199" alt="image" src="https://github.com/user-attachments/assets/a22d78f0-ce7d-4339-b7f7-81add478ff41" />
+<img width="1919" height="1137" alt="image" src="https://github.com/user-attachments/assets/b3e05e29-0801-407f-9524-66f7c99ca976" />
 
 ## Waste Guide 
 
-<img width="1919" height="1199" alt="image" src="https://github.com/user-attachments/assets/1f761acd-d61f-4a2a-99d5-c1dc8137d668" />
+<img width="1919" height="1199" alt="image" src="https://github.com/user-attachments/assets/ffcb2d97-a505-4af2-a9ae-b2c28afdfe41" />
 
 ## Waste Pickup
 
-<img width="1919" height="1199" alt="image" src="https://github.com/user-attachments/assets/e480ffa8-c482-4681-b754-069609f94b9e" />
+<img width="1918" height="1199" alt="image" src="https://github.com/user-attachments/assets/e0968700-ba30-43d1-9701-44dfc3533092" />
 
 ## Sign Up Page 
 
-<img width="1919" height="1199" alt="image" src="https://github.com/user-attachments/assets/28a3477c-ee44-4286-84d9-3e225d78a938" />
+<img width="1919" height="1199" alt="image" src="https://github.com/user-attachments/assets/d29014d8-f714-4070-ac50-9b5ad0bdc8ef" />
 
 ## User Dashboard 
 
-<img width="1919" height="1199" alt="image" src="https://github.com/user-attachments/assets/e27de78d-5b11-4821-883b-5d508b75d49d" />
+<img width="1918" height="1199" alt="image" src="https://github.com/user-attachments/assets/cc955d9a-6a96-4e48-b883-083c9408e37f" />
 
 ## Live Demo
 Try the platform here: https://trash-itt.vercel.app/
