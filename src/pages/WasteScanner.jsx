@@ -169,7 +169,7 @@ function WasteScanner() {
       if (!isAPIConfigured()) {
         console.log('⚠️ No Gemini API key — using mock results');
         setTimeout(() => {
-          const randomResult = mockResults[Math.floor(Math.random() * mockResults.length)];
+          const randomResult = mockResults[0];
           setResult(randomResult);
           setState('result');
           toast.success('+10 Green Points earned! 🌿');
@@ -185,7 +185,7 @@ function WasteScanner() {
       } catch (err) {
         console.error('AI scan failed:', err.message);
         toast.error('AI scan failed — showing sample result');
-        const randomResult = mockResults[Math.floor(Math.random() * mockResults.length)];
+        const randomResult = mockResults[0];
         setResult(randomResult);
         setState('result');
       }

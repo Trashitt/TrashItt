@@ -17,6 +17,7 @@ import {
   Calendar,
   CheckCircle,
   ArrowUpRight,
+  Sparkles,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import Ticker from '../components/Ticker.jsx';
@@ -162,9 +163,15 @@ function Challenges() {
         </div>
         <div className="container">
           <div className="ch-hero-content">
-            <div className="ch-hero-badge">
-              <Flame size={14} />
-              <span>Active Challenges</span>
+            <div style={{ display: 'flex', gap: '8px', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+              <div className="upcoming-feature-tag">
+                <Sparkles size={12} />
+                <span>Upcoming Features</span>
+              </div>
+              <div className="ch-hero-badge">
+                <Flame size={14} />
+                <span>Active Challenges</span>
+              </div>
             </div>
             <h1>
               <span className="hero-highlight">Compete.</span> Clean.<br />
@@ -1277,6 +1284,45 @@ function Challenges() {
             width: 100%;
             justify-content: center;
           }
+        }
+
+        /* Upcoming Features Tag */
+        .upcoming-feature-tag {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 6px 14px;
+          background: linear-gradient(135deg, rgba(34, 197, 94, 0.15), rgba(16, 185, 129, 0.15));
+          border: 1.5px solid rgba(34, 197, 94, 0.4);
+          border-radius: 12px;
+          font-size: 0.75rem;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          color: var(--green);
+          animation: fadeInScale 0.6s ease-out;
+        }
+
+        .upcoming-feature-tag svg {
+          width: 12px;
+          height: 12px;
+          animation: spin 3s linear infinite;
+        }
+
+        @keyframes fadeInScale {
+          from {
+            opacity: 0;
+            transform: scale(0.8);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
         }
       `}</style>
     </div>

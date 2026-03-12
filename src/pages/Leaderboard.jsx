@@ -18,6 +18,7 @@ import {
   ScanLine,
   Flag,
   Recycle,
+  Sparkles,
 } from 'lucide-react';
 
 const leaderboardData = [
@@ -98,9 +99,15 @@ function Leaderboard() {
       <div className="container">
         {/* Hero */}
         <div className="lb-hero">
-          <div className="lb-hero-badge">
-            <Trophy size={14} />
-            <span>Leaderboard</span>
+          <div style={{ display: 'flex', gap: '8px', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+            <div className="upcoming-feature-tag">
+              <Sparkles size={12} />
+              <span>Upcoming Features</span>
+            </div>
+            <div className="lb-hero-badge">
+              <Trophy size={14} />
+              <span>Leaderboard</span>
+            </div>
           </div>
           <h1>Top <span className="hero-highlight">Eco Warriors</span> of Ranchi</h1>
           <p>See who's leading the charge for a cleaner Ranchi. Scan, segregate, and climb the ranks!</p>
@@ -937,6 +944,45 @@ function Leaderboard() {
             width: 38px;
             height: 38px;
           }
+        }
+
+        /* Upcoming Features Tag */
+        .upcoming-feature-tag {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 6px 14px;
+          background: linear-gradient(135deg, rgba(34, 197, 94, 0.15), rgba(16, 185, 129, 0.15));
+          border: 1.5px solid rgba(34, 197, 94, 0.4);
+          border-radius: 12px;
+          font-size: 0.75rem;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          color: var(--green);
+          animation: fadeInScale 0.6s ease-out;
+        }
+
+        .upcoming-feature-tag svg {
+          width: 12px;
+          height: 12px;
+          animation: spin 3s linear infinite;
+        }
+
+        @keyframes fadeInScale {
+          from {
+            opacity: 0;
+            transform: scale(0.8);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
         }
       `}</style>
     </div>
